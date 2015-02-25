@@ -1,5 +1,3 @@
-devices = new Meteor.Collection("devices");
-
 function get(collectionid, objs) {
     console.log('get');
     console.log(objs);
@@ -44,7 +42,7 @@ if (Meteor.isServer) {
         });
 
         // Add the collection Players to the API "/players" path
-        collectionApi.addCollection(devices, 'devices', {
+        collectionApi.addCollection(Devices, 'devices', {
             // All values listed below are default
             authToken: undefined,                   // Require this string to be passed in on each request
             methods: ['POST','GET','PUT','DELETE'],  // Allow creating, reading, updating, and deleting
