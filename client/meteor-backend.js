@@ -16,22 +16,14 @@ if (Meteor.isClient) {
     });
 
     Template.api.events({
-        'click .button': function(){
+        'click #api-title': function(){
             var api = $('#api-content');
             api.toggleClass('hidden');
+            api.toggleClass('show');
         }
 
     });
 
     hljs.initHighlightingOnLoad();
-
-
-    // if(!window.jQuery)
-    // {
-    //     alert('jquery');
-    // } else {
-    //     alert('click');
-    // }
-
 
 }

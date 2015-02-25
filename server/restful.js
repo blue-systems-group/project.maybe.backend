@@ -22,8 +22,9 @@ function put(collectionID, obj, newValues) {
 
 function del(collectionID, obj) {
     console.log('del');
-    console.log(collectionID);
-    console.log(obj);
+    if (obj === undefined) {
+        return false;
+    }
     return true;
 }
 

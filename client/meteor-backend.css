@@ -3,6 +3,7 @@ body, html {
   height: 100%;
   /*background-color: red;*/
 }
+
 #board {
     position:relative;
 	text-align: left;
@@ -24,25 +25,31 @@ body, html {
 	float: center;
 	border-left-style: solid;
 	border-right-style: solid;
-    /*border-style: solid;*/
-    border-width: 1px;
+	border-width: 1px;
 }
+
 #title {
 	text-align: center;
 }
-#api {
-	display: none;
-}
-.box {
-  background: goldenrod;
-  width: 300px;
-  height: 300px;
-  margin: 30px auto;
-  transition: all 2s linear;
-  display: block;
+
+#api-title:hover {
+	color: red;
 }
 
+#api-content {}
+
 .hidden {
-  display: none;
-  opacity: 0;
+	max-height: 0;
+	overflow: hidden;
+	-webkit-transition: max-height 0.5s;
+	-moz-transition: max-height 0.5s;
+	transition: linear max-height 0.5s;
+}
+
+.show {
+	max-height: 100%;
+	overflow: scroll;
+	-webkit-transition: max-height 1.8s;
+	-moz-transition: max-height 1.8s;
+	transition:  max-height 1.8s;
 }
