@@ -1,4 +1,3 @@
-
 Get all of the player records:
 ```
 curl http://127.0.0.1:3000/maybe-api-v1/devices

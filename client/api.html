@@ -1,8 +1,29 @@
-<body>
-  <h1>Maybe API</h1>
-</body>
+<template name="api">
+  <h2 class="button">Maybe API</h2>
+  <div id="api-content" class="hidden">
+    Get all of the player records:
+    <pre>
+      <code class="bash">curl http://127.0.0.1:3000/maybe-api-v1/devices</code>
+    </pre>
 
-<template name="hello">
-  <button>Click Me</button>
-  <p>You've pressed the button {{counter}} times.</p>
+    Get an individual record:
+    <pre>
+      <code class="bash">curl http://127.0.0.1:3000/maybe-api-v1/devices/XXX</code>
+    </pre>
+
+    Create a record:
+    <pre>
+      <code class="bash">curl http://127.0.0.1:3000/maybe-api-v1/devices -d "{\"deviceid\": \"001\", \"values\" : {\"button1\":true, \"button2\":true, \"button3\":true, \"button4\":true}}"</code>
+    </pre>
+
+    Update a record:
+    <pre>
+      <code class="bash">curl -X PUT -d "{\"\$set\":{\"values.button1\" : false}}" http://127.0.0.1:3000/maybe-api-v1/devices/XXX</code>
+    </pre>
+
+    Delete a record:
+    <pre>
+      <code class="bash">curl -X DELETE http://127.0.0.1:3000/maybe-api-v1/devices/XXX</code>
+    </pre>
+  </div>
 </template>

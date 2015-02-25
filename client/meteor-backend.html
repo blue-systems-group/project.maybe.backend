@@ -1,14 +1,13 @@
-<head>
-  <title>maybe backend</title>
-</head>
-
 <body>
-  <h1>Welcome to Meteor!</h1>
-
-  {{> hello}}
+  <div id="board">
+    <h1 id="title">Maybe Backend!</h1>
+    {{> api}}
+    {{> hello}}
+  </div>
 </body>
 
+
 <template name="hello">
-  <button>Click Me</button>
+  <h2 class='button'>Click Me!</h2>
   <p>You've pressed the button {{counter}} times.</p>
 </template>

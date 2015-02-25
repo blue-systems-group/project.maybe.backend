@@ -1,1 +1,48 @@
 /* CSS declarations go here */
+body, html {
+  height: 100%;
+  /*background-color: red;*/
+}
+#board {
+    position:relative;
+	text-align: left;
+	display: block;
+	margin-left: auto;
+	margin-right: auto;
+	margin-top: 0px;
+	margin-bottom: 0px;
+	min-width: 200px;
+	max-width: 1920px;
+	padding-top: 0px;
+	padding-bottom: 0px;
+	padding-left: 32px;
+	padding-right: 32px;
+	height: 100%;
+	width: 64%;
+	overflow: auto;
+	background-color: white;
+	float: center;
+	border-left-style: solid;
+	border-right-style: solid;
+    /*border-style: solid;*/
+    border-width: 1px;
+}
+#title {
+	text-align: center;
+}
+#api {
+	display: none;
+}
+.box {
+  background: goldenrod;
+  width: 300px;
+  height: 300px;
+  margin: 30px auto;
+  transition: all 2s linear;
+  display: block;
+}
+
+.hidden {
+  display: none;
+  opacity: 0;
+}
