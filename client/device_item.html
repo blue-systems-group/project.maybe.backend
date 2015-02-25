@@ -1,0 +1,31 @@
+<template name="deviceItem">
+  <div class="device">
+    <h3>{{deviceid}}</h3>
+    <p>
+      button1:
+      {{button1}}
+    </p>
+    <p>
+      button2:
+      {{button2}}
+    </p>
+    <p>
+      button3:
+      {{button3}}
+    </p>
+    <p>
+      button4:
+      {{button4}}
+    </p>
+  </div>
+</template>
+
+<template name="values">
+  {{#each values}}
+  {{> valueItem}}
+  {{/each}}
+</template>
+
+<template name="valueItem">
+  {{key}} : {{value}}
+</template>

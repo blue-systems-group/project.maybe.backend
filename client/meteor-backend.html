@@ -2,12 +2,17 @@
   <div id="board">
     <h1 id="title">Maybe Backend!</h1>
     {{> api}}
-    {{> hello}}
+    <div id="devices-container">
+      <h2 class="subtitle">Devices:</h2>
+      {{> devicesList}}
+    </div>
   </div>
 </body>
 
-
-<template name="hello">
-  <h2 class='button'>Click Me!</h2>
-  <p>You've pressed the button {{counter}} times.</p>
+<template name="devicesList">
+  <div class="devices">
+    {{#each devices}}
+    {{> deviceItem}}
+    {{/each}}
+  </div>
 </template>
