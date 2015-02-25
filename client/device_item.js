@@ -22,11 +22,6 @@ Template.deviceItem.helpers({
 Template.deviceItem.events({
     'click .button': function(event) {
         var button = event.target.getAttribute("id");
-        // for (var key in this.values) {
-        //     if (this.values.hasOwnProperty(key)) {
-        //         alert(key + " -> " + this.values[key]);
-        //     }
-        // }
         this.values[button] = !this.values[button];
         Devices.update(this._id, this);
 
@@ -47,8 +42,34 @@ Template.deviceItem.events({
     // update the text of the item on keypress but throttle the event to ensure
     // we don't flood the server with updates (handles the event at most once
     // every 300ms)
-
     'keyup input[type=text]': _.throttle(function(event) {
         Devices.update(this._id, {$set: {'values.color': event.target.value}});
     }, 300),
 });
+
+Template.valuesList.helpers({
+    values: function() {
+        var array = [];
+        for (var key in this.values) {
+            if (this.values.hasOwnProperty(key)) {
+                var value = this.values[key];
+                var object = {
+                    "key" : key,
+                    "value" : this.values[key]
+                }
+                // alert(key + " -> " + this.values[key]);
+                array.push(object);
+            }
+        }
+        return array;
+    },
+});
+
+Template.valuesList.events({
+    'click' : function(event, template) {
+        var key = this.key;
+        var device = template.data;
+        device.values[key] = !device.values[key];
+        Devices.update(device._id, device);
+    },
+})

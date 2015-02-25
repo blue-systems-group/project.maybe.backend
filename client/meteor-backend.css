@@ -53,3 +53,11 @@ body, html {
     -moz-transition: max-height 1.8s;
     transition:  max-height 1.8s;
 }
+
+.key-value-pair {
+    display: block;
+    margin: 12px;
+    border-top-style: dashed;
+    border-bottom-style: dashed;
+    border-width: 1px;
+}

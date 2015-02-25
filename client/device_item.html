@@ -17,16 +17,17 @@
       button4:
       {{button4}}
     </p>
+    color:
     <input type="text" value="{{color}}" placeholder="Color">
+    {{> valuesList}}
   </div>
 </template>
 
-<template name="values">
+<template name="valuesList">
   {{#each values}}
-  {{> valueItem}}
+  <div class="key-value-pair">
+  {{key}}:
+  {{value}}
+  </div>
   {{/each}}
-</template>
-
-<template name="valueItem">
-  {{key}} : {{value}}
 </template>
