@@ -67,6 +67,18 @@ Template.valuesList.helpers({
 
 Template.valuesList.events({
     'click' : function(event, template) {
+        Meteor.call('remoteGet','http://maybe.xcv58.me/maybe-api-v1/devices', {
+            //...options...
+        }, function(error,response){
+            if (!error) {
+                console.log("GET Error!");
+                alert(JSON.stringify(response));
+            } else {
+                alert(error);
+            }
+            //if an error happened, error argument contains the details
+            //if the request succeeded, the response will contain the response of the server request
+        });
         var key = this.key;
         var device = template.data;
         device.values[key] = !device.values[key];
