@@ -9,3 +9,4 @@ autopublish
 insecure
 collection-api
 http
+mrt:collection-api
