@@ -6,10 +6,10 @@ Template.api.events({
     }
 });
 
+hljs.initHighlightingOnLoad();
+
 Template.devicesList.helpers({
     devices: function() {
         return Devices.find();
     }
 });
-
-hljs.initHighlightingOnLoad();
