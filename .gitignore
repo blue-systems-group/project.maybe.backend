@@ -1,0 +1,6 @@
+.env
+.*.swp
+*.*~
+
+bin
+meteor
