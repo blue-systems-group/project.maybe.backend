@@ -3,25 +3,28 @@
       <code class="java">
 maybe ("block test") {
         <div class="codesnippet codesnippetchoosed">
-  if ("true") {
-    i = 0;
-  } else {
-    j = 0;
-    maybe ("third block test") {
-      i = 1;
-    } or {
-      j = 2;
-    } or {
-      j = 3;
-    }
+  if ("true") {<br/>
+    i = 0;<br/>
+  } else {<br/>
+    j = 0;<br/>
+    maybe ("third block test") {<br/>
+      i = 1;<br/>
+    } or {<br/>
+      j = 2;<br/>
+    } or {<br/>
+      j = 3;<br/>
+    }<br/>
   }
         </div>
-} or {<div class="codesnippet">
-  i = 1;</div>
-} or {<div class="codesnippet">
-  j = 2;
-  maybe ("another block test") {
-    j = 3;
+} or {
+        <div class="codesnippet">
+  i = 1;
+        </div>
+} or {
+        <div class="codesnippet">
+  j = 2;<br/>
+  maybe ("another block test") {<br/>
+    j = 3;<br/>
   }</div>
 }
       </code>

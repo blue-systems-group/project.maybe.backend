@@ -6,6 +6,7 @@ Template.api.events({
     }
 });
 
+hljs.configure({useBR: true});
 hljs.initHighlightingOnLoad();
 
 Template.devicesList.helpers({
