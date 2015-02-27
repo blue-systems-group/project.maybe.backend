@@ -23,7 +23,7 @@ fi
 # Install meteor
 if [ ! -d "meteor" ]; then
 	git clone https://github.com/meteor/meteor.git
-	git checkout release/METEOR@1.0.3.2
+	cd meteor && git checkout release/METEOR@1.0.3.2 && cd ..
 	if [[ $HAS_VIRTUALENV -ne 0 ]]; then
 		ln -s `pwd`/meteor/meteor `pwd`/bin
 	fi
@@ -32,6 +32,4 @@ if [ ! -d "meteor" ]; then
 fi
 
 # Set up app dependencies
-cd app
-	../meteor/meteor add mrt:collection-api
-cd - >/dev/null
+cd app && ../meteor/meteor add mrt:collection-api && cd ..
