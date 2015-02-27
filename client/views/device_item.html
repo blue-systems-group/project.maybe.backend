@@ -1,9 +1,17 @@
 <template name="deviceItem">
   <div class="device">
-    <h3>{{deviceid}}</h3>
+    <h3 class="deviceID">{{deviceid}}</h3>
     {{#each values}}
     <div class="key-value-pair">
-      {{key}}: {{value}}
+      {{#if choosed}}
+      <div class="choosed">
+        {{key}}: {{value}}
+      </div>
+      {{else}}
+      <div class="notchoosed">
+        {{key}}: {{value}}
+      </div>
+      {{/if}}
     </div>
     {{/each}}
   </div>

@@ -61,3 +61,7 @@ body, html {
     border-bottom-style: dashed;
     border-width: 1px;
 }
+
+.choosed {
+    color: red;
+}

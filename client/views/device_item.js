@@ -9,7 +9,8 @@ Template.deviceItem.helpers({
                 var value = this.values[key];
                 var object = {
                     "key" : key,
-                    "value" : this.values[key]
+                    "value" : this.values[key],
+                    "choosed" : this.values[key]
                 }
                 // alert(key + " -> " + this.values[key]);
                 array.push(object);
@@ -31,7 +32,11 @@ Template.deviceItem.events({
     //     // this.values.button4 = !this.values.button4;
     // },
 
-    'click' : function(event, template) {
+    'click .deviceID': function(event, template) {
+        alert("Click deviceID");
+    },
+
+    'click .key-value-pair' : function(event, template) {
         // Meteor.call('remoteGet','http://maybe.xcv58.me/maybe-api-v1/devices', {
         //     //...options...
         // }, function(error,response){
