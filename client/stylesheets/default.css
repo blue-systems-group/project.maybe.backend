@@ -55,10 +55,10 @@ body, html {
 }
 
 .key-value-pair {
-    display: block;
+    display: inline-block;
     margin: 12px;
-    border-top-style: dashed;
-    border-bottom-style: dashed;
+    padding: 8px;
+    border-style: solid;
     border-width: 1px;
 }
 

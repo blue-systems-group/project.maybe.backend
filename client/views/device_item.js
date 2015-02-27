@@ -9,7 +9,7 @@ Template.deviceItem.helpers({
                 var value = this.values[key];
                 var object = {
                     "key" : key,
-                    "value" : this.values[key],
+                    "value" : this.values[key].toString(),
                     "choosed" : this.values[key]
                 }
                 // alert(key + " -> " + this.values[key]);
@@ -51,9 +51,20 @@ Template.deviceItem.events({
         // });
         var key = this.key;
         var device = template.data;
-        console.log(key);
         console.log(JSON.stringify(device));
-        device.values[key] = !device.values[key];
+        for (var i in device.values) {
+            if (device.values.hasOwnProperty(i)) {
+                console.log(key);
+                console.log(i);
+                if (key === i) {
+                    console.log("TRUE");
+                    device.values[i] = true;
+                } else {
+                    console.log("false");
+                    device.values[i] = false;
+                }
+            }
+        }
         Devices.update(device._id, device);
     },
 
