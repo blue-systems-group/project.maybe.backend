@@ -23,6 +23,7 @@ fi
 # Install meteor
 if [ ! -d "meteor" ]; then
 	git clone https://github.com/meteor/meteor.git
+	git checkout release/METEOR@1.0.3.2
 	if [[ $HAS_VIRTUALENV -ne 0 ]]; then
 		ln -s `pwd`/meteor/meteor `pwd`/bin
 	fi
