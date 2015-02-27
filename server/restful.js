@@ -1,35 +1,5 @@
-function get(collectionid, objs) {
-    console.log('get');
-    console.log(objs);
-    return true;
-}
-
-function post(obj) {
-    console.log('post');
-    obj._id = obj.deviceid;
-    return true;
-}
-
-function put(collectionID, obj, newValues) {
-    console.log('put');
-    console.log(collectionID);
-    console.log(obj);
-    console.log(newValues);
-    return true;
-}
-
-function del(collectionID, obj) {
-    console.log('del');
-    if (obj === undefined) {
-        return false;
-    }
-    return true;
-}
-
 Meteor.startup(function () {
-
-    // All values listed below are default
-    collectionApi = new CollectionAPI({
+    devicesAPI = new CollectionAPI({
         authToken: undefined,              // Require this string to be passed in on each request
         apiPath: 'maybe-api-v1',          // API path prefix
         standAlone: false,                 // Run as a stand-alone HTTP(S) server
@@ -41,18 +11,38 @@ Meteor.startup(function () {
     });
 
     // Add the collection Players to the API "/players" path
-    collectionApi.addCollection(Devices, 'devices', {
+    devicesAPI.addCollection(Devices, 'devices', {
         // All values listed below are default
         authToken: undefined,                   // Require this string to be passed in on each request
         methods: ['POST','GET','PUT','DELETE'],  // Allow creating, reading, updating, and deleting
         before: {  // This methods, if defined, will be called before the POST/GET/PUT/DELETE actions are performed on the collection. If the function returns false the action will be canceled, if you return true the action will take place.
-            POST: post,  // function(obj) {return true/false;},
-            GET: get,  // function(collectionID, objs) {return true/false;},
-            PUT: put,  //function(collectionID, obj, newValues) {return true/false;},
-            DELETE: del,  //function(collectionID, obj) {return true/false;}
+            POST: function(obj) {
+                console.log('POST');
+                obj._id = obj.deviceid;
+                return true;
+            }, // function(obj) {return true/false;},
+            GET: function(collectionid, objs) {
+                console.log('GET');
+                console.log(objs);
+                return true;
+            }, // function(collectionID, objs) {return true/false;},
+            PUT: function(collectionID, obj, newValues) {
+                console.log('PUT');
+                console.log(collectionID);
+                console.log(obj);
+                console.log(newValues);
+                return true;
+            },  //function(collectionID, obj, newValues) {return true/false;},
+            DELETE: function(collectionID, obj) {
+                console.log('DEL');
+                if (obj === undefined) {
+                    return false;
+                }
+                return true;
+            },  //function(collectionID, obj) {return true/false;}
         }
     });
 
     // Starts the API server
-    collectionApi.start();
+    devicesAPI.start();
 });
