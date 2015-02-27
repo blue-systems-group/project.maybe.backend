@@ -3,7 +3,6 @@
     "package": "testing_inputs.maybe",
     "statements": [
         {
-            // to parse 1 and 2 is easy
             "content": "int i = maybe(\"simple test\") 1, 2;",
             "alternatives": [
                 {
@@ -22,8 +21,6 @@
             "label": "simple test"
         },
         {
-            // one, two, three are aliases of alternatives?
-            // If yes, how I parse it?
             "content": "public String test = maybe(\"another test\") \"one\",\"two\",   \"three\";",
             "alternatives": [
                 {
