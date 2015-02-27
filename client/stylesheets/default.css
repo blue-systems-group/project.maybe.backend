@@ -65,3 +65,17 @@ body, html {
 .choosed {
     color: red;
 }
+
+.codesnippet {
+/*    white-space: pre-wrap;
+    white-space: -moz-pre-wrap;
+    white-space: -pre-wrap;
+    white-space: -o-pre-wrap;
+    white-space:nowrap;
+*/
+}
+
+.codesnippetchoosed {
+    background-color: #9fffff;
+
+}

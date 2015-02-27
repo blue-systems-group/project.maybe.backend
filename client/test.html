@@ -1,0 +1,30 @@
+<template name="test">
+    <pre>
+      <code class="java">
+maybe ("block test") {
+        <div class="codesnippet codesnippetchoosed">
+  if ("true") {
+    i = 0;
+  } else {
+    j = 0;
+    maybe ("third block test") {
+      i = 1;
+    } or {
+      j = 2;
+    } or {
+      j = 3;
+    }
+  }
+        </div>
+} or {<div class="codesnippet">
+  i = 1;</div>
+} or {<div class="codesnippet">
+  j = 2;
+  maybe ("another block test") {
+    j = 3;
+  }</div>
+}
+      </code>
+    </pre>
+
+</template>
