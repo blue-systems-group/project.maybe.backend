@@ -2,7 +2,7 @@
 
 # First set up virtualenv
 # Does the system have virtualenv?
-HAS_VIRTUALENV="0"
+HAS_VIRTUALENV="1"
 type virtualenv >/dev/null 2>&1 || { echo >&2 "virtualenv is not installed!"; HAS_VIRTUALENV="0";}
 if [ ! -d ".env" ]; then
 	if [[ $HAS_VIRTUALENV -ne 0 ]]; then
