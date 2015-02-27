@@ -12,7 +12,7 @@ if [ ! -d ".env" ]; then
 		if [ ! -d "bin" ]; then
 			mkdir -p bin
 			# Add bin to PATH
-			echo "export PATH=\$PATH:\$VIRTUAL_ENV_BASE/bin" >>.env/bin/activate
+			echo "export PATH=\$VIRTUAL_ENV_BASE/bin:\$PATH" >>.env/bin/activate
 		fi
 
 		source .env/bin/activate
@@ -26,7 +26,7 @@ if [ ! -d "meteor" ]; then
 	if [[ $HAS_VIRTUALENV -ne 0 ]]; then
 		ln -s `pwd`/meteor/meteor `pwd`/bin
 	fi
-	export PATH=$PATH:`pwd`/meteor
+	export PATH=`pwd`/meteor:$PATH
 	cd app && meteor && cd - 2>&1
 fi
 
