@@ -1,0 +1,110 @@
+{
+    "sha224_hash": "1aab3f28f3d0ead580c3c22b10fee7e81c75e6d1e8f957611aedf51e",
+    "package": "testing_inputs.maybe",
+    "statements": [
+        {
+            // to parse 1 and 2 is easy
+            "content": "int i = maybe(\"simple test\") 1, 2;",
+            "alternatives": [
+                {
+                    "start": 29,
+                    "end": 30,
+                    "value": 0
+                },
+                {
+                    "start": 32,
+                    "end": 33,
+                    "value": 1
+                }
+            ],
+            "line": 5,
+            "type": "assignment",
+            "label": "simple test"
+        },
+        {
+            // one, two, three are aliases of alternatives?
+            // If yes, how I parse it?
+            "content": "public String test = maybe(\"another test\") \"one\",\"two\",   \"three\";",
+            "alternatives": [
+                {
+                    "start": 43,
+                    "end": 48,
+                    "value": 0
+                },
+                {
+                    "start": 49,
+                    "end": 54,
+                    "value": 1
+                },
+                {
+                    "start": 58,
+                    "end": 65,
+                    "value": 2
+                }
+            ],
+            "line": 6,
+            "type": "assignment",
+            "label": "another test"
+        },
+        {
+            // this one is pretty difficult.
+            "content": "maybe (\"block test\") {\n  if (\"true\") {\n    i = 0;\n  } else {\n    j = 0;\n    maybe (\"third block test\") {\n      i = 1;\n    } or {\n      j = 2;\n    } or {\n      j = 3;\n    }\n  }\n} or {\n  i = 1;\n} or {\n  j = 2;\n  maybe (\"another block test\") {\n    j = 3;\n  }\n}",
+            "alternatives": [
+                {
+                    "start": 22,
+                    "end": 177,
+                    "value": 0
+                },
+                {
+                    "start": 182,
+                    "end": 193,
+                    "value": 1
+                },
+                {
+                    "start": 198,
+                    "end": 257,
+                    "value": 2
+                }
+            ],
+            "line": 20,
+            "type": "block",
+            "label": "block test"
+        },
+        {
+            "content": "    maybe (\"third block test\") {\n      i = 1;\n    } or {\n      j = 2;\n    } or {\n      j = 3;\n    }",
+            "alternatives": [
+                {
+                    "start": 32,
+                    "end": 51,
+                    "value": 0
+                },
+                {
+                    "start": 56,
+                    "end": 75,
+                    "value": 1
+                },
+                {
+                    "start": 80,
+                    "end": 99,
+                    "value": 2
+                }
+            ],
+            "line": 25,
+            "type": "block",
+            "label": "third block test"
+        },
+        {
+            "content": "  maybe (\"another block test\") {\n    j = 3;\n  }",
+            "alternatives": [
+                {
+                    "start": 32,
+                    "end": 47,
+                    "value": 0
+                }
+            ],
+            "line": 37,
+            "type": "block",
+            "label": "another block test"
+        }
+    ]
+}
