@@ -24,11 +24,13 @@ fi
 if [ ! -d "meteor" ]; then
 	git clone https://github.com/meteor/meteor.git
 	if [[ $HAS_VIRTUALENV -ne 0 ]]; then
-		cd bin && ln -s ../meteor/meteor ./ && cd - >/dev/null 2>&1
+		ln -s `pwd`/meteor/meteor `pwd`/bin
 	fi
 	export PATH=$PATH:`pwd`/meteor
-	meteor
+	cd app && meteor && cd - 2>&1
 fi
 
-# Set up server dependencies
-meteor/meteor add mrt:collection-api
+# Set up app dependencies
+cd app
+	../meteor/meteor add mrt:collection-api
+cd - >/dev/null
