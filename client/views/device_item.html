@@ -1,33 +1,10 @@
 <template name="deviceItem">
   <div class="device">
     <h3>{{deviceid}}</h3>
-    <p class="button" id="button1">
-      button1:
-      {{button1}}
-    </p>
-    <p class="button" id="button2">
-      button2:
-      {{button2}}
-    </p>
-    <p class="button" id="button3">
-      button3:
-      {{button3}}
-    </p>
-    <p class="button" id="button4">
-      button4:
-      {{button4}}
-    </p>
-    color:
-    <input type="text" value="{{color}}" placeholder="Color">
-    {{> valuesList}}
+    {{#each values}}
+    <div class="key-value-pair">
+      {{key}}: {{value}}
+    </div>
+    {{/each}}
   </div>
-</template>
-
-<template name="valuesList">
-  {{#each values}}
-  <div class="key-value-pair">
-  {{key}}:
-  {{value}}
-  </div>
-  {{/each}}
 </template>
