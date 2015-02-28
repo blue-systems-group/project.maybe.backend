@@ -1,37 +1,26 @@
 {
     "deviceid": "001",
     "sha224_hash": "dddddddddddddddddddddddddddddddddddddddddddddddddddddddd",
-    [
+    "testing_inputs.maybe": [
         {
-            "package": "testing_inputs.maybe",
-            "sha224_hash": "1aab3f28f3d0ead580c3c22b10fee7e81c75e6d1e8f957611aedf51e",
-            [
-                {
-                    "label": "another block test",
-                    // the choice should be index of alternatives or each alternative have an alias?
-                    "choice": "1"
-                },
-                {
-                    "label": "simple test",
-                    "choice": "other_option"
-                },
-                ...
-            ]
+            "label": "another block test",
+            "choice": "1"
         },
         {
-            "package": "demo.maybe",
-            "sha224_hash": "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",
-            [
-                {
-                    "label": "label_1",
-                    "choice": "option_from_label_1"
-                },
-                {
-                    "label": "label_2",
-                    "choice": "option_from_label_2"
-                },
-                ...
-            ]
-        }
-    ]
+            "label": "simple test",
+            "choice": "other_option"
+        },
+            ...
+    ],
+    "demo.maybe": [
+        {
+            "label": "label_1",
+            "choice": "option_from_label_1"
+        },
+        {
+            "label": "label_2",
+            "choice": "option_from_label_2"
+        },
+            ...
+    ],
 }

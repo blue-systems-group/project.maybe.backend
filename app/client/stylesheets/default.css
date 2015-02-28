@@ -66,6 +66,13 @@ body, html {
     color: red;
 }
 
+.packageName {
+    font-weight: bold;
+    font-size: xx-large;
+    margin-top: 32px;
+    border-top: solid 5px;
+}
+
 .maybeCodeJunction {
     display: inline;
 }

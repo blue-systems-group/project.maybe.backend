@@ -1,3 +1,33 @@
+function updateOneDevice(device, packageList) {
+    if (device.queryCount === undefined) {
+        device.queryCount = 1;
+    } else {
+        device.queryCount = device.queryCount + 1;
+    }
+
+    for (i in packageList) {
+        console.log(i);
+        onePackage = packageList[i];
+        name = onePackage.package;
+        array = [];
+        for (j in onePackage.statements) {
+            statement = onePackage.statements[j];
+            if (statement.choice === undefined) {
+                statement.choice = 0;
+            }
+            label = {
+                "label": statement.label,
+                "choice": statement.choice
+            }
+            array.push(label);
+        }
+        device[name] = array;
+    }
+
+    console.log(device);
+    Devices.update(device._id, device);
+}
+
 Meteor.startup(function () {
     maybeAPIv1 = new CollectionAPI({
         authToken: undefined,              // Require this string to be passed in on each request
@@ -23,6 +53,14 @@ Meteor.startup(function () {
             GET: function(collectionid, objs) {
                 console.log('GET');
                 console.log(objs);
+                packageList = MetaData.find().fetch();
+                console.log(packageList.length);
+                if (objs.length > 0) {
+                    for (i in objs) {
+                        var device = objs[i];
+                        updateOneDevice(device, packageList);
+                    }
+                }
                 return true;
             }, // function(collectionID, objs) {return true/false;},
             PUT: function(collectionID, obj, newValues) {
