@@ -44,7 +44,6 @@
             "label": "another test"
         },
         {
-            // this one is pretty difficult.
             "content": "maybe (\"block test\") {\n  if (\"true\") {\n    i = 0;\n  } else {\n    j = 0;\n    maybe (\"third block test\") {\n      i = 1;\n    } or {\n      j = 2;\n    } or {\n      j = 3;\n    }\n  }\n} or {\n  i = 1;\n} or {\n  j = 2;\n  maybe (\"another block test\") {\n    j = 3;\n  }\n}",
             "alternatives": [
                 {

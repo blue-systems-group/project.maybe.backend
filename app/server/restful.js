@@ -50,8 +50,15 @@ Meteor.startup(function () {
             POST: function(obj) {
                 console.log('POST');
                 // set id for that
-                obj._id = obj.deviceid;
-                return true;
+                var id = "sha224_hash";
+                if (obj.hasOwnProperty(id)) {
+                    obj._id = obj[id];
+                    console.log("valid");
+                    return true;
+                } else {
+                    console.log("invalid");
+                    return false;
+                }
             }, // function(obj) {return true/false;},
             GET: function(collectionid, objs) {
                 console.log('GET');
