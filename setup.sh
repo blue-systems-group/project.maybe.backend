@@ -32,4 +32,7 @@ if [ ! -d "meteor" ]; then
 fi
 
 # Set up app dependencies
-cd app && ../meteor/meteor add mrt:collection-api && cd ..
+cd app
+../meteor/meteor add mrt:collection-api
+../meteor/meteor add simple:highlight.js
+cd ..
