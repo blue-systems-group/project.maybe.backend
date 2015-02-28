@@ -1,0 +1,25 @@
+<template name="package">
+  <div class="package">
+    <div class="packageName">
+      {{packageName}}
+    </div>
+    <div class="hash">
+      {{hash}}
+    </div>
+    {{#each statements}}
+    <div class="statement">
+      <div class="label">
+        {{label}}
+      </div>
+      <div class="alternatives">
+        <pre>
+          <code class="java">{{#each alternatives}}{{#if isAlternative}}{{#if isChoosed}}<div class="maybeCodeBlock maybeCodeBlockChoosed">{{{code}}}</div>{{else}}<div class="maybeCodeBlock">{{{code}}}</div>{{/if}}{{else}}{{{code}}}{{/if}}{{/each}}
+          </code>
+          <!-- <code class="java">{{#each alternatives}}<div class="maybeCodeBlock">{{{code}}}</div>{{/each}} -->
+          <!-- </code> -->
+        </pre>
+      </div>
+    </div>
+    {{/each}}
+  </div>
+</template>

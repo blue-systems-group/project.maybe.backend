@@ -7,9 +7,13 @@
       {{> devicesList}}
     </div>
 
-    <div>
-      {{> test}}
+    <div id="packages-container">
+      <h2 class="subtitle">Packages:</h2>
+      {{> packageList}}
     </div>
+    <!-- <div> -->
+    <!--   {{> test}} -->
+    <!-- </div> -->
   </div>
 </body>
 
@@ -17,6 +21,14 @@
   <div class="devices">
     {{#each devices}}
     {{> deviceItem}}
+    {{/each}}
+  </div>
+</template>
+
+<template name="packageList">
+  <div class="packageList">
+    {{#each packages}}
+    {{> package}}
     {{/each}}
   </div>
 </template>

@@ -11,11 +11,10 @@ Template.test.events({
     },
 
     'mouseenter div': function(event, template) {
-        event.target.classList.toggle("maybeCodeBlockHover")
+        event.target.classList.add("maybeCodeBlockHover")
     },
 
     'mouseleave div': function(event, template) {
-        event.target.classList.toggle("maybeCodeBlockHover")
+        event.target.classList.remove("maybeCodeBlockHover")
     },
-
 });

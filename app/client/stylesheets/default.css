@@ -5,7 +5,7 @@ body, html {
 }
 
 #board {
-    position:relative;
+    /* position:relative; */
     text-align: left;
     display: block;
     margin-left: auto;
@@ -18,9 +18,9 @@ body, html {
     padding-bottom: 0px;
     padding-left: 32px;
     padding-right: 32px;
-    height: 100%;
+    /* height: 100%; */
     width: 64%;
-    overflow: auto;
+    /* overflow: auto; */
     background-color: white;
     float: center;
     border-left-style: solid;
@@ -68,6 +68,7 @@ body, html {
 
 .maybeCodeBlock {
     background-color: #aaaaaa;
+    display: inline;
 }
 
 .maybeCodeBlockChoosed {
@@ -77,4 +78,9 @@ body, html {
 .maybeCodeBlockHover {
     font-weight: bold;
     color: red;
+}
+
+.statement {
+    margin: 16px 0 16px 0;
+    border-top: solid 1px;
 }
