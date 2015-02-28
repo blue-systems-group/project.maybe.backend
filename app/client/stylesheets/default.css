@@ -66,6 +66,10 @@ body, html {
     color: red;
 }
 
+.maybeCodeJunction {
+    display: inline;
+}
+
 .maybeCodeBlock {
     background-color: #aaaaaa;
     display: inline;
@@ -78,6 +82,16 @@ body, html {
 .maybeCodeBlockHover {
     font-weight: bold;
     color: red;
+}
+
+.option {
+    width: 128px;
+    margin: 4px;
+    padding: 4px;
+}
+
+.optionChoosed {
+    background-color: #9fffff;
 }
 
 .statement {

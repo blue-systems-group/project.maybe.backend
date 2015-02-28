@@ -12,11 +12,22 @@
         {{label}}
       </div>
       <div class="alternatives">
-        <pre>
-          <code class="java">{{#each alternatives}}{{#if isAlternative}}{{#if isChoosed}}<div class="maybeCodeBlock maybeCodeBlockChoosed">{{{code}}}</div>{{else}}<div class="maybeCodeBlock">{{{code}}}</div>{{/if}}{{else}}{{{code}}}{{/if}}{{/each}}
+
+        <div class="options">
+          {{#each alternatives}}
+          {{#if isAlternative}}
+          {{#if isChoosed}}
+          <button class="option optionChoosed">{{value}}</button>
+          {{else}}
+          <button class="option">{{value}}</button>
+          {{/if}}
+          {{/if}}
+          {{/each}}
+        </div>
+        <pre class="java">
+          <code>{{#each alternatives}}{{#if isAlternative}}{{#if isChoosed}}<div class="maybeCodeBlock">{{{code}}}</div>{{else}}<div class="maybeCodeBlock">{{{code}}}</div>{{/if}}{{else}}<div class="maybeCodeBlock">{{{code}}}</div>{{/if}}{{/each}}
+          <!-- <code>{{#each alternatives}}{{#if isAlternative}}{{#if isChoosed}}<div class="maybeCodeBlock maybeCodeBlockChoosed">{{{code}}}</div>{{else}}<div class="maybeCodeBlock">{{{code}}}</div>{{/if}}{{else}}<div class="maybeCodeJunction">{{{code}}}</div>{{/if}}{{/each}} -->
           </code>
-          <!-- <code class="java">{{#each alternatives}}<div class="maybeCodeBlock">{{{code}}}</div>{{/each}} -->
-          <!-- </code> -->
         </pre>
       </div>
     </div>

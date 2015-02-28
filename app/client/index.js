@@ -1,12 +1,12 @@
 Meteor.startup(function (){
     console.log("StartUp");
     hljs.configure({useBR: true});
-    // hljs.initHighlightingOnLoad();
-    $(document).ready(function() {
-        $('pre code').each(function(i, block) {
-            hljs.highlightBlock(block);
-        });
-    });
+    hljs.initHighlightingOnLoad();
+    // $(document).ready(function() {
+    //     $('pre code').each(function(i, block) {
+    //         hljs.highlightBlock(block);
+    //     });
+    // });
 });
 
 Template.api.events({
