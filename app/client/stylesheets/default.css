@@ -66,16 +66,15 @@ body, html {
     color: red;
 }
 
-.codesnippet {
-/*    white-space: pre-wrap;
-    white-space: -moz-pre-wrap;
-    white-space: -pre-wrap;
-    white-space: -o-pre-wrap;
-    white-space:nowrap;
-*/
+.maybeCodeBlock {
+    background-color: #aaaaaa;
 }
 
-.codesnippetchoosed {
+.maybeCodeBlockChoosed {
     background-color: #9fffff;
+}
 
+.maybeCodeBlockHover {
+    font-weight: bold;
+    color: red;
 }
