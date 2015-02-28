@@ -9,3 +9,4 @@ autopublish
 insecure
 http
 mrt:collection-api
+simple:highlight.js

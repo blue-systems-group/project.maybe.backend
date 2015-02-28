@@ -24,10 +24,12 @@ Template.package.helpers({
         for (var i in this.alternatives) {
             var alternative = this.alternatives[i];
             var junction = code.substring(start, alternative.start);
+            junction = junction.replace(/(?:\r\n|\r|\n)/g, "</br>");
+            console.log(junction);
             var block = code.substring(alternative.start, alternative.end);
             start = alternative.end;
             var junctionJSON = {
-                "code": junction.replace(/(?:\r\n|\r|\n)/g, "</br>"),
+                "code": junction,
                 "isAlternative": false
             }
             array.push(junctionJSON);
@@ -66,13 +68,34 @@ Template.package.helpers({
 Template.package.rendered = function() {
     // TODO: need rewrite only render self block.
     // nohighlight
-    $('pre code').each(function(i, block) {
-        hljs.highlightBlock(block);
-    });
+    // $('pre code').each(function(i, block) {
+    //     console.log(block);
+    //     hljs.highlightBlock(block);
+    //     console.log(block);
+    // });
 };
 
 Template.package.events({
     'click .option': function(event, template) {
+        console.log(event);
+        console.log(JSON.stringify(this));
+        var choice = this.value;
+        console.log("choice: " + choice);
+        console.log("label: " + this.label);
+
+        var onePackage = template.data;
+        for (var i in onePackage.statements) {
+            var label = onePackage.statements[i].label;
+            if (label === this.label) {
+                console.log("write option");
+                onePackage.statements[i].choice = choice;
+                break;
+            }
+        }
+        MetaData.update(onePackage._id, onePackage);
+    },
+
+    'click .maybeCodeBlock': function(event, template) {
         console.log(event);
         console.log(JSON.stringify(this));
         var choice = this.value;
@@ -96,6 +119,14 @@ Template.package.events({
     },
 
     'mouseleave .option': function(event, template) {
+        event.target.classList.remove("maybeCodeBlockHover")
+    },
+
+    'mouseenter .maybeCodeBlock': function(event, template) {
+        event.target.classList.add("maybeCodeBlockHover")
+    },
+
+    'mouseleave .maybeCodeBlock': function(event, template) {
         event.target.classList.remove("maybeCodeBlockHover")
     },
 });
