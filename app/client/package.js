@@ -19,59 +19,73 @@ Template.package.helpers({
         if (this.hasOwnProperty("choice")) {
             choice = this.choice;
         }
-        var array = [];
+        var alternatives = [];
         var start = 0;
         for (var i in this.alternatives) {
             var alternative = this.alternatives[i];
-            var junction = code.substring(start, alternative.start);
-            junction = junction.replace(/(?:\r\n|\r|\n)/g, "</br>");
-            console.log(junction);
-            var block = code.substring(alternative.start, alternative.end);
-            start = alternative.end;
-            var junctionJSON = {
-                "code": junction,
-                "isAlternative": false
-            }
-            array.push(junctionJSON);
             var alternativeJSON = {
-                "code": block.replace(/(?:\r\n|\r|\n)/g, "</br>"),
                 "isAlternative": true,
                 "value": alternative.value,
                 "isChoosed": choice == alternative.value,
                 "label": label,
             }
-            array.push(alternativeJSON);
+            alternatives.push(alternativeJSON);
+        }
+        return alternatives;
+    },
+    highlightedHtmlCode: function() {
+        var code = this.content;
+        var label = this.label;
+        var choice = 0;
+        if (this.hasOwnProperty("choice")) {
+            choice = this.choice;
+        }
+        var preNode = document.createElement('pre');
+        preNode.className = "java";
+        var codeNode = document.createElement('code');
+        codeNode.className = "java";
+        preNode.appendChild(codeNode);
+        var start = 0;
+        for (var i in this.alternatives) {
+            var alternative = this.alternatives[i];
+            var junction = code.substring(start, alternative.start);
+            junction = junction.replace(/(?:\r\n|\r|\n)/g, "</br>");
+            var block = code.substring(alternative.start, alternative.end).replace(/(?:\r\n|\r|\n)/g, "</br>");
+            start = alternative.end;
+
+            var tmpJunction = document.createElement('div');
+            tmpJunction.classList.add("maybeCodeJunction");
+            console.log(junction);
+            tmpJunction.innerHTML = junction;
+            codeNode.appendChild(tmpJunction);
+
+            var tmpBlock = document.createElement('div');
+            tmpBlock.classList.add("maybeCodeBlock");
+            if (choice === alternative.value) {
+                tmpBlock.classList.add("maybeCodeBlockChoosed");
+            }
+            tmpBlock.innerHTML = block;
+            codeNode.appendChild(tmpBlock);
         }
         var junction = code.substring(start);
-        var junctionJSON = {
-            "code": junction,
-            "isAlternative": false
-        }
-        array.push(junctionJSON);
-        // console.log(array);
-        return array;
-    },
-    // isAlternative: function() {
-    //     return this.isAlternative;
-    // },
-    // code: function() {
-    //     return this.code;
-    // },
-    // isChoosed: function() {
-    //     return this.isChoosed;
-    // },
-    // value: function() {
-    //     return this.value;
-    // }
+        var tmpJunction = document.createElement('div');
+        tmpJunction.classList.add("maybeCodeJunction");
+        tmpJunction.innerHTML = junction;
+        codeNode.appendChild(tmpJunction);
+
+        console.log(preNode);
+        hljs.highlightBlock(preNode);
+        return preNode.innerHTML;
+    }
 });
 
 Template.package.rendered = function() {
     // TODO: need rewrite only render self block.
     // nohighlight
     // $('pre code').each(function(i, block) {
-    //     console.log(block);
+    //     // console.log(block);
     //     hljs.highlightBlock(block);
-    //     console.log(block);
+    //     // console.log(block);
     // });
 };
 
@@ -95,24 +109,24 @@ Template.package.events({
         MetaData.update(onePackage._id, onePackage);
     },
 
-    'click .maybeCodeBlock': function(event, template) {
-        console.log(event);
-        console.log(JSON.stringify(this));
-        var choice = this.value;
-        console.log("choice: " + choice);
-        console.log("label: " + this.label);
+    // 'click .maybeCodeBlock': function(event, template) {
+    //     console.log(event.target);
+    //     console.log(JSON.stringify(this));
+    //     // var choice = this.value;
+    //     // console.log("choice: " + choice);
+    //     // console.log("label: " + this.label);
 
-        var onePackage = template.data;
-        for (var i in onePackage.statements) {
-            var label = onePackage.statements[i].label;
-            if (label === this.label) {
-                console.log("write option");
-                onePackage.statements[i].choice = choice;
-                break;
-            }
-        }
-        MetaData.update(onePackage._id, onePackage);
-    },
+    //     // var onePackage = template.data;
+    //     // for (var i in onePackage.statements) {
+    //     //     var label = onePackage.statements[i].label;
+    //     //     if (label === this.label) {
+    //     //         console.log("write option");
+    //     //         onePackage.statements[i].choice = choice;
+    //     //         break;
+    //     //     }
+    //     // }
+    //     // MetaData.update(onePackage._id, onePackage);
+    // },
 
     'mouseenter .option': function(event, template) {
         event.target.classList.add("maybeCodeBlockHover")

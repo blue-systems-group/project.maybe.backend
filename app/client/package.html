@@ -24,10 +24,9 @@
           {{/if}}
           {{/each}}
         </div>
-        <pre class="java">
-          <code class="java hijs">{{#each alternatives}}{{#if isAlternative}}{{#if isChoosed}}<div class="maybeCodeBlock maybeCodeBlockChoosed">{{{code}}}</div>{{else}}<div class="maybeCodeBlock">{{{code}}}</div>{{/if}}{{else}}<div class="maybeCodeJunction">{{{code}}}</div>{{/if}}{{/each}}
-          </code>
-        </pre>
+        <div>
+          {{{highlightedHtmlCode}}}
+        </div>
       </div>
     </div>
     {{/each}}
