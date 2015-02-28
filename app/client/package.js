@@ -40,11 +40,19 @@ Template.package.helpers({
         if (this.hasOwnProperty("choice")) {
             choice = this.choice;
         }
-        var preNode = document.createElement('pre');
+        var root = document.createElement("div");
+        root.className = "java";
+
+        var preNode = document.createElement("pre");
         preNode.className = "java";
-        var codeNode = document.createElement('code');
+
+        root.appendChild(preNode);
+
+        var codeNode = document.createElement("code");
         codeNode.className = "java";
+
         preNode.appendChild(codeNode);
+
         var start = 0;
         for (var i in this.alternatives) {
             var alternative = this.alternatives[i];
@@ -73,9 +81,8 @@ Template.package.helpers({
         tmpJunction.innerHTML = junction;
         codeNode.appendChild(tmpJunction);
 
-        console.log(preNode);
-        hljs.highlightBlock(preNode);
-        return preNode.innerHTML;
+        hljs.highlightBlock(codeNode);
+        return root.innerHTML;
     }
 });
 
@@ -136,11 +143,11 @@ Template.package.events({
         event.target.classList.remove("maybeCodeBlockHover")
     },
 
-    'mouseenter .maybeCodeBlock': function(event, template) {
-        event.target.classList.add("maybeCodeBlockHover")
-    },
+    // 'mouseenter .maybeCodeBlock': function(event, template) {
+    //     event.target.classList.add("maybeCodeBlockHover")
+    // },
 
-    'mouseleave .maybeCodeBlock': function(event, template) {
-        event.target.classList.remove("maybeCodeBlockHover")
-    },
+    // 'mouseleave .maybeCodeBlock': function(event, template) {
+    //     event.target.classList.remove("maybeCodeBlockHover")
+    // },
 });
