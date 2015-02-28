@@ -1,6 +1,7 @@
 {
     "deviceid": "001",
     "sha224_hash": "dddddddddddddddddddddddddddddddddddddddddddddddddddddddd",
+    "queryCount": 19,
     "testing_inputs.maybe": [
         {
             "label": "another block test",
