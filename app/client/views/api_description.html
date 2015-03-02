@@ -1,7 +1,8 @@
 <template name="api">
   <h2 id="api-title">Maybe API</h2>
   <div id="api-content" class="hidden">
-    Get all of the player records:
+    <h3>Devices APIs</h3>
+    Get all of the devices records:
     <pre>
       <code class="bash">curl https://maybe.xcv58.me/maybe-api-v1/devices</code>
     </pre>
@@ -24,6 +25,32 @@
     Delete a record:
     <pre>
       <code class="bash">curl -X DELETE https://maybe.xcv58.me/maybe-api-v1/devices/{deviceid}</code>
+    </pre>
+
+    Get all of the metadata:
+    <pre>
+      <code class="bash">curl https://maybe.xcv58.me/maybe-api-v1/metadata</code>
+    </pre>
+
+    <h3>Metadata APIs</h3>
+    Get an individual record:
+    <pre>
+      <code class="bash">curl https://maybe.xcv58.me/maybe-api-v1/metadata/{sha224_hash}</code>
+    </pre>
+
+    Create a record:
+    <pre>
+      <code class="bash">curl https://maybe.xcv58.me/maybe-api-v1/metadata -d "{\"sha224_hash\": \"001\"}"</code>
+    </pre>
+
+    Update a record:
+    <pre>
+      <code class="bash">curl -X PUT -d '{"$set":{"statements" : {"content":"int i = maybe(\"simple test\") 1, 2;","alternatives":[{"start":29,"end":30,"value":0},{"start":32,"end":33,"value":1}],"line":5,"type":"assignment","label":"simple test","choice":0}}}' https://maybe.xcv58.me/maybe-api-v1/metadata/{sha224_hash}</code>
+    </pre>
+
+    Delete a record:
+    <pre>
+      <code class="bash">curl -X DELETE https://maybe.xcv58.me/maybe-api-v1/metadata/{sha224_hash}</code>
     </pre>
   </div>
 </template>
