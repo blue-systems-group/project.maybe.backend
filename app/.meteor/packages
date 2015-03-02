@@ -10,3 +10,5 @@ insecure
 http
 mrt:collection-api
 simple:highlight.js
+nemo64:bootstrap
+less
