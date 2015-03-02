@@ -3,27 +3,27 @@
   <div id="api-content" class="hidden">
     Get all of the player records:
     <pre>
-      <code class="bash">curl http://maybe.xcv58.me/maybe-api-v1/devices</code>
+      <code class="bash">curl https://maybe.xcv58.me/maybe-api-v1/devices</code>
     </pre>
 
     Get an individual record:
     <pre>
-      <code class="bash">curl http://maybe.xcv58.me/maybe-api-v1/devices/{deviceid}</code>
+      <code class="bash">curl https://maybe.xcv58.me/maybe-api-v1/devices/{deviceid}</code>
     </pre>
 
     Create a record:
     <pre>
-      <code class="bash">curl http://maybe.xcv58.me/maybe-api-v1/devices -d "{\"deviceid\": \"001\", \"values\" : {\"button1\":true, \"button2\":true, \"button3\":true, \"button4\":true}}"</code>
+      <code class="bash">curl https://maybe.xcv58.me/maybe-api-v1/devices -d "{\"deviceid\": \"001\", \"values\" : {\"button1\":true, \"button2\":true, \"button3\":true, \"button4\":true}}"</code>
     </pre>
 
     Update a record:
     <pre>
-      <code class="bash">curl -X PUT -d "{\"\$set\":{\"values.button1\" : false}}" http://maybe.xcv58.me/maybe-api-v1/devices/{deviceid}</code>
+      <code class="bash">curl -X PUT -d "{\"\$set\":{\"values.button1\" : false}}" https://maybe.xcv58.me/maybe-api-v1/devices/{deviceid}</code>
     </pre>
 
     Delete a record:
     <pre>
-      <code class="bash">curl -X DELETE http://maybe.xcv58.me/maybe-api-v1/devices/{deviceid}</code>
+      <code class="bash">curl -X DELETE https://maybe.xcv58.me/maybe-api-v1/devices/{deviceid}</code>
     </pre>
   </div>
 </template>
