@@ -35,4 +35,5 @@ fi
 cd app
 ../meteor/meteor add mrt:collection-api
 ../meteor/meteor add simple:highlight.js
+../meteor/meteor add nemo64:bootstrap less
 cd ..
