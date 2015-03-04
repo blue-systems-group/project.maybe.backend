@@ -5,11 +5,13 @@ function updateOneDevice(device, packageList) {
         device.queryCount = device.queryCount + 1;
     }
 
+    var choices = {};
     for (i in packageList) {
         console.log(i);
         onePackage = packageList[i];
-        name = onePackage.package;
+        hash = onePackage.sha224_hash;
         array = [];
+
         for (j in onePackage.statements) {
             statement = onePackage.statements[j];
             if (statement.choice === undefined) {
@@ -21,8 +23,13 @@ function updateOneDevice(device, packageList) {
             }
             array.push(label);
         }
-        device[name] = array;
+        choices[hash] = {
+            name: onePackage.package,
+            labels: array
+        }
     }
+
+    device.choices = choices;
 
     console.log(device);
     Devices.update(device._id, device);
