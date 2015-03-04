@@ -29,16 +29,16 @@ Template.deviceItem.helpers({
 
         preNode.appendChild(codeNode);
 
-        id = this._id;
-        gcmid = this.gcmid;
-        delete this._id;
-        delete this.gcmid;
+        // id = this._id;
+        // gcmid = this.gcmid;
+        // delete this._id;
+        // delete this.gcmid;
 
         codeNode.innerHTML = json2html.transform(this);
         hljs.highlightBlock(codeNode);
 
-        this._id = id;
-        this.gcmid = gcmid;
+        // this._id = id;
+        // this.gcmid = gcmid;
         return root.innerHTML;
     }
 });
