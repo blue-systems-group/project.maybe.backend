@@ -30,7 +30,7 @@ Meteor.methods({
                   },
                   function (error, result) {
                       if (!error) {
-                          // console.log(result);
+                          console.log(result);
                       } else {
                           console.log("error: " + error);
                       }
