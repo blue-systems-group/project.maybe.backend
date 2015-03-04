@@ -6,18 +6,6 @@
         Sent notification
       </button>
     </div>
-    {{#each values}}
-    <div class="key-value-pair">
-      {{#if choosed}}
-      <div class="choosed">
-        {{key}}: {{value}}
-      </div>
-      {{else}}
-      <div class="notchoosed">
-        {{key}}: {{value}}
-      </div>
-      {{/if}}
-    </div>
-    {{/each}}
+    {{{deviceHtmlCode}}}
   </div>
 </template>

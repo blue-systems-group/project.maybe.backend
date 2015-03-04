@@ -10,7 +10,8 @@ Template.package.helpers({
     },
     content: function() {
         // return this.content;
-        return this.content.replace(/(?:\r\n|\r|\n)/g, "</br>");
+        return this.content;
+        // return this.content.replace(/(?:\r\n|\r|\n)/g, "</br>");
     },
     alternatives: function() {
         var code = this.content;
@@ -57,13 +58,14 @@ Template.package.helpers({
         for (var i in this.alternatives) {
             var alternative = this.alternatives[i];
             var junction = code.substring(start, alternative.start);
-            junction = junction.replace(/(?:\r\n|\r|\n)/g, "</br>");
-            var block = code.substring(alternative.start, alternative.end).replace(/(?:\r\n|\r|\n)/g, "</br>");
+            // junction = junction.replace(/(?:\r\n|\r|\n)/g, "</br>");
+            var block = code.substring(alternative.start, alternative.end);
+            // var block = code.substring(alternative.start, alternative.end).replace(/(?:\r\n|\r|\n)/g, "</br>");
             start = alternative.end;
 
             var tmpJunction = document.createElement('div');
             tmpJunction.classList.add("maybeCodeJunction");
-            console.log(junction);
+            // console.log(junction);
             tmpJunction.innerHTML = junction;
             codeNode.appendChild(tmpJunction);
 

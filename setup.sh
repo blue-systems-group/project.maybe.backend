@@ -36,4 +36,5 @@ cd app
 ../meteor/meteor add mrt:collection-api
 ../meteor/meteor add simple:highlight.js
 ../meteor/meteor add nemo64:bootstrap less
+../meteor/meteor add miro:json2html
 cd ..

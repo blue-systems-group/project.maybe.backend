@@ -1,9 +1,10 @@
 Meteor.startup(function (){
     console.log("StartUp");
-    hljs.configure({
-        useBR: true,
-    });
+    // hljs.configure({
+    //     useBR: true,
+    // });
     hljs.initHighlightingOnLoad();
+
     // $(document).ready(function() {
     //     $('pre code').each(function(i, block) {
     //         hljs.highlightBlock(block);

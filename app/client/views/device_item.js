@@ -12,12 +12,28 @@ Template.deviceItem.helpers({
                     "value" : JSON.stringify(this[key]),
                     "choosed" : false
                 }
-                // alert(key + " -> " + this.values[key]);
                 array.push(object);
             }
         }
         return array;
     },
+    deviceHtmlCode: function() {
+        var root = document.createElement("div");
+        var preNode = document.createElement("pre");
+        preNode.className = "json";
+
+        root.appendChild(preNode);
+
+        var codeNode = document.createElement("code");
+        codeNode.className = "json";
+
+        preNode.appendChild(codeNode);
+
+        codeNode.innerHTML = json2html.transform(this);
+
+        hljs.highlightBlock(codeNode);
+        return root.innerHTML;
+    }
 });
 
 Template.deviceItem.events({
