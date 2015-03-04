@@ -1,6 +1,11 @@
 <template name="deviceItem">
   <div class="device">
     <h3 class="deviceID">{{deviceid}}</h3>
+    <div class="button">
+      <button>
+        Sent notification
+      </button>
+    </div>
     {{#each values}}
     <div class="key-value-pair">
       {{#if choosed}}

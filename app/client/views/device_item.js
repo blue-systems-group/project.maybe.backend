@@ -4,13 +4,13 @@ Template.deviceItem.helpers({
     },
     values: function() {
         var array = [];
-        for (var key in this.values) {
-            if (this.values.hasOwnProperty(key)) {
-                var value = this.values[key];
+        for (var key in this) {
+            if (this.hasOwnProperty(key)) {
+                var value = this[key];
                 var object = {
                     "key" : key,
-                    "value" : this.values[key].toString(),
-                    "choosed" : this.values[key]
+                    "value" : JSON.stringify(this[key]),
+                    "choosed" : false
                 }
                 // alert(key + " -> " + this.values[key]);
                 array.push(object);
@@ -21,51 +21,32 @@ Template.deviceItem.helpers({
 });
 
 Template.deviceItem.events({
-    // 'click .button': function(event) {
-    //     var button = event.target.getAttribute("id");
-    //     this.values[button] = !this.values[button];
-    //     Devices.update(this._id, this);
-
-    //     // this.values.button1 = !this.values.button1;
-    //     // this.values.button2 = !this.values.button2;
-    //     // this.values.button3 = !this.values.button3;
-    //     // this.values.button4 = !this.values.button4;
-    // },
+    'click .button': function(event) {
+        Meteor.call('sendNotification', this);
+    },
 
     'click .deviceID': function(event, template) {
         alert("Click deviceID");
     },
 
     'click .key-value-pair' : function(event, template) {
-        // Meteor.call('remoteGet','http://maybe.xcv58.me/maybe-api-v1/devices', {
-        //     //...options...
-        // }, function(error,response){
-        //     if (!error) {
-        //         console.log("GET Error!");
-        //         alert(JSON.stringify(response));
-        //     } else {
-        //         alert(error);
+        // var key = this.key;
+        // var device = template.data;
+        // console.log(JSON.stringify(device));
+        // for (var i in device.values) {
+        //     if (device.values.hasOwnProperty(i)) {
+        //         console.log(key);
+        //         console.log(i);
+        //         if (key === i) {
+        //             console.log("TRUE");
+        //             device.values[i] = true;
+        //         } else {
+        //             console.log("false");
+        //             device.values[i] = false;
+        //         }
         //     }
-        //     //if an error happened, error argument contains the details
-        //     //if the request succeeded, the response will contain the response of the server request
-        // });
-        var key = this.key;
-        var device = template.data;
-        console.log(JSON.stringify(device));
-        for (var i in device.values) {
-            if (device.values.hasOwnProperty(i)) {
-                console.log(key);
-                console.log(i);
-                if (key === i) {
-                    console.log("TRUE");
-                    device.values[i] = true;
-                } else {
-                    console.log("false");
-                    device.values[i] = false;
-                }
-            }
-        }
-        Devices.update(device._id, device);
+        // }
+        // Devices.update(device._id, device);
     },
 
     'keydown input[type=text]': function(event) {
