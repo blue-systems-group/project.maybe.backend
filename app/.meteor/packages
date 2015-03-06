@@ -8,8 +8,8 @@ meteor-platform
 autopublish
 insecure
 http
-mrt:collection-api
 simple:highlight.js
 nemo64:bootstrap
 less
 miro:json2html
+xcv58:collection-api

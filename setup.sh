@@ -33,7 +33,7 @@ fi
 
 # Set up app dependencies
 cd app
-../meteor/meteor add mrt:collection-api
+../meteor/meteor add xcv58:collection-api
 ../meteor/meteor add simple:highlight.js
 ../meteor/meteor add nemo64:bootstrap less
 ../meteor/meteor add miro:json2html
