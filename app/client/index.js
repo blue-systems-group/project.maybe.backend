@@ -1,35 +1,35 @@
 Meteor.startup(function (){
-    console.log("StartUp");
-    // hljs.configure({
-    //     useBR: true,
-    // });
-    hljs.initHighlightingOnLoad();
+  console.log("StartUp");
+  // hljs.configure({
+  //     useBR: true,
+  // });
+  hljs.initHighlightingOnLoad();
 
-    // $(document).ready(function() {
-    //     $('pre code').each(function(i, block) {
-    //         hljs.highlightBlock(block);
-    //     });
-    // });
+  // $(document).ready(function() {
+  //     $('pre code').each(function(i, block) {
+  //         hljs.highlightBlock(block);
+  //     });
+  // });
 });
 
 Template.api.events({
-    'click #api-title': function(){
-        var api = $('#api-content');
-        api.toggleClass('hidden');
-        api.toggleClass('show');
-    }
+  'click #api-title': function(){
+    var api = $('#api-content');
+    api.toggleClass('hidden');
+    api.toggleClass('show');
+  }
 });
 
 Template.devicesList.helpers({
-    devices: function() {
-        return Devices.find();
-    }
+  devices: function() {
+    return Devices.find();
+  }
 });
 
 Template.packageList.helpers({
-    packages: function() {
-        var result = MetaData.find();
-        console.log(result);
-        return MetaData.find();
-    }
+  packages: function() {
+    var result = MetaData.find();
+    console.log(result);
+    return MetaData.find();
+  }
 });
