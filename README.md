@@ -2,10 +2,31 @@
 
 This project is backend for [maybe](http://blue.cse.buffalo.edu/projects/maybe/) project of [blue](http://blue.cse.buffalo.edu) in [University at Buffalo](http://www.cse.buffalo.edu).
 
+Table of Contents
+=================
+
+  * [Maybe backend](#maybe-backend)
+  * [Usage](#usage)
+  * [RESTFul APIs](#restful-apis)
+    * [devices](#devices)
+      * [POST](#post)
+      * [GET](#get)
+      * [PUT](#put)
+      * [DELETE](#delete)
+    * [metadata](#metadata)
+      * [POST](#post-1)
+      * [GET](#get-1)
+      * [PUT](#put-1)
+      * [DELETE](#delete-1)
+    * [logs](#logs)
+      * [POST](#post-2)
+      * [GET](#get-2)
+      * [PUT](#put-2)
+      * [DELETE](#delete-2)
+
 ---
 
-Usage
--------
+# Usage
 
 Just run this command in your terminal:
 ```bash
@@ -289,7 +310,7 @@ The logs api will let you store logs from devices. So each record represents a l
 ### POST
 This is the only thing you can do with the ```logs``` api.
 
-    $ curl http://127.0.0.1:3000/maybe-api-v1/logs/deviceid -d '{"a" : 1}'
+    $ curl http://localhost:3000/maybe-api-v1/logs/deviceid -d '{"a" : 1}'
 
 If everything good (I hope that),  it will return a JSONObject with status code ```201```:
 
