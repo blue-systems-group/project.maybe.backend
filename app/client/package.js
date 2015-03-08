@@ -13,6 +13,23 @@ Template.package.helpers({
     return this.content;
     // return this.content.replace(/(?:\r\n|\r|\n)/g, "</br>");
   },
+  packageHtmlCode: function() {
+    var root = document.createElement("div");
+    var preNode = document.createElement("pre");
+    preNode.className = "json";
+
+    root.appendChild(preNode);
+
+    var codeNode = document.createElement("code");
+    codeNode.className = "json";
+
+    preNode.appendChild(codeNode);
+
+    codeNode.innerHTML = json2html.transform(this);
+    hljs.highlightBlock(codeNode);
+
+    return root.innerHTML;
+  },
   alternatives: function() {
     var code = this.content;
     var label = this.label;
