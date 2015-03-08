@@ -1,19 +1,11 @@
 function updateOneDevice(device, packageList) {
-  if (device.queryCount === undefined) {
-    device.queryCount = 1;
-  } else {
-    device.queryCount = device.queryCount + 1;
-  }
+  device.queryCount = device.queryCount + 1 || 1;
 
   var choices = {};
-  for (var i in packageList) {
-    console.log(i);
-    var onePackage = packageList[i];
+  packageList.forEach(function(onePackage) {
     var hash = onePackage.sha224_hash;
     var array = [];
-
-    for (var j in onePackage.statements) {
-      var statement = onePackage.statements[j];
+    onePackage.statements.forEach(function(statement) {
       if (statement.choice === undefined) {
         statement.choice = 0;
       }
@@ -22,12 +14,12 @@ function updateOneDevice(device, packageList) {
         "choice": statement.choice
       };
       array.push(label);
-    }
+    });
     choices[hash] = {
       name: onePackage.package,
       labels: array
     };
-  }
+  });
 
   device.choices = choices;
 
@@ -60,20 +52,15 @@ Meteor.startup(function () {
       GET: function(collectionid, objs, fields, query) {
         console.log('GET');
         console.log(objs);
-        packageList = MetaData.find().fetch();
-        console.log(packageList.length);
-        if (objs.length > 0) {
-          for (i in objs) {
-            var device = objs[i];
-            updateOneDevice(device, packageList);
-          }
-        }
+        var packageList = MetaData.find().fetch();
 
         objs.forEach(function(device) {
+          updateOneDevice(device, packageList);
           if (device.hasOwnProperty('_id')) {
             delete device['_id'];
           }
         });
+
         return true;
       }, // function(collectionID, objs, fields, query) {return true/false;},
       PUT: function(collectionID, obj, newValues, fields, query) {
