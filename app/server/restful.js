@@ -6,27 +6,27 @@ function updateOneDevice(device, packageList) {
   }
 
   var choices = {};
-  for (i in packageList) {
+  for (var i in packageList) {
     console.log(i);
-    onePackage = packageList[i];
-    hash = onePackage.sha224_hash;
-    array = [];
+    var onePackage = packageList[i];
+    var hash = onePackage.sha224_hash;
+    var array = [];
 
-    for (j in onePackage.statements) {
-      statement = onePackage.statements[j];
+    for (var j in onePackage.statements) {
+      var statement = onePackage.statements[j];
       if (statement.choice === undefined) {
         statement.choice = 0;
       }
-      label = {
+      var label = {
         "label": statement.label,
         "choice": statement.choice
-      }
+      };
       array.push(label);
     }
     choices[hash] = {
       name: onePackage.package,
       labels: array
-    }
+    };
   }
 
   device.choices = choices;
@@ -57,7 +57,7 @@ Meteor.startup(function () {
         obj._id = obj.deviceid;
         return true;
       }, // function(obj) {return true/false;},
-      GET: function(collectionid, objs) {
+      GET: function(collectionid, objs, fields, query) {
         console.log('GET');
         console.log(objs);
         packageList = MetaData.find().fetch();
@@ -68,15 +68,23 @@ Meteor.startup(function () {
             updateOneDevice(device, packageList);
           }
         }
+
+        objs.forEach(function(device) {
+          if (device.hasOwnProperty('_id')) {
+            delete device['_id'];
+          }
+        });
         return true;
-      }, // function(collectionID, objs) {return true/false;},
-      PUT: function(collectionID, obj, newValues) {
+      }, // function(collectionID, objs, fields, query) {return true/false;},
+      PUT: function(collectionID, obj, newValues, fields, query) {
         console.log('PUT');
         console.log(collectionID);
         console.log(obj);
         console.log(newValues);
+        console.log(fields);
+        console.log(query);
         return true;
-      },  //function(collectionID, obj, newValues) {return true/false;},
+      },  //function(collectionID, obj, newValues, fields, query) {return true/false;},
       DELETE: function(collectionID, obj) {
         console.log('DEL');
         if (obj === undefined) {
