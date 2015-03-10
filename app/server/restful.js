@@ -1,4 +1,19 @@
-Logs = new Meteor.Collection('logs');
+// Logs = new Meteor.Collection('logs');
+Logs = {};
+
+function initLogCollections() {
+  console.log("init Log Collections");
+  var packageList = MetaData.find().fetch();
+  packageList.forEach(function(onePackage) {
+    var hash = onePackage.sha224_hash;
+    var packageName = onePackage.package;
+    onePackage.statements.forEach(function(statement) {
+      var key = hash + "-" + statement.label;
+      Logs[key] = new Meteor.Collection(key);
+    });
+  });
+  Logs = new Meteor.Collection('logs');
+}
 
 function updateOneDevice(device, packageList) {
   device.queryCount = device.queryCount + 1 || 1;
@@ -29,7 +44,10 @@ function updateOneDevice(device, packageList) {
   Devices.update(device._id, device);
 }
 
+
 Meteor.startup(function () {
+  initLogCollections();
+
   maybeAPIv1 = new CollectionAPI({
     authToken: undefined,              // Require this string to be passed in on each request
     apiPath: 'maybe-api-v1',          // API path prefix
@@ -130,6 +148,13 @@ Meteor.startup(function () {
     }
   });
 
+    // $ curl http://localhost:3000/maybe-api-v1/logs/deviceid -d '{"a" : 1, "sha224_hash" : "1aab3f28f3d0ead580c3c22b10fee7e81c75e6d1e8f957611aedf51e", "label": "simple test"}'
+// {
+//   "label": "simple test",
+//   "sha224_hash": "1aab3f28f3d0ead580c3c22b10fee7e81c75e6d1e8f957611aedf51e",
+//   "a": 1
+// }
+
   maybeAPIv1.addCollection(Logs, 'logs', {
     authToken: undefined,
     methods: ['POST','GET','PUT','DELETE'],
@@ -137,7 +162,14 @@ Meteor.startup(function () {
       POST: function(obj, requestMetadata) {
         console.log('POST');
         console.log(requestMetadata);
+        console.log(JSON.stringify(obj));
         if (requestMetadata.collectionId === undefined) {
+          return false;
+        }
+        if (!obj.hasOwnProperty("sha224_hash")) {
+          return false;
+        }
+        if (!obj.hasOwnProperty("label")) {
           return false;
         }
         var metaData = {

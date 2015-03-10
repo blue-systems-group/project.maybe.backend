@@ -310,7 +310,8 @@ The logs api will let you store logs from devices. So each record represents a l
 ### POST
 This is the only thing you can do with the ```logs``` api.
 
-    $ curl http://localhost:3000/maybe-api-v1/logs/deviceid -d '{"a" : 1}'
+    $ curl http://localhost:3000/maybe-api-v1/logs/deviceid -d '{"a" : 1, "sha224_hash" : "1aab3f28f3d0ead580c3c22b10fee7e81c75e6d1e8f957611aedf51e", "label": "simple test"}'
+
 
 If everything good (I hope that),  it will return a JSONObject with status code ```201```:
 
