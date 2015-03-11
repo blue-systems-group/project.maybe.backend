@@ -31,7 +31,7 @@ Meteor.methods({
     HTTP.call("POST",
               "https://android.googleapis.com/gcm/send",
               data,
-              function (error, result) {
+              function(error, result) {
                 if (!error) {
                   console.log(result);
                 } else {

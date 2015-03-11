@@ -59,7 +59,7 @@ function updateOneDevice(device, packageList) {
   Devices.update(device._id, device);
 }
 
-Meteor.startup(function () {
+Meteor.startup(function() {
   initLogCollections();
 
   maybeAPIv1 = new CollectionAPI({

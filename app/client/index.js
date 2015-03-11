@@ -1,4 +1,4 @@
-Meteor.startup(function (){
+Meteor.startup(function() {
   console.log("StartUp");
   // hljs.configure({
   //     useBR: true,
@@ -13,7 +13,7 @@ Meteor.startup(function (){
 });
 
 Template.api.events({
-  'click #api-title': function(){
+  'click #api-title': function() {
     var api = $('#api-content');
     api.toggleClass('hidden');
     api.toggleClass('show');
