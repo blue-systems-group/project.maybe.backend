@@ -255,7 +255,7 @@ You can check from [metadata JSONObject ](https://github.com/xcv58/backend/blob/
 ### POST
 Create a new record for specific ```metadata```.
 
-    $ curl http://localhost:3000/maybe-api-v1/ -d 'you json object'
+    $ curl http://localhost:3000/maybe-api-v1/metadata -d 'you json object'
 
 It will use ```sha224_hash``` as ```_id``` in MongoDB:
 If everything good, it will return a JSONObject with status code ```201```.
