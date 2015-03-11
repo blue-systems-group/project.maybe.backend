@@ -72,13 +72,21 @@ Template.package.helpers({
     preNode.appendChild(codeNode);
 
     var start = 0;
-    for (var i in this.alternatives) {
-      var alternative = this.alternatives[i];
+    var trim = this.type === "block";
+    this.alternatives.forEach(function(alternative) {
       var junction = code.substring(start, alternative.start);
       // junction = junction.replace(/(?:\r\n|\r|\n)/g, "</br>");
-      var block = code.substring(alternative.start, alternative.end);
+      start = alternative.start;
+      var end = alternative.end;
+      if (trim) {
+        end -= 1;
+        while (code.charAt(end - 1) === ' ' || code.charAt(end - 1) === '\t') {
+          end -= 1;
+        }
+      }
+      var block = code.substring(start, end);
       // var block = code.substring(alternative.start, alternative.end).replace(/(?:\r\n|\r|\n)/g, "</br>");
-      start = alternative.end;
+      start = end;
 
       var tmpJunction = document.createElement('div');
       tmpJunction.classList.add("maybeCodeJunction");
@@ -93,7 +101,7 @@ Template.package.helpers({
       }
       tmpBlock.innerHTML = block;
       codeNode.appendChild(tmpBlock);
-    }
+    });
     var junction = code.substring(start);
     var tmpJunction = document.createElement('div');
     tmpJunction.classList.add("maybeCodeJunction");
