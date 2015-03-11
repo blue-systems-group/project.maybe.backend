@@ -83,6 +83,15 @@ Meteor.startup(function () {
   //      query2: '2'
   //    }
   //  }
+
+  addDevices();
+  addMetadata();
+  addLogs();
+
+  maybeAPIv1.start();
+});
+
+function addDevices() {
   maybeAPIv1.addCollection(Devices, 'devices', {
     authToken: undefined,
     methods: ['POST','GET','PUT','DELETE'],
@@ -121,7 +130,9 @@ Meteor.startup(function () {
       }
     }
   });
+}
 
+function addMetadata() {
   maybeAPIv1.addCollection(MetaData, 'metadata', {
     authToken: undefined,
     methods: ['POST','GET','PUT','DELETE'],
@@ -180,6 +191,9 @@ Meteor.startup(function () {
     }
   });
 
+}
+
+function addLogs() {
   maybeAPIv1.addCollection(Logs, 'logs', {
     authToken: undefined,
     methods: ['POST','GET','PUT','DELETE'],
@@ -264,6 +278,4 @@ Meteor.startup(function () {
       }
     }
   });
-
-  maybeAPIv1.start();
-});
+}
