@@ -1,12 +1,6 @@
 Logs = {};
-var MetadataChanged = true;
 
 function initLogCollections() {
-  if (!MetadataChanged) {
-    return;
-  }
-  MetadataChanged = false;
-
   try {
     var packageList = MetaData.find().fetch();
     for (var key in Logs) {
@@ -31,7 +25,6 @@ function initLogCollections() {
       });
     });
     console.log("Logs length:" + Object.keys(Logs).length);
-    console.log(Logs);
   } catch (e) {
     console.log(e.toString());
   }
@@ -65,7 +58,6 @@ function updateOneDevice(device, packageList) {
   console.log(device);
   Devices.update(device._id, device);
 }
-
 
 Meteor.startup(function () {
   initLogCollections();
@@ -142,7 +134,6 @@ Meteor.startup(function () {
         if (obj.hasOwnProperty(id)) {
           obj._id = obj[id];
           console.log("valid");
-          MetadataChanged = true;
           return true;
         } else {
           console.log("invalid");
@@ -160,7 +151,6 @@ Meteor.startup(function () {
         console.log(obj);
         console.log(newValues);
         console.log(requestMetadata);
-        MetadataChanged = true;
         return true;
       },
       DELETE: function(obj, requestMetadata) {
@@ -168,8 +158,24 @@ Meteor.startup(function () {
         if (obj === undefined) {
           return false;
         }
-        MetadataChanged = true;
         return true;
+      }
+    },
+    after: {
+      POST: function() {
+        console.log("After POST");
+        initLogCollections();
+      },
+      GET: function() {
+        console.log("After GET");
+      },
+      PUT: function() {
+        console.log("After PUT");
+        initLogCollections();
+      },
+      DELETE: function() {
+        console.log("After DEL");
+        initLogCollections();
       }
     }
   });
