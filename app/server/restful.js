@@ -2,8 +2,8 @@
 Logs = {};
 
 function initLogCollections() {
-  console.log("init Log Collections");
   var packageList = MetaData.find().fetch();
+  Logs = {};
   packageList.forEach(function(onePackage) {
     var hash = onePackage.sha224_hash;
     var packageName = onePackage.package;
@@ -12,7 +12,6 @@ function initLogCollections() {
       Logs[key] = new Meteor.Collection(key);
     });
   });
-  Logs = new Meteor.Collection('logs');
 }
 
 function updateOneDevice(device, packageList) {
@@ -159,24 +158,68 @@ Meteor.startup(function () {
     authToken: undefined,
     methods: ['POST','GET','PUT','DELETE'],
     before: {
-      POST: function(obj, requestMetadata) {
+      POST: function(obj, requestMetadata, returnObject) {
         console.log('POST');
         console.log(requestMetadata);
         console.log(JSON.stringify(obj));
         if (requestMetadata.collectionId === undefined) {
           return false;
         }
+
         if (!obj.hasOwnProperty("sha224_hash")) {
           return false;
         }
         if (!obj.hasOwnProperty("label")) {
           return false;
         }
+
         var metaData = {
           deviceid: requestMetadata.collectionId,
           timestamp: new Date().valueOf()
         };
-        obj._metadata = metaData;
+
+        var logEntry = {
+          _metadata: metaData,
+          value: obj
+        };
+
+        var hash = obj.sha224_hash;
+        var label = obj.label;
+        var key = hash + "-" + label;
+
+        if (!Logs.hasOwnProperty(key)) {
+          returnObject.success = true;
+          returnObject.statusCode = 500;
+          var error = "";
+          if (MetaData.findOne(hash) === undefined) {
+            error = "No package for " + hash;
+          } else {
+            error = "Package " + hash  + " has no label " + label;
+          }
+          returnObject.body = {
+            error: error
+          };
+          return true;
+        }
+
+        console.log("key: " + key);
+
+
+        try {
+          Logs[key].insert(logEntry);
+        } catch (e) {
+          returnObject.success = true;
+          returnObject.statusCode = 500;
+          returnObject.body = {
+            error: e.toString()
+          };
+          return true;
+        }
+
+        returnObject.success = true;
+        returnObject.statusCode = 201;
+        returnObject.body = logEntry;
+
         return true;
       },
       GET: function(objs, requestMetadata) {
