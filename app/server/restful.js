@@ -1,17 +1,40 @@
-// Logs = new Meteor.Collection('logs');
 Logs = {};
+var MetadataChanged = true;
 
 function initLogCollections() {
-  var packageList = MetaData.find().fetch();
-  Logs = {};
-  packageList.forEach(function(onePackage) {
-    var hash = onePackage.sha224_hash;
-    var packageName = onePackage.package;
-    onePackage.statements.forEach(function(statement) {
-      var key = hash + "-" + statement.label;
-      Logs[key] = new Meteor.Collection(key);
+  if (!MetadataChanged) {
+    return;
+  }
+  MetadataChanged = false;
+
+  try {
+    var packageList = MetaData.find().fetch();
+    for (var key in Logs) {
+      if (Logs.hasOwnProperty(key)) {
+        console.log("disable: " + key);
+        Logs[key].enable = false;
+      }
+    }
+    packageList.forEach(function(onePackage) {
+      var hash = onePackage.sha224_hash;
+      var packageName = onePackage.package;
+      onePackage.statements.forEach(function(statement) {
+        var key = hash + "_" + statement.label;
+        if (!Logs.hasOwnProperty(key)) {
+          Logs[key] = {
+            enable: true,
+            collection: new Meteor.Collection(key)
+          };
+        } else {
+          Logs[key].enable = true;
+        }
+      });
     });
-  });
+    console.log("Logs length:" + Object.keys(Logs).length);
+    console.log(Logs);
+  } catch (e) {
+    console.log(e.toString());
+  }
 }
 
 function updateOneDevice(device, packageList) {
@@ -119,6 +142,7 @@ Meteor.startup(function () {
         if (obj.hasOwnProperty(id)) {
           obj._id = obj[id];
           console.log("valid");
+          MetadataChanged = true;
           return true;
         } else {
           console.log("invalid");
@@ -128,6 +152,7 @@ Meteor.startup(function () {
       GET: function(objs) {
         console.log('GET');
         console.log(objs);
+        initLogCollections();
         return true;
       },
       PUT: function(obj, newValues, requestMetadata) {
@@ -135,6 +160,7 @@ Meteor.startup(function () {
         console.log(obj);
         console.log(newValues);
         console.log(requestMetadata);
+        MetadataChanged = true;
         return true;
       },
       DELETE: function(obj, requestMetadata) {
@@ -142,17 +168,11 @@ Meteor.startup(function () {
         if (obj === undefined) {
           return false;
         }
+        MetadataChanged = true;
         return true;
       }
     }
   });
-
-    // $ curl http://localhost:3000/maybe-api-v1/logs/deviceid -d '{"a" : 1, "sha224_hash" : "1aab3f28f3d0ead580c3c22b10fee7e81c75e6d1e8f957611aedf51e", "label": "simple test"}'
-// {
-//   "label": "simple test",
-//   "sha224_hash": "1aab3f28f3d0ead580c3c22b10fee7e81c75e6d1e8f957611aedf51e",
-//   "a": 1
-// }
 
   maybeAPIv1.addCollection(Logs, 'logs', {
     authToken: undefined,
@@ -185,9 +205,9 @@ Meteor.startup(function () {
 
         var hash = obj.sha224_hash;
         var label = obj.label;
-        var key = hash + "-" + label;
+        var key = hash + "_" + label;
 
-        if (!Logs.hasOwnProperty(key)) {
+        if (!Logs.hasOwnProperty(key) || !Logs[key].enable) {
           returnObject.success = true;
           returnObject.statusCode = 500;
           var error = "";
@@ -202,23 +222,18 @@ Meteor.startup(function () {
           return true;
         }
 
-        console.log("key: " + key);
-
-
         try {
-          Logs[key].insert(logEntry);
+          Logs[key].collection.insert(logEntry);
+          returnObject.success = true;
+          returnObject.statusCode = 201;
+          returnObject.body = logEntry;
         } catch (e) {
           returnObject.success = true;
           returnObject.statusCode = 500;
           returnObject.body = {
             error: e.toString()
           };
-          return true;
         }
-
-        returnObject.success = true;
-        returnObject.statusCode = 201;
-        returnObject.body = logEntry;
 
         return true;
       },
