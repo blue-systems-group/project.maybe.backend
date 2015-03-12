@@ -1,4 +1,4 @@
-Logs = {};
+var Logs = {};
 
 function initLogCollections() {
   try {
