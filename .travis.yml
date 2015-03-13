@@ -1,0 +1,13 @@
+# https://github.com/xcv58/backend
+
+language: node_js
+
+node_js:
+  - "0.12"
+
+before_install:
+  - "curl -L http://git.io/ejPSng | /bin/sh"
+
+script:
+ - cd app
+ - meteor build temp
