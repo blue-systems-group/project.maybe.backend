@@ -24,7 +24,6 @@ function initLogCollections() {
         }
       });
     });
-    console.log("Logs length:" + Object.keys(Logs).length);
   } catch (e) {
     console.log(e.toString());
   }
