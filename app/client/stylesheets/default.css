@@ -32,26 +32,12 @@ body, html {
     text-align: center;
 }
 
-#api-title:hover {
+#api-title:hover, .deviceID:hover {
     color: red;
 }
 
-#api-content {}
-
-.hidden {
-    max-height: 0;
-    overflow: hidden;
-    -webkit-transition: max-height 0.5s;
-    -moz-transition: max-height 0.5s;
-    transition: linear max-height 0.5s;
-}
-
-.show {
-    max-height: 100%;
-    overflow: scroll;
-    -webkit-transition: max-height 1.8s;
-    -moz-transition: max-height 1.8s;
-    transition:  max-height 1.8s;
+#api-content {
+    display: none;
 }
 
 .key-value-pair {
@@ -104,4 +90,8 @@ body, html {
 .statement {
     margin: 16px 0 16px 0;
     border-top: solid 1px;
+}
+
+.deviceDetail {
+    display: none;
 }

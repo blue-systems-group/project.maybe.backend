@@ -49,7 +49,8 @@ Template.deviceItem.events({
   },
 
   'click .deviceID': function(event, template) {
-    alert("Click deviceID");
+    var deviceDetail = template.$('.deviceDetail');
+    deviceDetail.toggle(1000);
   },
 
   'click .key-value-pair' : function(event, template) {
