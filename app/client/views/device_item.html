@@ -1,11 +1,13 @@
 <template name="deviceItem">
   <div class="device">
     <h3 class="deviceID">{{deviceid}}</h3>
+    {{#if hasGCMid}}
     <div class="button">
       <button>
         Sent notification
       </button>
     </div>
+    {{/if}}
     <div class="deviceDetail">
       {{{deviceHtmlCode}}}
     </div>

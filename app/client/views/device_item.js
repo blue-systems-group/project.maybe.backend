@@ -17,6 +17,9 @@ Template.deviceItem.helpers({
     }
     return array;
   },
+  hasGCMid: function() {
+    return this.hasOwnProperty("gcmid");
+  },
   deviceHtmlCode: function() {
     var root = document.createElement("div");
     var preNode = document.createElement("pre");
