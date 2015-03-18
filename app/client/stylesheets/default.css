@@ -96,6 +96,10 @@ body, html {
     border-bottom: dotted 1px;
 }
 
+#devices-container {
+    border-top: solid 1px;
+}
+
 .deviceDetail {
     display: none;
 }
