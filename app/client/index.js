@@ -25,10 +25,22 @@ Template.devicesList.helpers({
   }
 });
 
+Template.devicesList.events({
+  'click .subtitle': function(event, template) {
+    template.$('.devices').toggle(1000);
+  }
+});
+
 Template.packageList.helpers({
   packages: function() {
     var result = MetaData.find();
     console.log(result);
     return MetaData.find();
+  }
+});
+
+Template.packageList.events({
+  'click .subtitle': function(event, template) {
+    template.$('.packageList').toggle(1000);
   }
 });

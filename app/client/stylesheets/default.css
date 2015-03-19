@@ -32,7 +32,7 @@ body, html {
     text-align: center;
 }
 
-#api-title:hover, .deviceID:hover {
+#api-title:hover, .subtitle:hover, .deviceID:hover {
     color: red;
 }
 

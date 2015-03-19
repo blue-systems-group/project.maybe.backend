@@ -2,15 +2,9 @@
   <div id="board">
     <h1 id="title">Maybe Backend!</h1>
     {{> api}}
-    <div id="devices-container">
-      <h2 class="subtitle">Devices:</h2>
-      {{> devicesList}}
-    </div>
+    {{> devicesList}}
 
-    <div id="packages-container">
-      <h2 class="subtitle">Packages:</h2>
-      {{> packageList}}
-    </div>
+    {{> packageList}}
     <!-- <div> -->
     <!--   {{> test}} -->
     <!-- </div> -->
@@ -18,17 +12,23 @@
 </body>
 
 <template name="devicesList">
-  <div class="devices">
-    {{#each devices}}
-    {{> deviceItem}}
-    {{/each}}
-  </div>
+    <div id="devices-container">
+      <h2 class="subtitle">Devices:</h2>
+      <div class="devices">
+        {{#each devices}}
+        {{> deviceItem}}
+        {{/each}}
+      </div>
+    </div>
 </template>
 
 <template name="packageList">
-  <div class="packageList">
-    {{#each packages}}
-    {{> package}}
-    {{/each}}
-  </div>
+    <div id="packages-container">
+      <h2 class="subtitle">Packages:</h2>
+      <div class="packageList">
+        {{#each packages}}
+        {{> package}}
+        {{/each}}
+      </div>
+    </div>
 </template>
