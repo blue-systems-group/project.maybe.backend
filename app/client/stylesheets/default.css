@@ -55,11 +55,10 @@ body, html {
 .packageName {
     font-weight: bold;
     font-size: large;
-    margin-top: 32px;
 }
 
 .package {
-    border-bottom: solid 3px;
+    border-bottom: solid 1px;
 }
 
 .maybeCodeJunction {
@@ -99,8 +98,8 @@ body, html {
     border-bottom: dotted 1px;
 }
 
-#devices-container {
-    border-top: solid 1px;
+#packages-container, #devices-container {
+    border-top: solid 2px;
 }
 
 .deviceDetail {
