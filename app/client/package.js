@@ -143,6 +143,11 @@ Template.package.events({
     MetaData.update(onePackage._id, onePackage);
   },
 
+  'click .packageName': function(event, template) {
+    console.log(event.target.innerHTML);
+    template.$('.packageDetail').toggle(1000);
+  },
+
   // 'click .maybeCodeBlock': function(event, template) {
   //     console.log(event.target);
   //     console.log(JSON.stringify(this));

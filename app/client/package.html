@@ -6,30 +6,32 @@
     <div class="hash">
       {{hash}}
     </div>
-    {{#each statements}}
-    <div class="statement">
-      <div class="label">
-        {{label}}
-      </div>
-      <div class="alternatives">
+    <div class="packageDetail">
+      {{#each statements}}
+      <div class="statement">
+        <div class="label">
+          {{label}}
+        </div>
+        <div class="alternatives">
 
-        <div class="options">
-          {{#each alternatives}}
-          {{#if isAlternative}}
-          {{#if isChoosed}}
-          <button class="option optionChoosed">{{value}}</button>
-          {{else}}
-          <button class="option">{{value}}</button>
-          {{/if}}
-          {{/if}}
-          {{/each}}
-        </div>
-        <div>
-          {{{highlightedHtmlCode}}}
+          <div class="options">
+            {{#each alternatives}}
+            {{#if isAlternative}}
+            {{#if isChoosed}}
+            <button class="option optionChoosed">{{value}}</button>
+            {{else}}
+            <button class="option">{{value}}</button>
+            {{/if}}
+            {{/if}}
+            {{/each}}
+          </div>
+          <div>
+            {{{highlightedHtmlCode}}}
+          </div>
         </div>
       </div>
+      {{/each}}
+      {{{packageHtmlCode}}}
     </div>
-    {{/each}}
-    {{{packageHtmlCode}}}
   </div>
 </template>
