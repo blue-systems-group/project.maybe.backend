@@ -1,6 +1,6 @@
 Template.deviceItem.helpers({
   deviceid: function() {
-    return this.deviceid;
+    return this.deviceid || this._id;
   },
   values: function() {
     var array = [];
