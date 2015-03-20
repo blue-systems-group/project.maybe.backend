@@ -5,7 +5,6 @@ function initLogCollections() {
     var packageList = MetaData.find().fetch();
     for (var key in Logs) {
       if (Logs.hasOwnProperty(key)) {
-        console.log("disable: " + key);
         Logs[key].enable = false;
       }
     }
@@ -189,18 +188,47 @@ function addMetadata() {
     before: {
       POST: function(obj, requestMetadata, returnObject) {
         console.log('POST');
-        console.log(requestMetadata);
-        console.log(returnObject);
-        // set id for that
-        // TODO: enforce schema for POST new metadata https://github.com/aldeed/meteor-collection2
-        var id = "sha224_hash";
-        if (obj.hasOwnProperty(id)) {
-          obj._id = obj[id];
-          console.log("valid");
+        var packageName = obj.package;
+        var hash = obj.sha224_hash;
+
+        // handle this manually
+        returnObject.success = true;
+
+        if (packageName === undefined || hash === undefined) {
+          returnObject.statusCode = 500;
+          returnObject.body = {error: "no package or sha224_hash provided!"};
           return true;
-        } else {
-          console.log("invalid");
-          return false;
+        }
+
+        obj._id = packageName;
+        try {
+          var record = MetaData.findOne(packageName);
+          if (record === undefined) {
+            MetaData.insert(obj);
+            record = obj;
+          } else {
+            var statements = {};
+            record.statements.forEach(function(oneStatement) {
+              statements[oneStatement.label] = oneStatement;
+            });
+            console.log(statements);
+            var incomeStatements = {};
+            obj.statements.forEach(function(oneStatement) {
+              statements[oneStatement.label] = oneStatement;
+            });
+            // var newStatements = [];
+            var newStatements = Object.keys(statements).map(function(key) { return statements[key]; });
+            record.statements = newStatements;
+
+            MetaData.update(record._id, record);
+          }
+          returnObject.statusCode = 201;
+          returnObject.body = requestMetadata.query && requestMetadata.query.callback === "0" && {} || record;
+          return true;
+        } catch (e) {
+          returnObject.statusCode = 500;
+          returnObject.body = {error: e.toString()};
+          return true;
         }
       },
       GET: function(objs) {
