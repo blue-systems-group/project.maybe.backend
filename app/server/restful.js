@@ -249,12 +249,19 @@ function addMetadata() {
         if (!obj && requestMetadata.collectionId != undefined) {
           returnObject.success = true;
           try {
+            var delCount = 0;
             MetaData.find({package: requestMetadata.collectionId}).forEach(function(record) {
               console.log("del " + record._id);
               MetaData.remove(record);
+              delCount++;
             });
-            returnObject.statusCode = 200;
-            returnObject.body = "";
+            if (delCount === 0) {
+              returnObject.statusCode = 500;
+              returnObject.body = {error: "No packageName: " + requestMetadata.collectionId};
+            } else {
+              returnObject.statusCode = 200;
+              returnObject.body = "";
+            }
           } catch (e) {
             console.log(e.toString());
             returnObject.statusCode = 500;
