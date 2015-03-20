@@ -100,9 +100,60 @@ function addDevices() {
         obj._id = obj.deviceid;
         return true;
       },
-      GET: function(objs, requestMetadata) {
+      GET: function(objs, requestMetadata, returnObject) {
         console.log('GET');
         var packageList = MetaData.find().fetch();
+
+        // if (requestMetadata.collectionId) {
+        if (requestMetadata.collectionId && requestMetadata.fields && requestMetadata.fields.length > 0 && objs.length === 1) {
+          returnObject.success = true;
+          var fields = requestMetadata.fields;
+          var device = objs[0];
+
+          updateOneDevice(device, packageList);
+
+          var choices = device.choices;
+          var sha224_hash = fields[0];
+          if (!choices.hasOwnProperty(sha224_hash)) {
+            returnObject.statusCode = 500;
+            returnObject.body = {
+              error: "device " + requestMetadata.collectionId + " doesn't have package hash: " + sha224_hash
+            };
+            return true;
+          }
+          if (fields.length == 1) {
+            returnObject.statusCode = 200;
+            returnObject.body = choices[sha224_hash];
+            return true;
+          }
+
+          var label = fields.slice(1).join(" ");
+          var choice = choices[sha224_hash];
+          var labels = choice.labels;
+          if (!label || !choice || !labels || labels.length === 0) {
+            returnObject.statusCode = 500;
+            returnObject.body = {
+              error: "device " + requestMetadata.collectionId + " with " + sha224_hash + " have something wrong!"
+            };
+            return true;
+          }
+
+          labels.forEach(function(oneLabel) {
+            if (oneLabel.label === label) {
+              returnObject.statusCode = 200;
+              returnObject.body = oneLabel;
+            }
+          });
+
+          if (!returnObject.statusCode) {
+            returnObject.statusCode = 500;
+            returnObject.body = {
+              error: "device " + requestMetadata.collectionId + " with " + sha224_hash + " doesn't have label: " + label
+            };
+          }
+
+          return true;
+        }
 
         objs.forEach(function(device) {
           updateOneDevice(device, packageList);
