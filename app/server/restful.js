@@ -214,8 +214,25 @@ function addMetadata() {
         console.log(requestMetadata);
         return true;
       },
-      DELETE: function(obj, requestMetadata) {
+      DELETE: function(obj, requestMetadata, returnObject) {
         console.log('DEL');
+        if (!obj && requestMetadata.collectionId != undefined) {
+          returnObject.success = true;
+          try {
+            MetaData.find({package: requestMetadata.collectionId}).forEach(function(record) {
+              console.log("del " + record._id);
+              MetaData.remove(record);
+            });
+            returnObject.statusCode = 200;
+            returnObject.body = "";
+          } catch (e) {
+            console.log(e.toString());
+            returnObject.statusCode = 500;
+            returnObject.body = {error: e.toString()};
+            return true;
+          }
+          return true;
+        }
         if (obj === undefined) {
           return false;
         }
