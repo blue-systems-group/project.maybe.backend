@@ -27,7 +27,7 @@ Template.devicesList.helpers({
 
 Template.devicesList.events({
   'click .subtitle': function(event, template) {
-    template.$('.devices').toggle(1000);
+    template.$('.deviceDetail').toggle(1000);
   }
 });
 
@@ -41,6 +41,6 @@ Template.packageList.helpers({
 
 Template.packageList.events({
   'click .subtitle': function(event, template) {
-    template.$('.packageList').toggle(1000);
+    template.$('.packageDetail').toggle(1000);
   }
 });

@@ -187,8 +187,10 @@ function addMetadata() {
     authToken: undefined,
     methods: ['POST','GET','PUT','DELETE'],
     before: {
-      POST: function(obj) {
+      POST: function(obj, requestMetadata, returnObject) {
         console.log('POST');
+        console.log(requestMetadata);
+        console.log(returnObject);
         // set id for that
         // TODO: enforce schema for POST new metadata https://github.com/aldeed/meteor-collection2
         var id = "sha224_hash";
