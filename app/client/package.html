@@ -16,22 +16,27 @@
 
           <div class="options">
             {{#each alternatives}}
-            {{#if isAlternative}}
-            {{#if isChoosed}}
-            <button class="option optionChoosed">{{value}}</button>
-            {{else}}
-            <button class="option">{{value}}</button>
-            {{/if}}
-            {{/if}}
+            <div class="option-container">
+              {{#if isAlternative}}
+              {{#if isChoosed}}
+              <button class="option optionChoosed">{{value}}</button>
+              {{else}}
+              <button class="option">{{value}}</button>
+              {{/if}}
+              {{/if}}
+              <div class="deviceList">deviceList</div>
+            </div>
             {{/each}}
           </div>
-          <div>
+          <div class="code">
             {{{highlightedHtmlCode}}}
           </div>
         </div>
       </div>
       {{/each}}
+      <div class="code">
       {{{packageHtmlCode}}}
+      </div>
     </div>
   </div>
 </template>

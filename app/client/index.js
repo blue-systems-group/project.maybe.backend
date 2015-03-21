@@ -33,8 +33,6 @@ Template.devicesList.events({
 
 Template.packageList.helpers({
   packages: function() {
-    var result = MetaData.find();
-    console.log(result);
     return MetaData.find();
   }
 });

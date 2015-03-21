@@ -42,10 +42,10 @@ Template.package.helpers({
     for (var i in this.alternatives) {
       var alternative = this.alternatives[i];
       var alternativeJSON = {
-        "isAlternative": true,
-        "value": alternative.value,
-        "isChoosed": choice == alternative.value,
-        "label": label
+        isAlternative: true,
+        value: alternative.value,
+        isChoosed: choice == alternative.value,
+        label: label
       };
       alternatives.push(alternativeJSON);
     }
@@ -113,16 +113,6 @@ Template.package.helpers({
   }
 });
 
-Template.package.rendered = function() {
-  // TODO: need rewrite only render self block.
-  // nohighlight
-  // $('pre code').each(function(i, block) {
-  //     // console.log(block);
-  //     hljs.highlightBlock(block);
-  //     // console.log(block);
-  // });
-};
-
 Template.package.events({
   'click .option': function(event, template) {
     console.log(event);
@@ -142,7 +132,42 @@ Template.package.events({
     }
     MetaData.update(onePackage._id, onePackage);
   },
+  'click .deviceList': function(event, template) {
+    var package = template.data;
+    var packageName = package.package;
+    var hash = package.sha224_hash;
+    var devices = Devices.find().fetch();
+    // this = {
+    //   isAlternative: true,
+    //   value: alternative.value,
+    //   isChoosed: choice == alternative.value,
+    //   label: label
+    // };
+    var label = this.label;
+    var choice = this.value;
+    var statement;
+    package.statements.some(function(oneStatement) {statement = oneStatement; return oneStatement.label === label;});
+    var alternatives = statement.alternatives;
+    var valueJSONObject = {};
+    alternatives.forEach(function(oneAlternative) {valueJSONObject[oneAlternative.value] = []});
 
+    console.log("package name: " + packageName);
+    console.log("label: " + label);
+    console.log("value: " + choice);
+
+    devices.forEach(function(oneDevice) {
+      var labels = oneDevice.choices[hash].labels;
+      labels.forEach(function(oneLabel) {
+        if (oneLabel.label === label) {
+          console.log(oneDevice._id + " choose " + oneLabel.choice);
+          // console.log(oneLabel.alternatives);
+          // console.log(valueJSONObject);
+          valueJSONObject[oneLabel.choice].push(oneDevice._id);
+        }
+      });
+    });
+    console.log(JSON.stringify(valueJSONObject));
+  },
   'click .packageName': function(event, template) {
     console.log(event.target.innerHTML);
     template.$('.packageDetail').toggle(1000);
@@ -165,21 +190,5 @@ Template.package.events({
   //     //     }
   //     // }
   //     // MetaData.update(onePackage._id, onePackage);
-  // },
-
-  'mouseenter .option': function(event, template) {
-    event.target.classList.add("maybeCodeBlockHover");
-  },
-
-  'mouseleave .option': function(event, template) {
-    event.target.classList.remove("maybeCodeBlockHover");
-  }
-
-  // 'mouseenter .maybeCodeBlock': function(event, template) {
-  //     event.target.classList.add("maybeCodeBlockHover")
-  // },
-
-  // 'mouseleave .maybeCodeBlock': function(event, template) {
-  //     event.target.classList.remove("maybeCodeBlockHover")
   // },
 });
