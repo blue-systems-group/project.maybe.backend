@@ -4,7 +4,9 @@ Meteor.startup(function() {
   //     useBR: true,
   // });
   hljs.initHighlightingOnLoad();
-
+  Session.setDefault("selectPackage", "default");
+  Session.setDefault("selectHash", "default");
+  Session.setDefault("selectLabel", "default");
   // $(document).ready(function() {
   //     $('pre code').each(function(i, block) {
   //         hljs.highlightBlock(block);
@@ -28,17 +30,5 @@ Template.devicesList.helpers({
 Template.devicesList.events({
   'click .subtitle': function(event, template) {
     template.$('.deviceDetail').toggle(1000);
-  }
-});
-
-Template.packageList.helpers({
-  packages: function() {
-    return MetaData.find();
-  }
-});
-
-Template.packageList.events({
-  'click .subtitle': function(event, template) {
-    template.$('.packageDetail').toggle(1000);
   }
 });

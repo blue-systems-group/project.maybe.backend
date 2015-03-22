@@ -124,6 +124,8 @@ body, html {
     border-top: solid 2px;
 }
 
-.deviceDetail, .packageDetail {
+.config-container,
+.deviceDetail,
+.packageDetail {
     display: none;
 }

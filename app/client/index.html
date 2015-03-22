@@ -1,9 +1,11 @@
 <body>
   <div id="board">
     <h1 id="title">Maybe Backend!</h1>
+
     {{> api}}
     {{> packageList}}
     {{> devicesList}}
+
     <!-- <div> -->
     <!--   {{> test}} -->
     <!-- </div> -->
@@ -24,6 +26,10 @@
 <template name="packageList">
     <div id="packages-container">
       <h2 class="subtitle">Packages:</h2>
+      <h2>{{select}}</h2>
+      <div class="code">
+        {{{choiceDetails}}}
+      </div>
       <div class="packageList">
         {{#each packages}}
         {{> package}}

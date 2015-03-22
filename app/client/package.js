@@ -135,36 +135,44 @@ Template.package.events({
   'click .config': function(event, template) {
     var package = template.data;
     var packageName = package.package;
+    Session.set("selectPackage", packageName);
     var hash = package.sha224_hash;
+    Session.set("selectHash", hash);
     var devices = Devices.find().fetch();
-    // this = {
-    //   isAlternative: true,
-    //   value: alternative.value,
-    //   isChoosed: choice == alternative.value,
-    //   label: label
-    // };
     var statement = this;
     var label = this.label;
-    var alternatives = statement.alternatives;
-    var valueJSONObject = {};
-    alternatives.forEach(function(oneAlternative) {valueJSONObject[oneAlternative.value] = []});
+    Session.set("selectLabel", label);
+    // // this = {
+    // //   isAlternative: true,
+    // //   value: alternative.value,
+    // //   isChoosed: choice == alternative.value,
+    // //   label: label
+    // // };
 
-    console.log("package name: " + packageName);
-    console.log("label: " + label);
-    console.log("choice: " + this.choice);
+    // var alternatives = statement.alternatives;
+    // var valueJSONObject = {};
+    // alternatives.forEach(function(oneAlternative) {valueJSONObject[oneAlternative.value] = []});
 
-    devices.forEach(function(oneDevice) {
-      if (oneDevice.choices[hash] && oneDevice.choices[hash].labels) {
-        var labels = oneDevice.choices[hash].labels;
-        labels.forEach(function(oneLabel) {
-          if (oneLabel.label === label) {
-            console.log(oneDevice._id + " choose " + oneLabel.choice);
-            valueJSONObject[oneLabel.choice].push(oneDevice._id);
-          }
-        });
-      }
-    });
-    console.log(JSON.stringify(valueJSONObject));
+    // console.log("package name: " + packageName);
+    // console.log("label: " + label);
+    // console.log("choice: " + this.choice);
+
+    // devices.forEach(function(oneDevice) {
+    //   if (oneDevice.choices[hash] && oneDevice.choices[hash].labels) {
+    //     var labels = oneDevice.choices[hash].labels;
+    //     labels.forEach(function(oneLabel) {
+    //       if (oneLabel.label === label) {
+    //         console.log(oneDevice._id + " choose " + oneLabel.choice);
+    //         valueJSONObject[oneLabel.choice].push(oneDevice._id);
+    //       }
+    //     });
+    //   }
+    // });
+    // console.log(JSON.stringify(valueJSONObject));
+
+    // // var target = event.target;
+    // // console.log(event);
+    // // console.log(event.toElement);
   },
   'click .packageName': function(event, template) {
     console.log(event.target.innerHTML);
