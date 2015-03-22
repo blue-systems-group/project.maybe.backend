@@ -126,7 +126,7 @@ body, html {
 .config-container,
 .deviceDetail,
 .packageDetail {
-    /* display: none; */
+    display: none;
 }
 
 #config-container {

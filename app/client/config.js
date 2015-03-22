@@ -31,7 +31,11 @@ function split(array, chunkSize) {
 
 function updateOneDevice(deviceid, package, hash, label, value, choiceCount) {
   var oneDevice = Devices.findOne(deviceid);
-  var currentChoice =oneDevice.choices[hash].labelJSON[label].choice;
+  if (oneDevice === undefined) {
+    return false;
+  }
+  // oneDevice.choices[hash] && oneDevice.choices[hash].labelJSON && oneDevice.choices[hash].labelJSON[label]
+  var currentChoice = oneDevice.choices[hash].labelJSON[label].choice;
   if (currentChoice  !== value) {
     console.log("update for " + deviceid + ", " + value + " previous is " + currentChoice);
 
