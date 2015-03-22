@@ -29,8 +29,11 @@ function split(array, chunkSize) {
     );
 };
 
-function updateOneDevice(deviceid, package, hash, label, value, choiceCount) {
-  var oneDevice = Devices.findOne(deviceid);
+function updateOneDevice(deviceid, device, package, hash, label, value, choiceCount) {
+  var oneDevice = device;
+  if (oneDevice === null) {
+    oneDevice = Devices.findOne(deviceid);
+  }
   if (oneDevice === undefined) {
     return false;
   }
@@ -53,7 +56,7 @@ function updateOneDevice(deviceid, package, hash, label, value, choiceCount) {
   return false;
 }
 
-function assignRandomValue(valueJSONObject) {
+function assignValue(valueJSONObject, value) {
   var package = Session.get("selectPackage");
   if (package === "default") {
     return "default";
@@ -67,7 +70,12 @@ function assignRandomValue(valueJSONObject) {
     console.log("label: " + label + " is not allowed to change distribution.");
     return null;
   }
-  console.log("assign random values for package: " + package + ", label: " + label);
+
+  if (valueJSONObject === null) {
+    console.log("assign one value: " + value + " for package: " + package + ", label: " + label);
+  } else {
+    console.log("assign random values for package: " + package + ", label: " + label);
+  }
 
   var packageDocument = MetaData.findOne(package);
   if (packageDocument === undefined || packageDocument.statements === undefined) {
@@ -75,39 +83,27 @@ function assignRandomValue(valueJSONObject) {
   }
 
   packageDocument.statements.some(function(oneStatement) {statement = oneStatement; return oneStatement.label === label;});
-  var devices = Devices.find().fetch();
-  alternatives = statement.alternatives;
 
+  alternatives = statement.alternatives;
   statement.choiceCount = {};
   var choiceCount = statement.choiceCount;
-  Object.keys(valueJSONObject).map(function(key) {
-    if (valueJSONObject.hasOwnProperty(key) && valueJSONObject[key]) {
-      valueJSONObject[key].forEach(function (deviceid) {
-        updateOneDevice(deviceid, package, hash, label, key, choiceCount);
-      });
-    }
-  });
+
+  if (valueJSONObject === null) {
+    var devices = Devices.find().fetch();
+    devices.forEach(function(oneDevice) {
+      updateOneDevice(oneDevice._id, oneDevice, package, hash, label, value, choiceCount);
+    });
+  } else {
+    Object.keys(valueJSONObject).map(function(key) {
+      if (valueJSONObject.hasOwnProperty(key) && valueJSONObject[key]) {
+        valueJSONObject[key].forEach(function (deviceid) {
+          updateOneDevice(deviceid, null, package, hash, label, key, choiceCount);
+        });
+      }
+    });
+  }
   MetaData.update(packageDocument._id, packageDocument);
   return null;
-  // valueJSONObject = {};
-
-  // alternatives.forEach(function(oneAlternative) {valueJSONObject[oneAlternative.value] = []});
-  // // alternatives.forEach(function(oneAlternative) {valueJSONObject[oneAlternative.value] = {}});
-
-  //   devices.forEach(function(oneDevice) {
-  //     if (oneDevice.choices[hash] && oneDevice.choices[hash].labels) {
-  //       var labels = oneDevice.choices[hash].labels;
-  //       labels.forEach(function(oneLabel) {
-  //         if (oneLabel.label === label) {
-  //           // console.log(oneDevice._id + " choose " + oneLabel.choice);
-  //           // valueJSONObject[oneLabel.choice][oneDevice._id] = oneDevice;
-  //           valueJSONObject[oneLabel.choice].push(oneDevice._id);
-  //         }
-  //       });
-  //     }
-  //   });
-  //   // console.log(JSON.stringify(valueJSONObject));
-  //   return valueJSONObject;
 };
 
 Template.config.helpers({
@@ -161,7 +157,7 @@ Template.config.helpers({
     });
     return options;
   },
-  title: function() {
+  option: function() {
     return this.key;
   },
   deviceList: function() {
@@ -224,11 +220,9 @@ Template.config.helpers({
 });
 
 Template.config.events({
-  'click ul li': function(event, template) {
-    console.log(this);
-    console.log(event.currentTarget);
-    $(event.currentTarget).toggleClass("selected");
-    // event.currentTarget.toggleClass("selected");
+  'click .option': function(event, template) {
+    var self = this;
+    assignValue(null, self.key);
   },
   'click .assign': function(event, template) {
     var self = this;
@@ -247,6 +241,6 @@ Template.config.events({
       var choice = choiceArray[i];
       valueJSONObject[choice] = chunks[i];
     }
-    assignRandomValue(valueJSONObject);
+    assignValue(valueJSONObject, null);
   }
 });
