@@ -34,15 +34,12 @@ function updateOneDevice(deviceid, package, hash, label, value, choiceCount) {
   if (oneDevice === undefined) {
     return false;
   }
-  // oneDevice.choices[hash] && oneDevice.choices[hash].labelJSON && oneDevice.choices[hash].labelJSON[label]
   var currentChoice = oneDevice.choices[hash].labelJSON[label].choice;
   if (currentChoice  !== value) {
-    console.log("update for " + deviceid + ", " + value + " previous is " + currentChoice);
+    // console.log("update for " + deviceid + ", " + value + " previous is " + currentChoice);
 
     oneDevice.choices[hash].labelJSON[label].choice = value;
     oneDevice.choices[hash].labels = Object.keys(oneDevice.choices[hash].labelJSON).map(function(k) { return oneDevice.choices[hash].labelJSON[k] });
-    console.log("update for " + deviceid + ", " + value + " previous is " + currentChoice);
-    console.log(oneDevice);
     try {
       Devices.update(deviceid, oneDevice);
       choiceCount[value] = choiceCount[value] + 1 || 1;
@@ -57,7 +54,6 @@ function updateOneDevice(deviceid, package, hash, label, value, choiceCount) {
 }
 
 function assignRandomValue(valueJSONObject) {
-  console.log(valueJSONObject);
   var package = Session.get("selectPackage");
   if (package === "default") {
     return "default";
@@ -76,13 +72,10 @@ function assignRandomValue(valueJSONObject) {
 
   statement.choiceCount = {};
   var choiceCount = statement.choiceCount;
-  console.log(alternatives);
   Object.keys(valueJSONObject).map(function(key) {
-    console.log(key);
     if (valueJSONObject.hasOwnProperty(key) && valueJSONObject[key]) {
       valueJSONObject[key].forEach(function (deviceid) {
         updateOneDevice(deviceid, package, hash, label, key, choiceCount);
-        console.log(choiceCount);
       });
     }
   });
