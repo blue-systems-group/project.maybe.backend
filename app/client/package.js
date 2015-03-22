@@ -132,7 +132,7 @@ Template.package.events({
     }
     MetaData.update(onePackage._id, onePackage);
   },
-  'click .label': function(event, template) {
+  'click .config': function(event, template) {
     var package = template.data;
     var packageName = package.package;
     var hash = package.sha224_hash;
@@ -154,15 +154,15 @@ Template.package.events({
     console.log("choice: " + this.choice);
 
     devices.forEach(function(oneDevice) {
-      var labels = oneDevice.choices[hash].labels;
-      labels.forEach(function(oneLabel) {
-        if (oneLabel.label === label) {
-          console.log(oneDevice._id + " choose " + oneLabel.choice);
-          // console.log(oneLabel.alternatives);
-          // console.log(valueJSONObject);
-          valueJSONObject[oneLabel.choice].push(oneDevice._id);
-        }
-      });
+      if (oneDevice.choices[hash] && oneDevice.choices[hash].labels) {
+        var labels = oneDevice.choices[hash].labels;
+        labels.forEach(function(oneLabel) {
+          if (oneLabel.label === label) {
+            console.log(oneDevice._id + " choose " + oneLabel.choice);
+            valueJSONObject[oneLabel.choice].push(oneDevice._id);
+          }
+        });
+      }
     });
     console.log(JSON.stringify(valueJSONObject));
   },
