@@ -26,9 +26,11 @@
 <template name="packageList">
     <div id="packages-container">
       <h2 class="subtitle">Packages:</h2>
-      <h2>{{select}}</h2>
-      <div class="code">
-        {{{choiceDetails}}}
+      <div id="config-container">
+        <h2>{{select}}</h2>
+        <div class="code">
+          {{{choiceDetails}}}
+        </div>
       </div>
       <div class="packageList">
         {{#each packages}}

@@ -142,6 +142,21 @@ Template.package.events({
     var statement = this;
     var label = this.label;
     Session.set("selectLabel", label);
+
+    Custombox.open({
+      target: '#config-container',
+      effect: 'contentscale',
+      open: function() {
+        alert('open');
+      },
+      complete: function() {
+        alert('complete');
+      },
+      close: function() {
+        alert('close');
+      }
+    });
+
     // // this = {
     // //   isAlternative: true,
     // //   value: alternative.value,
