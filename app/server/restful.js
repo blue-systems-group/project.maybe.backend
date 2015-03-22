@@ -66,7 +66,13 @@ function updateOneDevice(device, packageList) {
 
     var labelJSON = choiceForOnePackage.labelJSON;
 
+    var jinghao = 0;
+    var poor = "PoorLinkLossThreshold";
+    var good = "GoodLinkLossThreshold";
     onePackage.statements.forEach(function(statement) {
+      if (statement.label === poor || statement.label === good) {
+        jinghao++;
+      }
       if (!labelJSON.hasOwnProperty(statement.label)) {
         if (statement.choice === undefined) {
           statement.choice = 0;
@@ -92,6 +98,15 @@ function updateOneDevice(device, packageList) {
         };
       }
     });
+
+    if (jinghao === 2) {
+      // if (labelJSON[poor].choice < labelJSON[good].choice) {
+      //   console.log("change poor " + labelJSON[poor].choice + " to " + labelJSON[good].choice);
+      //   labelJSON[poor].choice = labelJSON[good].choice;
+      // }
+      console.log("change poor " + labelJSON[poor].choice + " to " + labelJSON[good].choice);
+      labelJSON[poor].choice = labelJSON[good].choice;
+    }
     choiceForOnePackage.labels = Object.keys(labelJSON).map(function(k) { return labelJSON[k] });
     try {
       MetaData.update(onePackage._id, onePackage);

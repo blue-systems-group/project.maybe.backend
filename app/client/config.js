@@ -30,6 +30,11 @@ function split(array, chunkSize) {
 };
 
 function updateOneDevice(deviceid, package, hash, label, value, choiceCount) {
+  var poor = "PoorLinkLossThreshold";
+  var good = "GoodLinkLossThreshold";
+  if (label === poor || label === good) {
+    return false;
+  }
   var oneDevice = Devices.findOne(deviceid);
   if (oneDevice === undefined) {
     return false;
