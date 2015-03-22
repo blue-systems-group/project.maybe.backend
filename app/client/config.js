@@ -1,8 +1,20 @@
+var statement;
+var alternatives;
+var valueJSONObject = {};
+
 Template.config.helpers({
   select: function() {
-    var hash = Session.get("selectHash");
+    var package = Session.get("selectPackage");
     var label = Session.get("selectLabel");
-    return hash + ":" + label;
+    return package + ":" + label;
+  },
+  options: function() {
+    console.log("value " + JSON.stringify(valueJSONObject));
+    var options = Object.keys(valueJSONObject).map(function(k) { return valueJSONObject[k] });
+    return options;
+  },
+  option: function() {
+    return 'x';
   },
   choiceDetails: function() {
     var package = Session.get("selectPackage");
@@ -16,12 +28,12 @@ Template.config.helpers({
     if (packageDocument === undefined || packageDocument.statements === undefined) {
       return "no package metaData for " + package;
     }
-    var statement;
+
     packageDocument.statements.some(function(oneStatement) {statement = oneStatement; return oneStatement.label === label;});
     var devices = Devices.find().fetch();
+    alternatives = statement.alternatives;
+    valueJSONObject = {};
 
-    var alternatives = statement.alternatives;
-    var valueJSONObject = {};
     alternatives.forEach(function(oneAlternative) {valueJSONObject[oneAlternative.value] = []});
 
     devices.forEach(function(oneDevice) {
