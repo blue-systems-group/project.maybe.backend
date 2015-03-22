@@ -80,6 +80,10 @@ body, html {
     background-color: #9fffff;
 }
 
+.label {
+    padding: 12px 0 12px 0;
+}
+
 .alternatives {
     /* border: solid 3px; */
 }

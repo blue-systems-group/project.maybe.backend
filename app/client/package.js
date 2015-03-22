@@ -132,7 +132,7 @@ Template.package.events({
     }
     MetaData.update(onePackage._id, onePackage);
   },
-  'click .deviceList': function(event, template) {
+  'click .label': function(event, template) {
     var package = template.data;
     var packageName = package.package;
     var hash = package.sha224_hash;
@@ -143,17 +143,15 @@ Template.package.events({
     //   isChoosed: choice == alternative.value,
     //   label: label
     // };
+    var statement = this;
     var label = this.label;
-    var choice = this.value;
-    var statement;
-    package.statements.some(function(oneStatement) {statement = oneStatement; return oneStatement.label === label;});
     var alternatives = statement.alternatives;
     var valueJSONObject = {};
     alternatives.forEach(function(oneAlternative) {valueJSONObject[oneAlternative.value] = []});
 
     console.log("package name: " + packageName);
     console.log("label: " + label);
-    console.log("value: " + choice);
+    console.log("choice: " + this.choice);
 
     devices.forEach(function(oneDevice) {
       var labels = oneDevice.choices[hash].labels;
