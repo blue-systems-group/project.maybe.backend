@@ -131,6 +131,6 @@ body, html {
 }
 
 #config-container {
-    display: none;
+    /* display: none; */
     Background: white;
 }

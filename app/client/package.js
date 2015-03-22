@@ -147,13 +147,13 @@ Template.package.events({
       target: '#config-container',
       effect: 'contentscale',
       open: function() {
-        alert('open');
+        // alert('open');
       },
       complete: function() {
-        alert('complete');
+        // alert('complete');
       },
       close: function() {
-        alert('close');
+        // alert('close');
       }
     });
 
