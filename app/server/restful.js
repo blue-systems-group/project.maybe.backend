@@ -31,27 +31,39 @@ function initLogCollections() {
 function updateOneDevice(device, packageList) {
   device.queryCount = device.queryCount + 1 || 1;
 
-  var choices = {};
+  if (device.choices === undefined) {
+    device.choices = {};
+  }
+  var choices = device.choices;
   packageList.forEach(function(onePackage) {
     var hash = onePackage.sha224_hash;
-    var array = [];
-    onePackage.statements.forEach(function(statement) {
-      if (statement.choice === undefined) {
-        statement.choice = 0;
-      }
-      var label = {
-        "label": statement.label,
-        "choice": statement.choice
+    if (!choices.hasOwnProperty(hash)) {
+      choices[hash] = {
+        name: onePackage.package,
+        labelJSON: {}
       };
-      array.push(label);
-    });
-    choices[hash] = {
-      name: onePackage.package,
-      labels: array
-    };
-  });
+    }
 
-  device.choices = choices;
+    var choiceForOnePackage = choices[hash];
+    if (choiceForOnePackage.labelJSON === undefined) {
+      choiceForOnePackage.labelJSON = {};
+    }
+
+    var labelJSON = choiceForOnePackage.labelJSON;
+
+    onePackage.statements.forEach(function(statement) {
+      if (!labelJSON.hasOwnProperty(statement.label)) {
+        if (statement.choice === undefined) {
+          statement.choice = 0;
+        }
+        labelJSON[statement.label] = {
+          "label": statement.label,
+          "choice": statement.choice
+        };
+      }
+    });
+    choiceForOnePackage.labels = Object.keys(labelJSON).map(function(k) { return labelJSON[k] });
+  });
 
   console.log(device);
   Devices.update(device._id, device);
