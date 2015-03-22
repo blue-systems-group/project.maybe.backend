@@ -146,16 +146,7 @@ Template.package.events({
     // Custombox.open({
     //   target: '#config-container',
     //   effect: 'flip',
-    //   speed: 50,
-    //   open: function() {
-    //     // alert('open');
-    //   },
-    //   complete: function() {
-    //     // alert('complete');
-    //   },
-    //   close: function() {
-    //     // alert('close');
-    //   }
+    //   speed: 50
     // });
 
     // // this = {

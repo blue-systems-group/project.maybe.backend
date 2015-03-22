@@ -30,11 +30,6 @@ function split(array, chunkSize) {
 };
 
 function updateOneDevice(deviceid, package, hash, label, value, choiceCount) {
-  var poor = "PoorLinkLossThreshold";
-  var good = "GoodLinkLossThreshold";
-  if (label === poor || label === good) {
-    return false;
-  }
   var oneDevice = Devices.findOne(deviceid);
   if (oneDevice === undefined) {
     return false;
@@ -65,6 +60,14 @@ function assignRandomValue(valueJSONObject) {
   }
   var hash = Session.get("selectHash");
   var label = Session.get("selectLabel");
+
+  var poor = "PoorLinkLossThreshold";
+  var good = "GoodLinkLossThreshold";
+  if (label === poor || label === good) {
+    console.log("label: " + label + " is not allowed to change distribution.");
+    return null;
+  }
+  console.log("assign random values for package: " + package + ", label: " + label);
 
   var packageDocument = MetaData.findOne(package);
   if (packageDocument === undefined || packageDocument.statements === undefined) {
