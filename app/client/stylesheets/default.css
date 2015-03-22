@@ -119,7 +119,6 @@ body, html {
 .device {
     border-bottom: dotted 1px;
 }
-
 #packages-container, #devices-container {
     border-top: solid 2px;
 }
@@ -127,10 +126,41 @@ body, html {
 .config-container,
 .deviceDetail,
 .packageDetail {
-    display: none;
+    /* display: none; */
 }
 
 #config-container {
     /* display: none; */
     Background: white;
+}
+
+.oneOption {
+    float: left;
+}
+
+.deviceList {
+    clear: both;
+}
+
+.optionList {
+    clear: both;
+}
+
+ul {
+    border:1px solid Black;
+    height:200px;
+    display:inline-block;
+    vertical-align:top;
+    list-style-type: none;
+}
+
+li {
+    float: left;
+    display: block;
+    background-color:Azure;
+    border-bottom:1px dotted Gray
+}
+
+li.selected {
+    background-color:GoldenRod
 }

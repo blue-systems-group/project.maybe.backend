@@ -1,5 +1,20 @@
 var Logs = {};
 
+function getMinChoice(statement, choiceCount) {
+  var minChoice = statement.choice;
+  var minCount = Number.MAX_VALUE;
+  Object.keys(choiceCount).map(function(key) {
+    if (choiceCount[key] < minCount) {
+      minChoice = key;
+    }
+  });
+  choiceCount[minChoice] = choiceCount[minChoice] + 1;
+  console.log("choice is " + minChoice);
+  console.log("count " + choiceCount[minChoice]);
+  console.log(choiceCount);
+  return minChoice;
+};
+
 function initLogCollections() {
   try {
     var packageList = MetaData.find().fetch();
@@ -56,13 +71,33 @@ function updateOneDevice(device, packageList) {
         if (statement.choice === undefined) {
           statement.choice = 0;
         }
+        if (statement.choiceCount === undefined) {
+          statement.choiceCount = {};
+        }
+        var choiceCount = statement.choiceCount;
+        statement.alternatives.forEach(function(oneAlternative) {
+          var value = oneAlternative.value;
+          if (!choiceCount.hasOwnProperty[value]) {
+            choiceCount[oneAlternative.value] = 0;
+          }
+        });
+
+        // TODO assign random one and update statement.choiceCount
+        var random = Math.floor(Math.random() * (statement.alternatives.length));
+        var choice = statement.alternatives[random].value;
+        choiceCount[choice]++;
         labelJSON[statement.label] = {
           "label": statement.label,
-          "choice": statement.choice
+          "choice": choice
         };
       }
     });
     choiceForOnePackage.labels = Object.keys(labelJSON).map(function(k) { return labelJSON[k] });
+    try {
+      MetaData.update(onePackage._id, onePackage);
+    } catch (e) {
+      console.log(e.toString());
+    }
   });
 
   console.log(device);

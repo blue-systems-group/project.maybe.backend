@@ -2,19 +2,168 @@ var statement;
 var alternatives;
 var valueJSONObject = {};
 
+function shuffle(array) {
+  var currentIndex = array.length, temporaryValue, randomIndex;
+
+  // While there remain elements to shuffle...
+  while (0 !== currentIndex) {
+
+    // Pick a remaining element...
+    randomIndex = Math.floor(Math.random() * currentIndex);
+    currentIndex -= 1;
+
+    // And swap it with the current element.
+    temporaryValue = array[currentIndex];
+    array[currentIndex] = array[randomIndex];
+    array[randomIndex] = temporaryValue;
+  }
+
+  return array;
+};
+
+function split(array, chunkSize) {
+    return [].concat.apply([],
+        array.map(function(elem,i) {
+            return i%chunkSize ? [] : [array.slice(i,i+chunkSize)];
+        })
+    );
+};
+
+function updateOneDevice(deviceid, package, hash, label, value, choiceCount) {
+  var oneDevice = Devices.findOne(deviceid);
+  var currentChoice =oneDevice.choices[hash].labelJSON[label].choice;
+  if (currentChoice  !== value) {
+    console.log("update for " + deviceid + ", " + value + " previous is " + currentChoice);
+
+    oneDevice.choices[hash].labelJSON[label].choice = value;
+    oneDevice.choices[hash].labels = Object.keys(oneDevice.choices[hash].labelJSON).map(function(k) { return oneDevice.choices[hash].labelJSON[k] });
+    console.log("update for " + deviceid + ", " + value + " previous is " + currentChoice);
+    console.log(oneDevice);
+    try {
+      Devices.update(deviceid, oneDevice);
+      choiceCount[value] = choiceCount[value] + 1 || 1;
+      return true;
+    } catch (e) {
+      console.log(e.toString());
+    }
+  } else {
+    choiceCount[currentChoice] = choiceCount[currentChoice] + 1 || 1;
+  }
+  return false;
+}
+
+function assignRandomValue(valueJSONObject) {
+  console.log(valueJSONObject);
+  var package = Session.get("selectPackage");
+  if (package === "default") {
+    return "default";
+  }
+  var hash = Session.get("selectHash");
+  var label = Session.get("selectLabel");
+
+  var packageDocument = MetaData.findOne(package);
+  if (packageDocument === undefined || packageDocument.statements === undefined) {
+    return null;
+  }
+
+  packageDocument.statements.some(function(oneStatement) {statement = oneStatement; return oneStatement.label === label;});
+  var devices = Devices.find().fetch();
+  alternatives = statement.alternatives;
+
+  statement.choiceCount = {};
+  var choiceCount = statement.choiceCount;
+  console.log(alternatives);
+  Object.keys(valueJSONObject).map(function(key) {
+    console.log(key);
+    if (valueJSONObject.hasOwnProperty(key) && valueJSONObject[key]) {
+      valueJSONObject[key].forEach(function (deviceid) {
+        updateOneDevice(deviceid, package, hash, label, key, choiceCount);
+        console.log(choiceCount);
+      });
+    }
+  });
+  MetaData.update(packageDocument._id, packageDocument);
+  return null;
+  // valueJSONObject = {};
+
+  // alternatives.forEach(function(oneAlternative) {valueJSONObject[oneAlternative.value] = []});
+  // // alternatives.forEach(function(oneAlternative) {valueJSONObject[oneAlternative.value] = {}});
+
+  //   devices.forEach(function(oneDevice) {
+  //     if (oneDevice.choices[hash] && oneDevice.choices[hash].labels) {
+  //       var labels = oneDevice.choices[hash].labels;
+  //       labels.forEach(function(oneLabel) {
+  //         if (oneLabel.label === label) {
+  //           // console.log(oneDevice._id + " choose " + oneLabel.choice);
+  //           // valueJSONObject[oneLabel.choice][oneDevice._id] = oneDevice;
+  //           valueJSONObject[oneLabel.choice].push(oneDevice._id);
+  //         }
+  //       });
+  //     }
+  //   });
+  //   // console.log(JSON.stringify(valueJSONObject));
+  //   return valueJSONObject;
+};
+
 Template.config.helpers({
   select: function() {
     var package = Session.get("selectPackage");
     var label = Session.get("selectLabel");
     return package + ":" + label;
   },
+  valueJSONObject: function() {
+    var package = Session.get("selectPackage");
+    if (package === "default") {
+      return "default";
+    }
+    var hash = Session.get("selectHash");
+    var label = Session.get("selectLabel");
+
+    var packageDocument = MetaData.findOne(package);
+    if (packageDocument === undefined || packageDocument.statements === undefined) {
+      return undefined;
+    }
+
+    packageDocument.statements.some(function(oneStatement) {statement = oneStatement; return oneStatement.label === label;});
+    var devices = Devices.find().fetch();
+    alternatives = statement.alternatives;
+    valueJSONObject = {};
+
+    alternatives.forEach(function(oneAlternative) {valueJSONObject[oneAlternative.value] = []});
+    // alternatives.forEach(function(oneAlternative) {valueJSONObject[oneAlternative.value] = {}});
+
+    devices.forEach(function(oneDevice) {
+      if (oneDevice.choices[hash] && oneDevice.choices[hash].labels) {
+        var labels = oneDevice.choices[hash].labels;
+        labels.forEach(function(oneLabel) {
+          if (oneLabel.label === label) {
+            // console.log(oneDevice._id + " choose " + oneLabel.choice);
+            // valueJSONObject[oneLabel.choice][oneDevice._id] = oneDevice;
+            valueJSONObject[oneLabel.choice].push(oneDevice._id);
+          }
+        });
+      }
+    });
+    // console.log(JSON.stringify(valueJSONObject));
+    return valueJSONObject;
+  },
   options: function() {
-    console.log("value " + JSON.stringify(valueJSONObject));
-    var options = Object.keys(valueJSONObject).map(function(k) { return valueJSONObject[k] });
+    var options = Object.keys(valueJSONObject).map(function(key) {
+      return {
+        key: key,
+        value: valueJSONObject[key]
+      };
+    });
     return options;
   },
-  option: function() {
-    return 'x';
+  title: function() {
+    return this.key;
+  },
+  deviceList: function() {
+    return this.value;
+  },
+  device: function() {
+    return this;
   },
   choiceDetails: function() {
     var package = Session.get("selectPackage");
@@ -35,13 +184,15 @@ Template.config.helpers({
     valueJSONObject = {};
 
     alternatives.forEach(function(oneAlternative) {valueJSONObject[oneAlternative.value] = []});
+    // alternatives.forEach(function(oneAlternative) {valueJSONObject[oneAlternative.value] = {}});
 
     devices.forEach(function(oneDevice) {
       if (oneDevice.choices[hash] && oneDevice.choices[hash].labels) {
         var labels = oneDevice.choices[hash].labels;
         labels.forEach(function(oneLabel) {
           if (oneLabel.label === label) {
-            console.log(oneDevice._id + " choose " + oneLabel.choice);
+            // console.log(oneDevice._id + " choose " + oneLabel.choice);
+            // valueJSONObject[oneLabel.choice][oneDevice._id] = oneDevice;
             valueJSONObject[oneLabel.choice].push(oneDevice._id);
           }
         });
@@ -49,9 +200,6 @@ Template.config.helpers({
     });
     // console.log(JSON.stringify(valueJSONObject));
 
-    // var target = event.target;
-    // console.log(event);
-    // console.log(event.toElement);
     var root = document.createElement("div");
     var preNode = document.createElement("pre");
     preNode.className = "json";
@@ -71,4 +219,29 @@ Template.config.helpers({
 });
 
 Template.config.events({
+  'click ul li': function(event, template) {
+    console.log(this);
+    console.log(event.currentTarget);
+    $(event.currentTarget).toggleClass("selected");
+    // event.currentTarget.toggleClass("selected");
+  },
+  'click .assign': function(event, template) {
+    var self = this;
+    var deviceArray = [];
+    var choiceArray = [];
+    Object.keys(self).map(function(key) {
+      deviceArray = deviceArray.concat(self[key]);
+      choiceArray.push(key);
+    });
+    shuffle(deviceArray);
+    shuffle(choiceArray);
+    var ratio = Math.round(deviceArray.length / choiceArray.length);
+    var chunks = split(deviceArray, ratio);
+    var valueJSONObject = {};
+    for (var i in choiceArray) {
+      var choice = choiceArray[i];
+      valueJSONObject[choice] = chunks[i];
+    }
+    assignRandomValue(valueJSONObject);
+  }
 });
