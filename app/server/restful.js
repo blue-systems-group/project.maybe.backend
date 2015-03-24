@@ -69,6 +69,9 @@ function updateOneDevice(device, packageList) {
     var jinghao = 0;
     var poor = "PoorLinkLossThreshold";
     var good = "GoodLinkLossThreshold";
+
+    var tempLabel1 = "hit_factor";
+    var tempLabel2 = "screen_timeout";
     onePackage.statements.forEach(function(statement) {
       if (statement.label === poor || statement.label === good) {
         jinghao++;
@@ -89,8 +92,13 @@ function updateOneDevice(device, packageList) {
         });
 
         // TODO assign random one and update statement.choiceCount
+
         var random = Math.floor(Math.random() * (statement.alternatives.length));
+
         var choice = statement.alternatives[random].value;
+        if (statement.label === tempLabel1 || statement.label === tempLabel2) {
+          choice = 1;
+        }
         choiceCount[choice]++;
         labelJSON[statement.label] = {
           "label": statement.label,
