@@ -256,51 +256,52 @@ function addMetadata() {
     authToken: undefined,
     methods: ['POST','GET','PUT','DELETE'],
     before: {
-      POST: function(obj, requestMetadata, returnObject) {
-        console.log('POST');
-        var packageName = obj.package;
-        var hash = obj.sha224_hash;
+      POST: undefined,
+      // POST: function(obj, requestMetadata, returnObject) {
+      //   console.log('POST');
+      //   var packageName = obj.package;
+      //   var hash = obj.sha224_hash;
 
-        // handle this manually
-        returnObject.success = true;
+      //   // handle this manually
+      //   returnObject.success = true;
 
-        if (packageName === undefined || hash === undefined) {
-          returnObject.statusCode = 500;
-          returnObject.body = {error: "no package or sha224_hash provided!"};
-          return true;
-        }
+      //   if (packageName === undefined || hash === undefined) {
+      //     returnObject.statusCode = 500;
+      //     returnObject.body = {error: "no package or sha224_hash provided!"};
+      //     return true;
+      //   }
 
-        obj._id = packageName;
-        try {
-          var record = MetaData.findOne(packageName);
-          if (record === undefined) {
-            MetaData.insert(obj);
-            record = obj;
-          } else {
-            var statements = {};
-            record.statements.forEach(function(oneStatement) {
-              statements[oneStatement.label] = oneStatement;
-            });
-            console.log(statements);
-            var incomeStatements = {};
-            obj.statements.forEach(function(oneStatement) {
-              statements[oneStatement.label] = oneStatement;
-            });
-            // var newStatements = [];
-            var newStatements = Object.keys(statements).map(function(key) { return statements[key]; });
-            record.statements = newStatements;
+      //   obj._id = packageName;
+      //   try {
+      //     var record = MetaData.findOne(packageName);
+      //     if (record === undefined) {
+      //       MetaData.insert(obj);
+      //       record = obj;
+      //     } else {
+      //       var statements = {};
+      //       record.statements.forEach(function(oneStatement) {
+      //         statements[oneStatement.label] = oneStatement;
+      //       });
+      //       console.log(statements);
+      //       var incomeStatements = {};
+      //       obj.statements.forEach(function(oneStatement) {
+      //         statements[oneStatement.label] = oneStatement;
+      //       });
+      //       // var newStatements = [];
+      //       var newStatements = Object.keys(statements).map(function(key) { return statements[key]; });
+      //       record.statements = newStatements;
 
-            MetaData.update(record._id, record);
-          }
-          returnObject.statusCode = 201;
-          returnObject.body = requestMetadata.query && requestMetadata.query.callback === "0" && {} || record;
-          return true;
-        } catch (e) {
-          returnObject.statusCode = 500;
-          returnObject.body = {error: e.toString()};
-          return true;
-        }
-      },
+      //       MetaData.update(record._id, record);
+      //     }
+      //     returnObject.statusCode = 201;
+      //     returnObject.body = requestMetadata.query && requestMetadata.query.callback === "0" && {} || record;
+      //     return true;
+      //   } catch (e) {
+      //     returnObject.statusCode = 500;
+      //     returnObject.body = {error: e.toString()};
+      //     return true;
+      //   }
+      // },
       GET: function(objs) {
         console.log('GET');
         console.log(objs);
@@ -314,37 +315,38 @@ function addMetadata() {
         console.log(requestMetadata);
         return true;
       },
-      DELETE: function(obj, requestMetadata, returnObject) {
-        console.log('DEL');
-        if (!obj && requestMetadata.collectionId != undefined) {
-          returnObject.success = true;
-          try {
-            var delCount = 0;
-            MetaData.find({package: requestMetadata.collectionId}).forEach(function(record) {
-              console.log("del " + record._id);
-              MetaData.remove(record);
-              delCount++;
-            });
-            if (delCount === 0) {
-              returnObject.statusCode = 500;
-              returnObject.body = {error: "No packageName: " + requestMetadata.collectionId};
-            } else {
-              returnObject.statusCode = 200;
-              returnObject.body = "";
-            }
-          } catch (e) {
-            console.log(e.toString());
-            returnObject.statusCode = 500;
-            returnObject.body = {error: e.toString()};
-            return true;
-          }
-          return true;
-        }
-        if (obj === undefined) {
-          return false;
-        }
-        return true;
-      }
+      DELETE: undefined
+      // DELETE: function(obj, requestMetadata, returnObject) {
+      //   console.log('DEL');
+      //   if (!obj && requestMetadata.collectionId != undefined) {
+      //     returnObject.success = true;
+      //     try {
+      //       var delCount = 0;
+      //       MetaData.find({package: requestMetadata.collectionId}).forEach(function(record) {
+      //         console.log("del " + record._id);
+      //         MetaData.remove(record);
+      //         delCount++;
+      //       });
+      //       if (delCount === 0) {
+      //         returnObject.statusCode = 500;
+      //         returnObject.body = {error: "No packageName: " + requestMetadata.collectionId};
+      //       } else {
+      //         returnObject.statusCode = 200;
+      //         returnObject.body = "";
+      //       }
+      //     } catch (e) {
+      //       console.log(e.toString());
+      //       returnObject.statusCode = 500;
+      //       returnObject.body = {error: e.toString()};
+      //       return true;
+      //     }
+      //     return true;
+      //   }
+      //   if (obj === undefined) {
+      //     return false;
+      //   }
+      //   return true;
+      // }
     },
     after: {
       POST: function() {
