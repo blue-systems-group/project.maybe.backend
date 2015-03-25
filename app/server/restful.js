@@ -97,7 +97,7 @@ function updateOneDevice(device, packageList) {
 
         var choice = statement.alternatives[random].value;
         if (statement.label === tempLabel1 || statement.label === tempLabel2) {
-          choice = 1;
+          choice = 2;
         }
         choiceCount[choice]++;
         labelJSON[statement.label] = {
