@@ -258,7 +258,6 @@ function addMetadata() {
     before: {
       POST: function(obj, requestMetadata, returnObject) {
         console.log('POST forbid');
-        return false;
         var packageName = obj.package;
         var hash = obj.sha224_hash;
 
