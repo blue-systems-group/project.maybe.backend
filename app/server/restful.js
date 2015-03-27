@@ -99,6 +99,9 @@ function updateOneDevice(device, packageList) {
         if (statement.label === tempLabel1 || statement.label === tempLabel2) {
           choice = 2;
         }
+        if (statement.label == 'MAX_CPU_FREQ') {
+          choice = 0;
+        }
         choiceCount[choice]++;
         labelJSON[statement.label] = {
           "label": statement.label,
