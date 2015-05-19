@@ -50,6 +50,9 @@ function addMetadataToCollection(obj, collection) {
     statements[oneStatement.label] = oneStatement;
   });
   obj.statements = statements;
+  var newPackage = {
+    package: obj
+  };
 
   var current = collection.findOne('0');
   var version = 1;
@@ -63,9 +66,9 @@ function addMetadataToCollection(obj, collection) {
     version += current._version;
   }
 
-  obj._version = version;
-  obj._id = '0';
-  collection.insert(obj);
+  newPackage._version = version;
+  newPackage._id = '0';
+  collection.insert(newPackage);
 
   return obj;
 }
@@ -340,18 +343,9 @@ function addMetadata() {
           }
           initCollection(Packages, packageName);
           var newRecord = addMetadataToCollection(obj, Packages[packageName].collection);
-          // debug(statements);
-          // var incomeStatements = {};
-          // obj.statements.forEach(function(oneStatement) {
-          //   statements[oneStatement.label] = oneStatement;
-          // });
-          // // var newStatements = [];
-          // var newStatements = Object.keys(statements).map(function(key) { return statements[key]; });
-          // record.statements = newStatements;
 
           returnObject.statusCode = 201;
           returnObject.body = requestMetadata.query && requestMetadata.query.callback === "0" && {} || newRecord;
-          // returnObject.body = requestMetadata.query && requestMetadata.query.callback === "0" && {} || record;
           return true;
         } catch (e) {
           returnObject.statusCode = 500;
@@ -359,47 +353,55 @@ function addMetadata() {
           return true;
         }
       },
-      GET: function(objs) {
+      GET: function(objs, requestMetadata, returnObject) {
+        returnObject.success = true;
+
         debug('GET');
         debug(objs);
-        // initLogCollections();
+        var packages = [];
+        try {
+          objs.forEach(function(obj) {
+            initCollection(Packages, obj._id);
+            var package = Packages[obj._id].collection.findOne('0');
+            packages.push(package.package);
+          });
+          returnObject.statusCode = 200;
+          returnObject.body = packages;
+        } catch (e) {
+          returnObject.statusCode = 500;
+          returnObject.body = {error: e.toString()};
+        }
         return true;
       },
       PUT: function(obj, newValues, requestMetadata) {
-        debug('PUT');
-        debug(obj);
-        debug(newValues);
-        debug(requestMetadata);
-        return true;
+        debug('PUT to metadata is forbidden!');
+        return false;
       },
       DELETE: function(obj, requestMetadata, returnObject) {
         debug('DEL');
-        if (!obj && requestMetadata.collectionId != undefined) {
-          returnObject.success = true;
-          try {
-            var delCount = 0;
-            MetaData.find({package: requestMetadata.collectionId}).forEach(function(record) {
-              debug("del " + record._id);
-              MetaData.remove(record);
-              delCount++;
-            });
-            if (delCount === 0) {
-              returnObject.statusCode = 500;
-              returnObject.body = {error: "No packageName: " + requestMetadata.collectionId};
-            } else {
-              returnObject.statusCode = 200;
-              returnObject.body = "";
-            }
-          } catch (e) {
-            debug(e.toString());
+        debug(obj);
+        debug(requestMetadata.collectionId);
+        returnObject.success = true;
+        if (obj !== undefined && requestMetadata.collectionId !== undefined) {
+          var record = MetaData.findOne(requestMetadata.collectionId);
+          if (record === undefined || record.deleted) {
             returnObject.statusCode = 500;
-            returnObject.body = {error: e.toString()};
-            return true;
+            returnObject.body = {error: "No packageName: " + requestMetadata.collectionId};
+          } else {
+            try {
+              record.deleted = true;
+              MetaData.update(record._id, record);
+              returnObject.statusCode = 200;
+              returnObject.body = {};
+            } catch (e) {
+              debug(e.toString());
+              returnObject.statusCode = 500;
+              returnObject.body = {error: e.toString()};
+            }
           }
-          return true;
-        }
-        if (obj === undefined) {
-          return false;
+        } else {
+          returnObject.statusCode = 500;
+          returnObject.body = {error: "no record for: " + requestMetadata.collectionId};
         }
         return true;
       }
@@ -407,18 +409,15 @@ function addMetadata() {
     after: {
       POST: function() {
         debug("After POST");
-        // initLogCollections();
       },
       GET: function() {
         debug("After GET");
       },
       PUT: function() {
         debug("After PUT");
-        // initLogCollections();
       },
       DELETE: function() {
         debug("After DEL");
-        // initLogCollections();
       }
     }
   });
