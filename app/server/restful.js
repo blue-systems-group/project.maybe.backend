@@ -49,14 +49,24 @@ function addMetadataToCollection(obj, collection) {
   obj.statements.forEach(function(oneStatement) {
     statements[oneStatement.label] = oneStatement;
   });
-  var current = collection.findOne('current');
+  obj.statements = statements;
+
+  var current = collection.findOne('0');
+  var version = 1;
   if (current !== undefined) {
     collection.remove(current);
-    current._id = new Mongo.ObjectID();
+
+    current._id = current._version.toString();
+    current._dumpAt = new Date();
     collection.insert(current);
+
+    version += current._version;
   }
-  obj._id = 'current';
+
+  obj._version = version;
+  obj._id = '0';
   collection.insert(obj);
+
   return obj;
 }
 
