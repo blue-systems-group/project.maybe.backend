@@ -1,4 +1,5 @@
 var Logs = {};
+var Packages = {};
 
 function getMinChoice(statement, choiceCount) {
   var minChoice = statement.choice;
@@ -9,39 +10,83 @@ function getMinChoice(statement, choiceCount) {
     }
   });
   choiceCount[minChoice] = choiceCount[minChoice] + 1;
-  console.log("choice is " + minChoice);
-  console.log("count " + choiceCount[minChoice]);
-  console.log(choiceCount);
+  debug("choice is " + minChoice);
+  debug("count " + choiceCount[minChoice]);
+  debug(choiceCount);
   return minChoice;
 };
 
-function initLogCollections() {
+function initPackageCollections() {
   try {
     var packageList = MetaData.find().fetch();
-    for (var key in Logs) {
-      if (Logs.hasOwnProperty(key)) {
-        Logs[key].enable = false;
-      }
-    }
     packageList.forEach(function(onePackage) {
-      var hash = onePackage.sha224_hash;
-      var packageName = onePackage.package;
-      onePackage.statements.forEach(function(statement) {
-        var key = hash + "_" + statement.label;
-        if (!Logs.hasOwnProperty(key)) {
-          Logs[key] = {
-            enable: true,
-            collection: new Meteor.Collection(key)
-          };
-        } else {
-          Logs[key].enable = true;
-        }
-      });
+      initCollection(Packages, onePackage.packageName);
     });
   } catch (e) {
-    console.log(e.toString());
+    debug(e.toString());
   }
 }
+
+function initCollection(map, key) {
+  try {
+    if (!map.hasOwnProperty(key)) {
+      debug('create Collection: ' + key);
+      map[key] = {
+        enable: true,
+        collection: new Meteor.Collection(key)
+      };
+    } else {
+      debug('enable Collection: ' + key);
+      map[key].enable = true;
+    }
+  } catch (e) {
+    debug(e.toString());
+  }
+}
+
+function addMetadataToCollection(obj, collection) {
+  var statements = {};
+  obj.statements.forEach(function(oneStatement) {
+    statements[oneStatement.label] = oneStatement;
+  });
+  var current = collection.findOne('current');
+  if (current !== undefined) {
+    collection.remove(current);
+    current._id = new Mongo.ObjectID();
+    collection.insert(current);
+  }
+  obj._id = 'current';
+  collection.insert(obj);
+  return obj;
+}
+
+// function initLogCollections() {
+//   try {
+//     var packageList = .find().fetch();
+//     for (var key in Logs) {
+//       if (Logs.hasOwnProperty(key)) {
+//         Logs[key].enable = false;
+//       }
+//     }
+//     packageList.forEach(function(onePackage) {
+//       var hash = onePackage.sha224_hash;
+//       var packageName = onePackage.package;
+//       onePackage.statements.forEach(function(statement) {
+//         var key = hash + "_" + statement.label;
+//         if (!Logs.hasOwnProperty(key)) {
+//           Logs[key] = {
+//             enable: true,
+//             collection: new Meteor.Collection(key)
+//           };
+//         } else {
+//           Logs[key].enable = true;
+//         }
+//       });
+//     });
+//   } catch (e) {
+//     console.log(e.toString());
+//   }
+// }
 
 function updateOneDevice(device, packageList) {
   device.queryCount = device.queryCount + 1 || 1;
@@ -112,26 +157,26 @@ function updateOneDevice(device, packageList) {
 
     if (jinghao === 2) {
       // if (labelJSON[poor].choice < labelJSON[good].choice) {
-      //   console.log("change poor " + labelJSON[poor].choice + " to " + labelJSON[good].choice);
+      //   debug("change poor " + labelJSON[poor].choice + " to " + labelJSON[good].choice);
       //   labelJSON[poor].choice = labelJSON[good].choice;
       // }
-      console.log("change poor " + labelJSON[poor].choice + " to " + labelJSON[good].choice);
+      debug("change poor " + labelJSON[poor].choice + " to " + labelJSON[good].choice);
       labelJSON[poor].choice = labelJSON[good].choice;
     }
     choiceForOnePackage.labels = Object.keys(labelJSON).map(function(k) { return labelJSON[k] });
     try {
       MetaData.update(onePackage._id, onePackage);
     } catch (e) {
-      console.log(e.toString());
+      debug(e.toString());
     }
   });
 
-  console.log(device);
+  debug(device);
   Devices.update(device._id, device);
 }
 
 Meteor.startup(function() {
-  initLogCollections();
+  // initLogCollections();
 
   maybeAPIv1 = new CollectionAPI({
     authToken: undefined,              // Require this string to be passed in on each request
@@ -168,12 +213,12 @@ function addDevices() {
     methods: ['POST','GET','PUT','DELETE'],
     before: {
       POST: function(obj, requestMetadata) {
-        console.log('POST');
+        debug('POST');
         obj._id = obj.deviceid;
         return true;
       },
       GET: function(objs, requestMetadata, returnObject) {
-        console.log('GET');
+        debug('GET');
         var packageList = MetaData.find().fetch();
 
         // if (requestMetadata.collectionId) {
@@ -237,14 +282,14 @@ function addDevices() {
         return true;
       },
       PUT: function(obj, newValues, requestMetadata) {
-        console.log('PUT');
-        console.log(obj);
-        console.log(newValues);
-        console.log(requestMetadata);
+        debug('PUT');
+        debug(obj);
+        debug(newValues);
+        debug(requestMetadata);
         return true;
       },
       DELETE: function(obj, requestMetadata) {
-        console.log('DEL');
+        debug('DEL');
         if (obj === undefined) {
           return false;
         }
@@ -260,7 +305,7 @@ function addMetadata() {
     methods: ['POST','GET','PUT','DELETE'],
     before: {
       POST: function(obj, requestMetadata, returnObject) {
-        console.log('POST forbid');
+        debug('POST metadata');
         var packageName = obj.package;
         var hash = obj.sha224_hash;
 
@@ -273,30 +318,30 @@ function addMetadata() {
           return true;
         }
 
-        obj._id = packageName;
         try {
           var record = MetaData.findOne(packageName);
           if (record === undefined) {
-            MetaData.insert(obj);
-            record = obj;
+            MetaData.insert({_id: packageName, packageName: packageName, deleted: false});
           } else {
-            var statements = {};
-            record.statements.forEach(function(oneStatement) {
-              statements[oneStatement.label] = oneStatement;
-            });
-            console.log(statements);
-            var incomeStatements = {};
-            obj.statements.forEach(function(oneStatement) {
-              statements[oneStatement.label] = oneStatement;
-            });
-            // var newStatements = [];
-            var newStatements = Object.keys(statements).map(function(key) { return statements[key]; });
-            record.statements = newStatements;
-
-            MetaData.update(record._id, record);
+            if (record.deleted) {
+              record.deleted = false;
+              MetaData.update(record._id, record);
+            }
           }
+          initCollection(Packages, packageName);
+          var newRecord = addMetadataToCollection(obj, Packages[packageName].collection);
+          // debug(statements);
+          // var incomeStatements = {};
+          // obj.statements.forEach(function(oneStatement) {
+          //   statements[oneStatement.label] = oneStatement;
+          // });
+          // // var newStatements = [];
+          // var newStatements = Object.keys(statements).map(function(key) { return statements[key]; });
+          // record.statements = newStatements;
+
           returnObject.statusCode = 201;
-          returnObject.body = requestMetadata.query && requestMetadata.query.callback === "0" && {} || record;
+          returnObject.body = requestMetadata.query && requestMetadata.query.callback === "0" && {} || newRecord;
+          // returnObject.body = requestMetadata.query && requestMetadata.query.callback === "0" && {} || record;
           return true;
         } catch (e) {
           returnObject.statusCode = 500;
@@ -305,26 +350,26 @@ function addMetadata() {
         }
       },
       GET: function(objs) {
-        console.log('GET');
-        console.log(objs);
-        initLogCollections();
+        debug('GET');
+        debug(objs);
+        // initLogCollections();
         return true;
       },
       PUT: function(obj, newValues, requestMetadata) {
-        console.log('PUT');
-        console.log(obj);
-        console.log(newValues);
-        console.log(requestMetadata);
+        debug('PUT');
+        debug(obj);
+        debug(newValues);
+        debug(requestMetadata);
         return true;
       },
       DELETE: function(obj, requestMetadata, returnObject) {
-        console.log('DEL');
+        debug('DEL');
         if (!obj && requestMetadata.collectionId != undefined) {
           returnObject.success = true;
           try {
             var delCount = 0;
             MetaData.find({package: requestMetadata.collectionId}).forEach(function(record) {
-              console.log("del " + record._id);
+              debug("del " + record._id);
               MetaData.remove(record);
               delCount++;
             });
@@ -336,7 +381,7 @@ function addMetadata() {
               returnObject.body = "";
             }
           } catch (e) {
-            console.log(e.toString());
+            debug(e.toString());
             returnObject.statusCode = 500;
             returnObject.body = {error: e.toString()};
             return true;
@@ -351,23 +396,22 @@ function addMetadata() {
     },
     after: {
       POST: function() {
-        console.log("After POST");
-        initLogCollections();
+        debug("After POST");
+        // initLogCollections();
       },
       GET: function() {
-        console.log("After GET");
+        debug("After GET");
       },
       PUT: function() {
-        console.log("After PUT");
-        initLogCollections();
+        debug("After PUT");
+        // initLogCollections();
       },
       DELETE: function() {
-        console.log("After DEL");
-        initLogCollections();
+        debug("After DEL");
+        // initLogCollections();
       }
     }
   });
-
 }
 
 function addLogs() {
@@ -376,9 +420,9 @@ function addLogs() {
     methods: ['POST','GET','PUT','DELETE'],
     before: {
       POST: function(obj, requestMetadata, returnObject) {
-        console.log('POST');
-        console.log(requestMetadata);
-        console.log(JSON.stringify(obj));
+        debug('POST');
+        debug(requestMetadata);
+        debug(JSON.stringify(obj));
         if (requestMetadata.collectionId === undefined) {
           return false;
         }
@@ -435,19 +479,19 @@ function addLogs() {
         return true;
       },
       GET: function(objs, requestMetadata) {
-        console.log('GET');
-        console.log(objs);
+        debug('GET');
+        debug(objs);
         return true;
       },
       PUT: function(obj, newValues, requestMetadata) {
-        console.log('PUT');
-        console.log(obj);
-        console.log(newValues);
-        console.log(requestMetadata);
+        debug('PUT');
+        debug(obj);
+        debug(newValues);
+        debug(requestMetadata);
         return true;
       },
       DELETE: function(obj, requestMetadata) {
-        console.log('DEL');
+        debug('DEL');
         if (obj === undefined) {
           return false;
         }
