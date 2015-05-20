@@ -1,6 +1,6 @@
 Template.package.helpers({
   packageName: function() {
-    return this.package;
+    return this._id;
   },
   hash: function() {
     return this.sha224_hash;

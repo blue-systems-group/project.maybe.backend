@@ -1,5 +1,6 @@
 var Logs = {};
-var Packages = {};
+var PackageCollections = {};
+var DeviceCollections = {};
 
 function getMinChoice(statement, choiceCount) {
   var minChoice = statement.choice;
@@ -20,7 +21,7 @@ function initPackageCollections() {
   try {
     var packageList = MetaData.find().fetch();
     packageList.forEach(function(onePackage) {
-      initCollection(Packages, onePackage.packageName);
+      initCollection(PackageCollections, onePackage.packageName);
     });
   } catch (e) {
     debug(e.toString());
@@ -44,6 +45,32 @@ function initCollection(map, key) {
   }
 }
 
+function staleData(collection) {
+  var version = 1;
+  var current = collection.findOne('0');
+  if (current !== undefined) {
+    collection.remove(current);
+
+    current._id = current._version.toString();
+    current._dumpAt = new Date();
+
+    collection.insert(current);
+    version += current._version;
+  }
+  return version;
+}
+
+function addDeviceToCollection(obj, collection) {
+  var version = staleData(collection);
+
+  var newDevice = {device: obj};
+  newDevice._version = version;
+  newDevice._id = '0';
+  newDevice.queryCount = 0;
+  collection.insert(newDevice);
+  return obj;
+}
+
 function addMetadataToCollection(obj, collection) {
   var statements = {};
   obj.statements.forEach(function(oneStatement) {
@@ -54,23 +81,62 @@ function addMetadataToCollection(obj, collection) {
     package: obj
   };
 
-  var current = collection.findOne('0');
-  var version = 1;
-  if (current !== undefined) {
-    collection.remove(current);
-
-    current._id = current._version.toString();
-    current._dumpAt = new Date();
-    collection.insert(current);
-
-    version += current._version;
-  }
+  var version = staleData(collection);
 
   newPackage._version = version;
   newPackage._id = '0';
   collection.insert(newPackage);
 
   return obj;
+}
+
+function insertToIndexCollection(id, collection, allowDuplicated, returnObject) {
+  try {
+    var record = collection.findOne(id);
+    if (record === undefined) {
+      collection.insert({_id: id, deleted: false});
+      return true;
+    } else {
+      if (record.deleted) {
+        record.deleted = false;
+        collection.update(record._id, record);
+        return true;
+      } else {
+        if (!allowDuplicated) {
+          debug(id + ' has not deletes yet');
+          returnObject.statusCode = 409;
+          returnObject.body = {error: record._id + ' conflict!'};
+          return false;
+        }
+      }
+    }
+  } catch (e) {
+    debug(e.toString());
+    returnObject.statusCode = 500;
+    returnObject.body = {error: e.toString()};
+    return false;
+  }
+  return true;
+}
+
+function delFromIndexCollection(obj, collection, returnObject) {
+  // obj must be valid because collection-api will return early if it's undefined
+  var record = obj;
+  if (record.deleted) {
+    returnObject.statusCode = 404;
+    returnObject.body = {error: obj._id + " not found!"};
+  } else {
+    try {
+      record.deleted = true;
+      collection.update(record._id, record);
+      returnObject.statusCode = 200;
+      returnObject.body = {};
+    } catch (e) {
+      debug(e.toString());
+      returnObject.statusCode = 500;
+      returnObject.body = {error: e.toString()};
+    }
+  }
 }
 
 // function initLogCollections() {
@@ -225,74 +291,115 @@ function addDevices() {
     authToken: undefined,
     methods: ['POST','GET','PUT','DELETE'],
     before: {
-      POST: function(obj, requestMetadata) {
-        debug('POST');
-        obj._id = obj.deviceid;
-        return true;
-      },
-      GET: function(objs, requestMetadata, returnObject) {
-        debug('GET');
-        var packageList = MetaData.find().fetch();
+      POST: function(obj, requestMetadata, returnObject) {
+        // rquire deviceid
+        // optional gcmid
+        returnObject.success = true;
+        debug('POST device');
 
-        // if (requestMetadata.collectionId) {
-        if (requestMetadata.collectionId && requestMetadata.fields && requestMetadata.fields.length > 0 && objs.length === 1) {
-          returnObject.success = true;
-          var fields = requestMetadata.fields;
-          var device = objs[0];
-
-          updateOneDevice(device, packageList);
-
-          var choices = device.choices;
-          var sha224_hash = fields[0];
-          if (!choices.hasOwnProperty(sha224_hash)) {
-            returnObject.statusCode = 500;
-            returnObject.body = {
-              error: "device " + requestMetadata.collectionId + " doesn't have package hash: " + sha224_hash
-            };
-            return true;
-          }
-          if (fields.length == 1) {
-            returnObject.statusCode = 200;
-            returnObject.body = choices[sha224_hash];
-            return true;
-          }
-
-          var label = fields.slice(1).join(" ");
-          var choice = choices[sha224_hash];
-          var labels = choice.labels;
-          if (!label || !choice || !labels || labels.length === 0) {
-            returnObject.statusCode = 500;
-            returnObject.body = {
-              error: "device " + requestMetadata.collectionId + " with " + sha224_hash + " have something wrong!"
-            };
-            return true;
-          }
-
-          labels.forEach(function(oneLabel) {
-            if (oneLabel.label === label) {
-              returnObject.statusCode = 200;
-              returnObject.body = oneLabel;
-            }
-          });
-
-          if (!returnObject.statusCode) {
-            returnObject.statusCode = 500;
-            returnObject.body = {
-              error: "device " + requestMetadata.collectionId + " with " + sha224_hash + " doesn't have label: " + label
-            };
-          }
-
+        if (obj === undefined) {
+          returnObject.statusCode = 400;
+          returnObject.body = {error: 'your format is unsupported, only support json!'};
+          return true;
+        } else if (obj.deviceid === undefined) {
+          returnObject.statusCode = 400;
+          returnObject.body = {error: JSON.stringify(obj) + ' have no deviceid!'};
           return true;
         }
 
-        objs.forEach(function(device) {
-          updateOneDevice(device, packageList);
-          if (device.hasOwnProperty('_id')) {
-            delete device['_id'];
-          }
-        });
+        if (!insertToIndexCollection(obj.deviceid, Devices, false, returnObject)) {
+          return true;
+        }
 
+        try {
+          initCollection(DeviceCollections, obj.deviceid);
+
+          var newRecord = addDeviceToCollection(obj, DeviceCollections[obj.deviceid].collection);
+
+          returnObject.statusCode = 201;
+          returnObject.body = requestMetadata.query && requestMetadata.query.callback === "0" && {} || newRecord;
+        } catch (e) {
+          returnObject.statusCode = 500;
+          returnObject.body = {error: e.toString()};
+        }
         return true;
+      },
+      GET: function(objs, requestMetadata, returnObject) {
+        returnObject.success = true;
+        debug('GET devices');
+        debug(objs);
+        try {
+          var packageList = MetaData.find({deleted: false}).fetch();
+        } catch (e) {
+          returnObject.statusCode = 500;
+          returnObject.body = {error: e.toString()};
+          return true;
+        }
+        debug(packageList);
+
+        if (requestMetadata.collectionId && requestMetadata.fields && requestMetadata.fields.length > 0 && objs.length === 1) {
+        }
+        return false;
+
+        // // if (requestMetadata.collectionId) {
+        // if (requestMetadata.collectionId && requestMetadata.fields && requestMetadata.fields.length > 0 && objs.length === 1) {
+        //   returnObject.success = true;
+        //   var fields = requestMetadata.fields;
+        //   var device = objs[0];
+
+        //   updateOneDevice(device, packageList);
+
+        //   var choices = device.choices;
+        //   var sha224_hash = fields[0];
+        //   if (!choices.hasOwnProperty(sha224_hash)) {
+        //     returnObject.statusCode = 500;
+        //     returnObject.body = {
+        //       error: "device " + requestMetadata.collectionId + " doesn't have package hash: " + sha224_hash
+        //     };
+        //     return true;
+        //   }
+        //   if (fields.length == 1) {
+        //     returnObject.statusCode = 200;
+        //     returnObject.body = choices[sha224_hash];
+        //     return true;
+        //   }
+
+        //   var label = fields.slice(1).join(" ");
+        //   var choice = choices[sha224_hash];
+        //   var labels = choice.labels;
+        //   if (!label || !choice || !labels || labels.length === 0) {
+        //     returnObject.statusCode = 500;
+        //     returnObject.body = {
+        //       error: "device " + requestMetadata.collectionId + " with " + sha224_hash + " have something wrong!"
+        //     };
+        //     return true;
+        //   }
+
+        //   labels.forEach(function(oneLabel) {
+        //     if (oneLabel.label === label) {
+        //       returnObject.statusCode = 200;
+        //       returnObject.body = oneLabel;
+        //     }
+        //   });
+
+        //   if (!returnObject.statusCode) {
+        //     returnObject.statusCode = 500;
+        //     returnObject.body = {
+        //       error: "device " + requestMetadata.collectionId + " with " + sha224_hash + " doesn't have label: " + label
+        //     };
+        //   }
+
+        //   return true;
+        // }
+
+        // objs.forEach(function(device) {
+        //   updateOneDevice(device, packageList);
+        //   if (device.hasOwnProperty('_id')) {
+        //     delete device['_id'];
+        //   }
+        // });
+
+        // return true;
       },
       PUT: function(obj, newValues, requestMetadata) {
         debug('PUT');
@@ -301,12 +408,25 @@ function addDevices() {
         debug(requestMetadata);
         return true;
       },
-      DELETE: function(obj, requestMetadata) {
-        debug('DEL');
-        if (obj === undefined) {
-          return false;
-        }
+      DELETE: function(obj, requestMetadata, returnObject) {
+        returnObject.success = true;
+        debug('DEL device, id: ' + obj._id);
+        delFromIndexCollection(obj, Devices, returnObject);
         return true;
+      }
+    },
+    after: {
+      POST: function() {
+        debug("After POST");
+      },
+      GET: function() {
+        debug("After GET");
+      },
+      PUT: function() {
+        debug("After PUT");
+      },
+      DELETE: function() {
+        debug("After DEL");
       }
     }
   });
@@ -318,31 +438,36 @@ function addMetadata() {
     methods: ['POST','GET','PUT','DELETE'],
     before: {
       POST: function(obj, requestMetadata, returnObject) {
+        returnObject.success = true;
         debug('POST metadata');
+
+        if (obj === undefined) {
+          returnObject.statusCode = 400;
+          returnObject.body = {error: 'your format is unsupported, only support json!'};
+          return true;
+        } else if (obj.package === undefined) {
+          returnObject.statusCode = 400;
+          returnObject.body = {error: JSON.stringify(obj) + ' have no package!'};
+          return true;
+        } else if (obj.sha224_hash === undefined) {
+          returnObject.statusCode = 400;
+          returnObject.body = {error: JSON.stringify(obj) + ' have no ssha224_hash!'};
+          return true;
+        }
+
         var packageName = obj.package;
         var hash = obj.sha224_hash;
 
         // handle this manually
-        returnObject.success = true;
 
-        if (packageName === undefined || hash === undefined) {
-          returnObject.statusCode = 500;
-          returnObject.body = {error: "no package or sha224_hash provided!"};
+        if (!insertToIndexCollection(packageName, MetaData, true, returnObject)) {
           return true;
         }
 
         try {
-          var record = MetaData.findOne(packageName);
-          if (record === undefined) {
-            MetaData.insert({_id: packageName, packageName: packageName, deleted: false});
-          } else {
-            if (record.deleted) {
-              record.deleted = false;
-              MetaData.update(record._id, record);
-            }
-          }
-          initCollection(Packages, packageName);
-          var newRecord = addMetadataToCollection(obj, Packages[packageName].collection);
+          initCollection(PackageCollections, packageName);
+
+          var newRecord = addMetadataToCollection(obj, PackageCollections[packageName].collection);
 
           returnObject.statusCode = 201;
           returnObject.body = requestMetadata.query && requestMetadata.query.callback === "0" && {} || newRecord;
@@ -361,8 +486,8 @@ function addMetadata() {
         var packages = [];
         try {
           objs.forEach(function(obj) {
-            initCollection(Packages, obj._id);
-            var package = Packages[obj._id].collection.findOne('0');
+            initCollection(PackageCollections, obj._id);
+            var package = PackageCollections[obj._id].collection.findOne('0');
             packages.push(package.package);
           });
           returnObject.statusCode = 200;
@@ -378,31 +503,10 @@ function addMetadata() {
         return false;
       },
       DELETE: function(obj, requestMetadata, returnObject) {
-        debug('DEL');
-        debug(obj);
-        debug(requestMetadata.collectionId);
+        debug('DEL metadata, id: ' + obj._id);
+
         returnObject.success = true;
-        if (obj !== undefined && requestMetadata.collectionId !== undefined) {
-          var record = MetaData.findOne(requestMetadata.collectionId);
-          if (record === undefined || record.deleted) {
-            returnObject.statusCode = 500;
-            returnObject.body = {error: "No packageName: " + requestMetadata.collectionId};
-          } else {
-            try {
-              record.deleted = true;
-              MetaData.update(record._id, record);
-              returnObject.statusCode = 200;
-              returnObject.body = {};
-            } catch (e) {
-              debug(e.toString());
-              returnObject.statusCode = 500;
-              returnObject.body = {error: e.toString()};
-            }
-          }
-        } else {
-          returnObject.statusCode = 500;
-          returnObject.body = {error: "no record for: " + requestMetadata.collectionId};
-        }
+        delFromIndexCollection(obj, MetaData, returnObject);
         return true;
       }
     },
