@@ -2,6 +2,21 @@ var Logs = {};
 var PackageCollections = {};
 var DeviceCollections = {};
 
+function decodeDotForDevice(device) {
+  var choices = device.choices;
+  var newChoices = {};
+  if (choices !== undefined) {
+    for (var packageName in choices) {
+      debug(packageName);
+      debug(dotDecode(packageName));
+      if (choices.hasOwnProperty(packageName)) {
+        newChoices[dotDecode(packageName)] = choices[packageName];
+      }
+    }
+    device.choices = newChoices;
+  }
+};
+
 function getMinChoice(statement, choiceCount) {
   var minChoice = statement.choice;
   var minCount = Number.MAX_VALUE;
@@ -17,18 +32,17 @@ function getMinChoice(statement, choiceCount) {
   return minChoice;
 };
 
-function initPackageCollections() {
-  try {
-    var packageList = MetaData.find().fetch();
-    packageList.forEach(function(onePackage) {
-      initCollection(PackageCollections, onePackage.packageName);
-    });
-  } catch (e) {
-    debug(e.toString());
-  }
+function initPackageCollection(key) {
+  return initCollection(PackageCollections, key, 'package');
 }
 
-function initCollection(map, key) {
+function initDeviceCollection(key) {
+  return initCollection(DeviceCollections, key, 'device');
+}
+
+function initCollection(map, key, prefix) {
+  prefix = prefix || 'noprefix';
+  key = prefix + '_' + key;
   try {
     if (!map.hasOwnProperty(key)) {
       debug('create Collection: ' + key);
@@ -37,16 +51,18 @@ function initCollection(map, key) {
         collection: new Meteor.Collection(key)
       };
     } else {
-      debug('enable Collection: ' + key);
-      map[key].enable = true;
+      if (map[key].enable === false) {
+        debug('enable Collection: ' + key);
+        map[key].enable = true;
+      }
     }
   } catch (e) {
     debug(e.toString());
   }
+  return map[key].collection;
 }
 
 function staleData(collection) {
-  var version = 1;
   var current = collection.findOne('0');
   if (current !== undefined) {
     collection.remove(current);
@@ -55,13 +71,27 @@ function staleData(collection) {
     current._dumpAt = new Date();
 
     collection.insert(current);
-    version += current._version;
   }
-  return version;
+  return current;
+}
+
+function getPackageList() {
+  var packageList = [];
+  var packageIndexList = MetaData.find({deleted: false}).fetch();
+  packageIndexList.forEach(function(packageIndex) {
+    var collection = initPackageCollection(packageIndex._id);
+    var record = collection.findOne('0');
+    packageList.push(record);
+  });
+  return packageList;
 }
 
 function addDeviceToCollection(obj, collection) {
-  var version = staleData(collection);
+  var current = staleData(collection);
+  var version = 1;
+  if (current !== undefined) {
+    version += current._version;
+  }
 
   var newDevice = {device: obj};
   newDevice._version = version;
@@ -81,7 +111,11 @@ function addMetadataToCollection(obj, collection) {
     package: obj
   };
 
-  var version = staleData(collection);
+  var current = staleData(collection);
+  var version = 1;
+  if (current !== undefined) {
+    version += current._version;
+  }
 
   newPackage._version = version;
   newPackage._id = '0';
@@ -167,91 +201,86 @@ function delFromIndexCollection(obj, collection, returnObject) {
 //   }
 // }
 
-function updateOneDevice(device, packageList) {
-  device.queryCount = device.queryCount + 1 || 1;
+function updateOneDevice(deviceIndex, packageList) {
+  debug('update choices for ' + deviceIndex._id);
+  var collection = initDeviceCollection(deviceIndex._id);
+
+  var current = collection.findOne('0');
+  var device = current.device;
 
   if (device.choices === undefined) {
     device.choices = {};
   }
+
+  current.queryCount = current.queryCount + 1 || 1;
+
   var choices = device.choices;
+
   packageList.forEach(function(onePackage) {
-    var hash = onePackage.sha224_hash;
-    if (!choices.hasOwnProperty(hash)) {
-      choices[hash] = {
-        name: onePackage.package,
+    var packageName = onePackage.package.package;
+    var compatibleName = dotEncode(packageName);
+
+    if (!choices.hasOwnProperty(compatibleName)) {
+      choices[compatibleName] = {
+        name: packageName,
         labelJSON: {}
       };
     }
 
-    var choiceForOnePackage = choices[hash];
+    var choiceForOnePackage = choices[compatibleName];
     if (choiceForOnePackage.labelJSON === undefined) {
+      choiceForOnePackage.version = -1;
       choiceForOnePackage.labelJSON = {};
     }
 
     var labelJSON = choiceForOnePackage.labelJSON;
 
-    var jinghao = 0;
-    var poor = "PoorLinkLossThreshold";
-    var good = "GoodLinkLossThreshold";
-
-    var tempLabel1 = "hit_factor";
-    var tempLabel2 = "screen_timeout";
-    onePackage.statements.forEach(function(statement) {
-      if (statement.label === poor || statement.label === good) {
-        jinghao++;
-      }
-      if (!labelJSON.hasOwnProperty(statement.label)) {
-        if (statement.choice === undefined) {
-          statement.choice = 0;
-        }
-        if (statement.choiceCount === undefined) {
-          statement.choiceCount = {};
-        }
-        var choiceCount = statement.choiceCount;
-        statement.alternatives.forEach(function(oneAlternative) {
-          var value = oneAlternative.value;
-          if (!choiceCount.hasOwnProperty[value]) {
-            choiceCount[oneAlternative.value] = 0;
+    if (choiceForOnePackage.version === onePackage._version) {
+      debug('skip ' + packageName + ' because version is same: ' + onePackage._version);
+    } else {
+      choiceForOnePackage.version = onePackage._version;
+      var statements = onePackage.package.statements;
+      for (var label in statements) {
+        if (statements.hasOwnProperty(label)) {
+          var statement = statements[label];
+          // if (!labelJSON.hasOwnProperty(statement.label)) {
+          if (statement.choice === undefined) {
+            statement.choice = 0;
           }
-        });
+          if (statement.choiceCount === undefined) {
+            statement.choiceCount = {};
+          }
+          var choiceCount = statement.choiceCount;
+          statement.alternatives.forEach(function(oneAlternative) {
+            var value = oneAlternative.value;
+            if (!choiceCount.hasOwnProperty[value]) {
+              choiceCount[oneAlternative.value] = 0;
+            }
+          });
 
-        // TODO assign random one and update statement.choiceCount
+          // TODO assign random one and update statement.choiceCount
 
-        var random = Math.floor(Math.random() * (statement.alternatives.length));
+          var random = Math.floor(Math.random() * (statement.alternatives.length));
 
-        var choice = statement.alternatives[random].value;
-        if (statement.label === tempLabel1 || statement.label === tempLabel2) {
-          choice = 2;
+          var choice = statement.alternatives[random].value;
+          choiceCount[choice]++;
+          labelJSON[statement.label] = {
+            "label": statement.label,
+            "choice": choice
+          };
+          // }
+        } else {
+          debug('Error: statements has ' + label + ' with no value!');
         }
-        if (statement.label == 'MAX_CPU_FREQ') {
-          choice = 0;
-        }
-        choiceCount[choice]++;
-        labelJSON[statement.label] = {
-          "label": statement.label,
-          "choice": choice
-        };
       }
-    });
 
-    if (jinghao === 2) {
-      // if (labelJSON[poor].choice < labelJSON[good].choice) {
-      //   debug("change poor " + labelJSON[poor].choice + " to " + labelJSON[good].choice);
-      //   labelJSON[poor].choice = labelJSON[good].choice;
-      // }
-      debug("change poor " + labelJSON[poor].choice + " to " + labelJSON[good].choice);
-      labelJSON[poor].choice = labelJSON[good].choice;
-    }
-    choiceForOnePackage.labels = Object.keys(labelJSON).map(function(k) { return labelJSON[k] });
-    try {
-      MetaData.update(onePackage._id, onePackage);
-    } catch (e) {
-      debug(e.toString());
+      // update count information in package
+      var packageCollection = initPackageCollection(packageName);
+      packageCollection.update('0', onePackage);
     }
   });
-
-  debug(device);
-  Devices.update(device._id, device);
+  collection.update(current._id, current);
+  return device;
 }
 
 Meteor.startup(function() {
@@ -312,12 +341,19 @@ function addDevices() {
         }
 
         try {
-          initCollection(DeviceCollections, obj.deviceid);
+          var collection = initDeviceCollection(obj.deviceid);
 
-          var newRecord = addDeviceToCollection(obj, DeviceCollections[obj.deviceid].collection);
+          var newRecord = addDeviceToCollection(obj, collection);
+
+          var packageList = getPackageList();
+
+          var deviceIndex = Devices.findOne(obj.deviceid);
+          var device = updateOneDevice(deviceIndex, packageList);
+
+          decodeDotForDevice(device);
 
           returnObject.statusCode = 201;
-          returnObject.body = requestMetadata.query && requestMetadata.query.callback === "0" && {} || newRecord;
+          returnObject.body = requestMetadata.query && requestMetadata.query.callback === "0" && {} || device;
         } catch (e) {
           returnObject.statusCode = 500;
           returnObject.body = {error: e.toString()};
@@ -325,47 +361,57 @@ function addDevices() {
         return true;
       },
       GET: function(objs, requestMetadata, returnObject) {
+        // DONE: generate choices for all packages, labels
+        // each device has version number for metadata index collection.
+        // if the version number is less than metadata version, do update its choices
         returnObject.success = true;
+
         debug('GET devices');
-        debug(objs);
+
         try {
-          var packageList = MetaData.find({deleted: false}).fetch();
+          var packageList = getPackageList();
+
+          var fields = requestMetadata.fields;
+
+          var deviceList = [];
+          objs.forEach(function(deviceIndex) {
+            var device = updateOneDevice(deviceIndex, packageList);
+            decodeDotForDevice(device);
+            deviceList.push(device);
+          });
+          returnObject.statusCode = 200;
+          returnObject.body = deviceList;
         } catch (e) {
           returnObject.statusCode = 500;
           returnObject.body = {error: e.toString()};
-          return true;
         }
-        debug(packageList);
+        return true;
 
-        if (requestMetadata.collectionId && requestMetadata.fields && requestMetadata.fields.length > 0 && objs.length === 1) {
-        }
-        return false;
-
-        // // if (requestMetadata.collectionId) {
+        // TODO: handle only query one pacakge
         // if (requestMetadata.collectionId && requestMetadata.fields && requestMetadata.fields.length > 0 && objs.length === 1) {
-        //   returnObject.success = true;
         //   var fields = requestMetadata.fields;
-        //   var device = objs[0];
+        //   var deviceIndex = objs[0];
 
-        //   updateOneDevice(device, packageList);
+        //   updateOneDevice(deviceIndex, packageList);
 
         //   var choices = device.choices;
-        //   var sha224_hash = fields[0];
-        //   if (!choices.hasOwnProperty(sha224_hash)) {
+        //   var targetPackage = fields[0];
+        //   if (!choices.hasOwnProperty(targetPackage )) {
         //     returnObject.statusCode = 500;
         //     returnObject.body = {
-        //       error: "device " + requestMetadata.collectionId + " doesn't have package hash: " + sha224_hash
+        //       error: "device " + device._id + " doesn't have package: " + targetPackage
         //     };
         //     return true;
         //   }
+
         //   if (fields.length == 1) {
         //     returnObject.statusCode = 200;
-        //     returnObject.body = choices[sha224_hash];
+        //     returnObject.body = choices[targetPackage];
         //     return true;
         //   }
 
         //   var label = fields.slice(1).join(" ");
-        //   var choice = choices[sha224_hash];
+        //   var choice = choices[targetPackage];
         //   var labels = choice.labels;
         //   if (!label || !choice || !labels || labels.length === 0) {
         //     returnObject.statusCode = 500;
@@ -398,10 +444,9 @@ function addDevices() {
         //     delete device['_id'];
         //   }
         // });
-
-        // return true;
       },
       PUT: function(obj, newValues, requestMetadata) {
+        // TODO: only allow for gcmid
         debug('PUT');
         debug(obj);
         debug(newValues);
@@ -413,20 +458,6 @@ function addDevices() {
         debug('DEL device, id: ' + obj._id);
         delFromIndexCollection(obj, Devices, returnObject);
         return true;
-      }
-    },
-    after: {
-      POST: function() {
-        debug("After POST");
-      },
-      GET: function() {
-        debug("After GET");
-      },
-      PUT: function() {
-        debug("After PUT");
-      },
-      DELETE: function() {
-        debug("After DEL");
       }
     }
   });
@@ -465,9 +496,9 @@ function addMetadata() {
         }
 
         try {
-          initCollection(PackageCollections, packageName);
+          var collection = initPackageCollection(packageName);
 
-          var newRecord = addMetadataToCollection(obj, PackageCollections[packageName].collection);
+          var newRecord = addMetadataToCollection(obj, collection);
 
           returnObject.statusCode = 201;
           returnObject.body = requestMetadata.query && requestMetadata.query.callback === "0" && {} || newRecord;
@@ -482,12 +513,11 @@ function addMetadata() {
         returnObject.success = true;
 
         debug('GET');
-        debug(objs);
         var packages = [];
         try {
           objs.forEach(function(obj) {
-            initCollection(PackageCollections, obj._id);
-            var package = PackageCollections[obj._id].collection.findOne('0');
+            var collection = initPackageCollection(obj._id);
+            var package = collection.findOne('0');
             packages.push(package.package);
           });
           returnObject.statusCode = 200;
