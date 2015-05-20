@@ -1,0 +1,29 @@
+{
+    "statements": [
+        {
+            "content": "                int screenTimeoutVal = maybe(\"screen_timeout\") 15000, 60000, 120000;", 
+            "alternatives": [
+                {
+                    "start": 63, 
+                    "end": 68, 
+                    "value": 0
+                }, 
+                {
+                    "start": 70, 
+                    "end": 75, 
+                    "value": 1
+                }, 
+                {
+                    "start": 77, 
+                    "end": 83, 
+                    "value": 2
+                }
+            ], 
+            "line": 1536, 
+            "type": "assignment", 
+            "label": "screen_timeout"
+        }
+    ], 
+    "sha224_hash": "dc9630353392661d62eff4baefab4916f7860f275766af304d01bd09", 
+    "package": "com.android.keyguard"
+}

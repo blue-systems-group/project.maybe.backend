@@ -1,0 +1,29 @@
+{
+    "statements": [
+        {
+            "content": "                float hitFactor = maybe(\"hit_factor\") 0.4f, 0.6f, 0.9f;", 
+            "alternatives": [
+                {
+                    "start": 54, 
+                    "end": 58, 
+                    "value": 0
+                }, 
+                {
+                    "start": 60, 
+                    "end": 64, 
+                    "value": 1
+                }, 
+                {
+                    "start": 66, 
+                    "end": 70, 
+                    "value": 2
+                }
+            ], 
+            "line": 435, 
+            "type": "assignment", 
+            "label": "hit_factor"
+        }
+    ], 
+    "sha224_hash": "168f680437d585d55a0e2a292f9662d53455eab11b2207b41a09093a", 
+    "package": "com.android.keyguard"
+}

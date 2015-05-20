@@ -1,0 +1,80 @@
+{
+    "statements": [
+        {
+            "content": "        mLinkSamplingIntervalMs = maybe(\"LinkSamplingIntervalMs\") 1000, 2000, 5000, 10000;", 
+            "alternatives": [
+                {
+                    "start": 66, 
+                    "end": 70, 
+                    "value": 0
+                }, 
+                {
+                    "start": 72, 
+                    "end": 76, 
+                    "value": 1
+                }, 
+                {
+                    "start": 78, 
+                    "end": 82, 
+                    "value": 2
+                }, 
+                {
+                    "start": 84, 
+                    "end": 89, 
+                    "value": 3
+                }
+            ], 
+            "line": 639, 
+            "type": "assignment", 
+            "label": "LinkSamplingIntervalMs"
+        }, 
+        {
+            "content": "        mPoorLinkLossThreshold = maybe(\"PoorLinkLossThreshold\") 0.2, 0.5, 0.8;", 
+            "alternatives": [
+                {
+                    "start": 64, 
+                    "end": 67, 
+                    "value": 0
+                }, 
+                {
+                    "start": 69, 
+                    "end": 72, 
+                    "value": 1
+                }, 
+                {
+                    "start": 74, 
+                    "end": 77, 
+                    "value": 2
+                }
+            ], 
+            "line": 643, 
+            "type": "assignment", 
+            "label": "PoorLinkLossThreshold"
+        }, 
+        {
+            "content": "        mGoodLinkLossThreshold = maybe(\"GoodLinkLossThreshold\") 0.1, 0.3, 0.6;", 
+            "alternatives": [
+                {
+                    "start": 64, 
+                    "end": 67, 
+                    "value": 0
+                }, 
+                {
+                    "start": 69, 
+                    "end": 72, 
+                    "value": 1
+                }, 
+                {
+                    "start": 74, 
+                    "end": 77, 
+                    "value": 2
+                }
+            ], 
+            "line": 647, 
+            "type": "assignment", 
+            "label": "GoodLinkLossThreshold"
+        }
+    ], 
+    "sha224_hash": "5e7dd6f7a51dcbdc521c09a1ac753218d297054dddb9cc21336e72d4", 
+    "package": "android.net.wifi"
+}
