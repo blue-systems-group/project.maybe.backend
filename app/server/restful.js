@@ -454,12 +454,36 @@ function addDevices() {
         //   }
         // });
       },
-      PUT: function(obj, newValues, requestMetadata) {
-        // TODO: only allow for gcmid
-        debug('PUT');
-        debug(obj);
-        debug(newValues);
-        debug(requestMetadata);
+      PUT: function(obj, newValues, requestMetadata, returnObject) {
+        // DONE: only allow for gcmid
+        debug('PUT for device: ' + JSON.stringify(obj) + ' with: ' + JSON.stringify(newValues));
+
+        returnObject.success = true;
+        if (obj === undefined || obj.deleted === true) {
+          returnObject.statusCode = 404;
+          returnObject.body = {error: requestMetadata.collectionId + ' not found!'};
+          return true;
+        }
+
+        if (!newValues.hasOwnProperty('gcmid')) {
+          returnObject.statusCode = 403;
+          returnObject.body = {error: 'only gcmid is allowed for PUT!'};
+          return true;
+        }
+
+        try {
+          var collection = initDeviceCollection(obj._id);
+          var current = collection.findOne('0');
+          var device = current.device;
+          device['gcmid'] = newValues['gcmid'];
+          collection.update(current._id, current);
+
+          returnObject.statusCode = 202;
+          returnObject.body = requestMetadata.query && requestMetadata.query.callback === "0" && {} || device;
+        } catch (e) {
+          returnObject.statusCode = 500;
+          returnObject.body = {error: e.toString()};
+        }
         return true;
       },
       DELETE: function(obj, requestMetadata, returnObject) {
