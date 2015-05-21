@@ -1,7 +1,6 @@
 var Logs = {};
 var PackageCollections = {};
 var DeviceCollections = {};
-var _DELETED = 'deleted';
 
 function decodeDotForDevice(device) {
   var choices = device.choices;
@@ -19,8 +18,8 @@ function decodeDotForDevice(device) {
 function filterDeleted(objs, returnObject) {
   var records = [];
   objs.forEach(function(obj) {
-    if (obj.hasOwnProperty(_DELETED)) {
-      if (obj[_DELETED] === false) {
+    if (obj.hasOwnProperty('deleted')) {
+      if (obj['deleted'] === false) {
         records.push(obj);
       }
     } else {
@@ -148,8 +147,8 @@ function insertToIndexCollection(id, collection, allowDuplicated, returnObject) 
       collection.insert({_id: id, deleted: false});
       return true;
     } else {
-      if (record[_DELETED]) {
-        record[_DELETED] = false;
+      if (record['deleted']) {
+        record['deleted'] = false;
         collection.update(record._id, record);
         return true;
       } else {
@@ -173,12 +172,12 @@ function insertToIndexCollection(id, collection, allowDuplicated, returnObject) 
 function delFromIndexCollection(obj, collection, returnObject) {
   // obj must be valid because collection-api will return early if it's undefined
   var record = obj;
-  if (record[_DELETED] === true) {
+  if (record['deleted'] === true) {
     returnObject.statusCode = 404;
     returnObject.body = {error: obj._id + " not found!"};
   } else {
     try {
-      record[_DELETED] = true;
+      record['deleted'] = true;
       collection.update(record._id, record);
       returnObject.statusCode = 200;
       returnObject.body = {};
