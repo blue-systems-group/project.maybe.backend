@@ -1,6 +1,7 @@
 var Logs = {};
 var PackageCollections = {};
 var DeviceCollections = {};
+var _DELETED = 'deleted';
 
 function decodeDotForDevice(device) {
   var choices = device.choices;
@@ -13,6 +14,24 @@ function decodeDotForDevice(device) {
     }
     device.choices = newChoices;
   }
+};
+
+function filterDeleted(objs, returnObject) {
+  var records = [];
+  objs.forEach(function(obj) {
+    if (obj.hasOwnProperty(_DELETED)) {
+      if (obj[_DELETED] === false) {
+        records.push(obj);
+      }
+    } else {
+      debug(obj + ' has no deleted field!');
+    }
+  });
+  if (records.length === 0) {
+    returnObject.statusCode = 404;
+    returnObject.body = {message: 'No Record(s) Found'};
+  }
+  return records;
 };
 
 function getMinChoice(statement, choiceCount) {
@@ -129,8 +148,8 @@ function insertToIndexCollection(id, collection, allowDuplicated, returnObject) 
       collection.insert({_id: id, deleted: false});
       return true;
     } else {
-      if (record.deleted) {
-        record.deleted = false;
+      if (record[_DELETED]) {
+        record[_DELETED] = false;
         collection.update(record._id, record);
         return true;
       } else {
@@ -154,12 +173,12 @@ function insertToIndexCollection(id, collection, allowDuplicated, returnObject) 
 function delFromIndexCollection(obj, collection, returnObject) {
   // obj must be valid because collection-api will return early if it's undefined
   var record = obj;
-  if (record.deleted) {
+  if (record[_DELETED] === true) {
     returnObject.statusCode = 404;
     returnObject.body = {error: obj._id + " not found!"};
   } else {
     try {
-      record.deleted = true;
+      record[_DELETED] = true;
       collection.update(record._id, record);
       returnObject.statusCode = 200;
       returnObject.body = {};
@@ -365,6 +384,10 @@ function addDevices() {
         returnObject.success = true;
 
         debug('GET devices');
+        objs = filterDeleted(objs, returnObject);
+        if (objs.length === 0) {
+          return true;
+        }
 
         try {
           var packageList = getPackageList();
@@ -511,6 +534,12 @@ function addMetadata() {
         returnObject.success = true;
 
         debug('GET');
+
+        objs = filterDeleted(objs, returnObject);
+        if (objs.length === 0) {
+          return true;
+        }
+
         var packages = [];
         try {
           objs.forEach(function(obj) {
