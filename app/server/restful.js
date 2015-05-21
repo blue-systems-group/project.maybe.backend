@@ -2,19 +2,6 @@ var Logs = {};
 var PackageCollections = {};
 var DeviceCollections = {};
 
-function decodeDotForDevice(device) {
-  var choices = device.choices;
-  var newChoices = {};
-  if (choices !== undefined) {
-    for (var packageName in choices) {
-      if (choices.hasOwnProperty(packageName)) {
-        newChoices[dotDecode(packageName)] = choices[packageName];
-      }
-    }
-    device.choices = newChoices;
-  }
-};
-
 function filterDeleted(objs, returnObject) {
   var records = [];
   objs.forEach(function(obj) {
@@ -226,6 +213,8 @@ function updateOneDevice(deviceIndex, packageList) {
 
   if (device.choices === undefined) {
     device.choices = {};
+  } else {
+    device.choices = arrayToMap(device.choices, 'packageName');
   }
 
   current.queryCount = current.queryCount + 1 || 1;
@@ -234,16 +223,15 @@ function updateOneDevice(deviceIndex, packageList) {
 
   packageList.forEach(function(onePackage) {
     var packageName = onePackage.package.package;
-    var compatibleName = dotEncode(packageName);
 
-    if (!choices.hasOwnProperty(compatibleName)) {
-      choices[compatibleName] = {
-        name: packageName,
+    if (!choices.hasOwnProperty(packageName)) {
+      choices[packageName] = {
+        packageName: packageName,
         labelJSON: {}
       };
     }
 
-    var choiceForOnePackage = choices[compatibleName];
+    var choiceForOnePackage = choices[packageName];
     if (choiceForOnePackage.labelJSON === undefined) {
       choiceForOnePackage.version = -1;
       choiceForOnePackage.labelJSON = {};
@@ -295,7 +283,11 @@ function updateOneDevice(deviceIndex, packageList) {
       packageCollection.update('0', onePackage);
     }
   });
+
+  var choiceMap = device.choices;
+  device.choices = mapToArray(choiceMap);
   collection.update(current._id, current);
+  device.choices = choiceMap;
   return device;
 }
 
@@ -366,8 +358,6 @@ function addDevices() {
           var deviceIndex = Devices.findOne(obj.deviceid);
           var device = updateOneDevice(deviceIndex, packageList);
 
-          decodeDotForDevice(device);
-
           returnObject.statusCode = 201;
           returnObject.body = requestMetadata.query && requestMetadata.query.callback === "0" && {} || device;
         } catch (e) {
@@ -396,7 +386,6 @@ function addDevices() {
           var deviceList = [];
           objs.forEach(function(deviceIndex) {
             var device = updateOneDevice(deviceIndex, packageList);
-            decodeDotForDevice(device);
             deviceList.push(device);
           });
           returnObject.statusCode = 200;
