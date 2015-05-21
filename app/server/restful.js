@@ -7,8 +7,6 @@ function decodeDotForDevice(device) {
   var newChoices = {};
   if (choices !== undefined) {
     for (var packageName in choices) {
-      debug(packageName);
-      debug(dotDecode(packageName));
       if (choices.hasOwnProperty(packageName)) {
         newChoices[dotDecode(packageName)] = choices[packageName];
       }
