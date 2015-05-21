@@ -332,7 +332,7 @@ function addDevices() {
         // rquire deviceid
         // optional gcmid
         returnObject.success = true;
-        debug('POST device');
+        debug('POST device: ' + JSON.stringify(obj));
 
         if (obj === undefined) {
           returnObject.statusCode = 400;
@@ -372,7 +372,7 @@ function addDevices() {
         // if the version number is less than metadata version, do update its choices
         returnObject.success = true;
 
-        debug('GET devices');
+        debug('GET device(s): ' + JSON.stringify(requestMetadata));
         objs = filterDeleted(objs, returnObject);
         if (objs.length === 0) {
           return true;
@@ -488,7 +488,7 @@ function addDevices() {
       },
       DELETE: function(obj, requestMetadata, returnObject) {
         returnObject.success = true;
-        debug('DEL device, id: ' + obj._id);
+        debug('DEL device: ' + obj._id);
         delFromIndexCollection(obj, Devices, returnObject);
         return true;
       }
@@ -503,7 +503,7 @@ function addMetadata() {
     before: {
       POST: function(obj, requestMetadata, returnObject) {
         returnObject.success = true;
-        debug('POST metadata');
+        debug('POST metadata: ' + JSON.stringify(obj));
 
         if (obj === undefined) {
           returnObject.statusCode = 400;
@@ -545,7 +545,7 @@ function addMetadata() {
       GET: function(objs, requestMetadata, returnObject) {
         returnObject.success = true;
 
-        debug('GET');
+        debug('GET metadata(s): ' + JSON.stringify(requestMetadata));
 
         objs = filterDeleted(objs, returnObject);
         if (objs.length === 0) {
@@ -572,25 +572,11 @@ function addMetadata() {
         return false;
       },
       DELETE: function(obj, requestMetadata, returnObject) {
-        debug('DEL metadata, id: ' + obj._id);
+        debug('DEL metadata: ' + obj._id);
 
         returnObject.success = true;
         delFromIndexCollection(obj, MetaData, returnObject);
         return true;
-      }
-    },
-    after: {
-      POST: function() {
-        debug("After POST");
-      },
-      GET: function() {
-        debug("After GET");
-      },
-      PUT: function() {
-        debug("After PUT");
-      },
-      DELETE: function() {
-        debug("After DEL");
       }
     }
   });
