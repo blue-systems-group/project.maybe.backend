@@ -6,7 +6,7 @@ function filterDeleted(objs, returnObject) {
   var records = [];
   objs.forEach(function(obj) {
     if (obj.hasOwnProperty('deleted')) {
-      if (obj['deleted'] === false) {
+      if (obj.deleted === false) {
         records.push(obj);
       }
     } else {
@@ -18,7 +18,7 @@ function filterDeleted(objs, returnObject) {
     returnObject.body = {message: 'No Record(s) Found'};
   }
   return records;
-};
+}
 
 function getMinChoice(statement, choiceCount) {
   var minChoice = statement.choice;
@@ -33,7 +33,7 @@ function getMinChoice(statement, choiceCount) {
   debug("count " + choiceCount[minChoice]);
   debug(choiceCount);
   return minChoice;
-};
+}
 
 function initPackageCollection(key) {
   return initCollection(PackageCollections, key, 'package');
@@ -134,8 +134,8 @@ function insertToIndexCollection(id, collection, allowDuplicated, returnObject) 
       collection.insert({_id: id, deleted: false});
       return true;
     } else {
-      if (record['deleted']) {
-        record['deleted'] = false;
+      if (record.deleted) {
+        record.deleted = false;
         collection.update(record._id, record);
         return true;
       } else {
@@ -159,12 +159,12 @@ function insertToIndexCollection(id, collection, allowDuplicated, returnObject) 
 function delFromIndexCollection(obj, collection, returnObject) {
   // obj must be valid because collection-api will return early if it's undefined
   var record = obj;
-  if (record['deleted'] === true) {
+  if (record.deleted === true) {
     returnObject.statusCode = 404;
     returnObject.body = {error: obj._id + " not found!"};
   } else {
     try {
-      record['deleted'] = true;
+      record.deleted = true;
       collection.update(record._id, record);
       returnObject.statusCode = 200;
       returnObject.body = {};
@@ -475,7 +475,7 @@ function addDevices() {
           var collection = initDeviceCollection(obj._id);
           var current = collection.findOne('0');
           var device = current.device;
-          device['gcmid'] = newValues['gcmid'];
+          device.gcmid = newValues.gcmid;
           collection.update(current._id, current);
 
           returnObject.statusCode = 202;
@@ -588,9 +588,7 @@ function addLogs() {
     methods: ['POST','GET','PUT','DELETE'],
     before: {
       POST: function(obj, requestMetadata, returnObject) {
-        debug('POST');
-        debug(requestMetadata);
-        debug(JSON.stringify(obj));
+        debug('POST log: ' + JSON.stringify(obj) + ' with: ' + JSON.stringify(requestMetadata));
         if (requestMetadata.collectionId === undefined) {
           return false;
         }
