@@ -146,21 +146,21 @@ body, html {
     clear: both;
 }
 
-ul {
-    border:1px solid Black;
-    height:200px;
-    display:inline-block;
-    vertical-align:top;
-    list-style-type: none;
-}
+/* ul { */
+/*     border:1px solid Black; */
+/*     height:200px; */
+/*     display:inline-block; */
+/*     vertical-align:top; */
+/*     list-style-type: none; */
+/* } */
 
-li {
-    float: left;
-    display: block;
-    background-color:Azure;
-    border-bottom:1px dotted Gray
-}
+/* li { */
+/*     float: left; */
+/*     display: block; */
+/*     background-color:Azure; */
+/*     border-bottom:1px dotted Gray */
+/* } */
 
-li.selected {
-    background-color:GoldenRod
-}
+/* li.selected { */
+/*     background-color:GoldenRod */
+/* } */
