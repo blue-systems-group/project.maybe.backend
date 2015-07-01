@@ -1,18 +1,47 @@
 Template.package.helpers({
   packageName: function() {
-    return this._id;
+    // return this.package;
+    var self = this.findOne('0');
+    return self && self.package.package;
   },
   hash: function() {
-    return this.sha224_hash;
+    // console.log(this.find().fetch());
+    // return this.find().count();
+    var self = this.findOne('0');
+    return self && self.package.sha224_hash;
+    // return this._name;
+
+    // return this.sha224_hash;
+    // Asynchronous call with a callback on the client
+    // if (MetaData.ready()) {
+    //   var package = ReactiveMethod.call('getPackage', this._id);
+    //   console.log(package);
+    //   // console.log(package.sha224_hash);
+    //   console.log(package);
+    // } else {
+    //   console.log('not ready');
+    // }
+    // return 'hash';
+    // return package['sha224_hash'];
   },
   statements: function() {
-    return this.statements;
+    // var package = ReactiveMethod.call('getPackage', this._id);
+    // console.log(package);
+    // console.log(package.statements);
+    // return package.statements;
+
+    var self = this.findOne('0');
+    return self && mapToArray(self.package.statements);
+    // console.log(this.findOne('0').package.statements);
+    // return mapToArray(this.findOne('0').package.statements);
+    // return mapToArray(this.statements);
+    // return this.statements;
   },
-  content: function() {
-    // return this.content;
-    return this.content;
-    // return this.content.replace(/(?:\r\n|\r|\n)/g, "</br>");
-  },
+  // content: function() {
+  //   // return this.content;
+  //   return this.content;
+  //   // return this.content.replace(/(?:\r\n|\r|\n)/g, "</br>");
+  // },
   packageHtmlCode: function() {
     var root = document.createElement("div");
     var preNode = document.createElement("pre");
@@ -25,7 +54,8 @@ Template.package.helpers({
 
     preNode.appendChild(codeNode);
 
-    codeNode.innerHTML = json2html.transform(this);
+    var self = this.findOne('0');
+    codeNode.innerHTML = self && json2html.transform(self.package);
     hljs.highlightBlock(codeNode);
 
     return root.innerHTML;
@@ -44,7 +74,7 @@ Template.package.helpers({
       var alternativeJSON = {
         isAlternative: true,
         value: alternative.value,
-        isChoosed: choice == alternative.value,
+        isChoosed: choice === alternative.value,
         label: label
       };
       alternatives.push(alternativeJSON);
@@ -117,20 +147,34 @@ Template.package.events({
   'click .option': function(event, template) {
     console.log(event);
     console.log(JSON.stringify(this));
-    var choice = this.value;
-    console.log("choice: " + choice);
-    console.log("label: " + this.label);
 
-    var onePackage = template.data;
-    for (var i in onePackage.statements) {
-      var label = onePackage.statements[i].label;
-      if (label === this.label) {
-        console.log("write option");
-        onePackage.statements[i].choice = choice;
-        break;
-      }
-    }
-    MetaData.update(onePackage._id, onePackage);
+    var label = this.label;
+    var choice = this.value;
+
+    var collection = template.data;
+    console.log("label: " + label);
+    console.log("choice: " + choice);
+
+    var document = collection.findOne('0');
+    document.package.statements[label].choice = choice;
+    collection.update('0', document);
+    // onePackage.statements[label].choice = choice;
+
+    // for (var i in onePackage.statements) {
+    //   var label = onePackage.statements[i].label;
+    //   if (label === this.label) {
+    //     console.log("write option");
+    //     onePackage.statements[i].choice = choice;
+    //     break;
+    //   }
+    // }
+    // MetaData.update(onePackage._id, onePackage);
+
+    // template.data.statements[label].choice = choice;
+
+    // console.log(template.data);
+
+    // Meteor.call('setChoice', onePackage.package, this.label, choice);
   },
   'click .config': function(event, template) {
     var package = template.data;

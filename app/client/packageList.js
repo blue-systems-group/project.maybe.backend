@@ -1,6 +1,28 @@
+var PackageCollections = {};
+
 Template.packageList.helpers({
   packages: function() {
-    return MetaData.find();
+    // return MetaData.find();
+    var packageIndex = MetaData.find().fetch();
+
+    var packageArray = [];
+
+    packageIndex.forEach(function(onePackage) {
+      var name = ReactiveMethod.call('getPackage', onePackage._id);
+      if (name !== undefined) {
+        if (!PackageCollections.hasOwnProperty(name)) {
+          console.log('subscribe: ' + name);
+          // PackageCollections[name] = MetaData;
+          Meteor.subscribe(name, function() {
+            console.log('content: ' + PackageCollections[name].find().fetch());
+          });
+          PackageCollections[name] = new Meteor.Collection(name);
+        }
+        // console.log('content: ' + PackageCollections[name].find().fetch());
+        packageArray.push(PackageCollections[name]);
+      }
+    });
+    return packageArray;
   }
 });
 

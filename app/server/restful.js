@@ -1,3 +1,16 @@
+// prepare collections
+var Devices = new Meteor.Collection('devices');
+var MetaData = new Meteor.Collection('metadata');
+
+// publish collections
+Meteor.publish('metadata', function() {
+  return MetaData.find({deleted: false}, {fields: {deleted: 0}});
+});
+
+Meteor.publish('devices', function() {
+  return Devices.find({deleted: false}, {fields: {deleted: 0}});
+});
+
 var Logs = {};
 var PackageCollections = {};
 var DeviceCollections = {};
@@ -666,3 +679,26 @@ function addLogs() {
     }
   });
 }
+
+// On the server
+var publishedCollection = {};
+
+Meteor.methods({
+  getPackage: function(packageName) {
+    var packageCollection = initPackageCollection(packageName);
+    if (!publishedCollection.hasOwnProperty(packageCollection._name)) {
+      Meteor.publish(packageCollection._name, function() {
+        // packageCollection.find({_id: "0"});
+        return packageCollection.find('0');
+      });
+      console.log('publish: ' + packageCollection._name + ', count: ' + packageCollection.find('0').count());
+      publishedCollection[packageCollection._name] = packageCollection;
+    }
+    return packageCollection._name;
+    // console.log(packageCollection);
+    // console.log(packageCollection._prefix);
+    // var package = packageCollection.findOne('0');
+    // return package.package;
+    // return JSON.stringify(package.package);
+  }
+});

@@ -12,7 +12,16 @@ Meteor.startup(function() {
   //         hljs.highlightBlock(block);
   //     });
   // });
+  Meteor.subscribe('metadata', function() {
+    debug('metadata index subscribe complete');
+  });
+  Meteor.subscribe('devices', function() {
+    debug('device index subscribe complete');
+  });
 });
+
+MetaData = new Meteor.Collection('metadata');
+Devices = new Meteor.Collection('devices');
 
 Template.api.events({
   'click #api-title': function() {
