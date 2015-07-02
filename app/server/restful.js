@@ -12,7 +12,8 @@ Meteor.publish('devices', function() {
   return Devices.find({deleted: false}, {fields: {deleted: 0}});
 });
 
-var Logs = {};
+var Logs = new Meteor.Collection('logs');
+// var Logs = {};
 var PackageCollections = {};
 var DeviceCollections = {};
 
@@ -603,6 +604,7 @@ function addLogs() {
     before: {
       POST: function(obj, requestMetadata, returnObject) {
         debug('POST log: ' + JSON.stringify(obj) + ' with: ' + JSON.stringify(requestMetadata));
+        return true;
         if (requestMetadata.collectionId === undefined) {
           return false;
         }
