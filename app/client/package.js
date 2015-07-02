@@ -178,7 +178,7 @@ Template.package.events({
     // // console.log(event.toElement);
   },
   'click .packageName': function(event, template) {
-    template.$('.packageDetail').toggle(1000);
+    template.$('.packageDetail').toggle(Session.get('toggleDuration'));
   }
 
   // 'click .maybeCodeBlock': function(event, template) {

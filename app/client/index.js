@@ -5,6 +5,8 @@ Meteor.startup(function() {
   //     useBR: true,
   // });
 
+  setGlobalVariables();
+
   hljs.initHighlightingOnLoad();
   Session.setDefault("selectPackage", "default");
   Session.setDefault("selectHash", "default");
@@ -25,10 +27,15 @@ Meteor.startup(function() {
 MetaData = new Meteor.Collection('metadata');
 Devices = new Meteor.Collection('devices');
 
+function setGlobalVariables() {
+  var duration = Meteor.settings && Meteor.settings.public && Meteor.settings.public.toggleDuration || 1024;
+  Session.setDefault("toggleDuration", duration);
+}
+
 Template.api.events({
   'click #api-title': function() {
     var api = $('#api-content');
-    api.toggle(1000);
+    api.toggle(Session.get('toggleDuration'));
   }
 });
 
@@ -40,6 +47,6 @@ Template.devicesList.helpers({
 
 Template.devicesList.events({
   'click .subtitle': function(event, template) {
-    template.$('.deviceDetail').toggle(1000);
+    template.$('.deviceDetail').toggle(Session.get('toggleDuration'));
   }
 });

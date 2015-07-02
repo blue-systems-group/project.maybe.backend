@@ -28,12 +28,12 @@ Template.packageList.helpers({
 
 Template.packageList.events({
   'click .subtitle': function(event, template) {
-    var isShow = Session.get('showHideToggle');
-    if (isShow) {
-      template.$('.packageDetail').show(1000);
+    var showing = Session.get('showHideToggle');
+    if (showing) {
+      template.$('.packageDetail').hide(Session.get('toggleDuration'));
     } else {
-      template.$('.packageDetail').hide(1000);
+      template.$('.packageDetail').show(Session.get('toggleDuration'));
     }
-    Session.set('showHideToggle', !isShow);
+    Session.set('showHideToggle', !showing);
   }
 });
