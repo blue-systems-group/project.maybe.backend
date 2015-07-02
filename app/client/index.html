@@ -1,36 +1,38 @@
-<body>
-  <div id="board">
-    <h1 id="title">Maybe Backend!</h1>
+<template name="home">
+  <body>
+    <div id="board">
+      <h1 id="title">Maybe Backend!</h1>
 
-    {{> api}}
-    {{> packageList}}
-    {{> devicesList}}
+      {{> api}}
+      {{> packageList}}
+      {{> devicesList}}
 
-    <!-- <div> -->
-    <!--   {{> test}} -->
-    <!-- </div> -->
-  </div>
-</body>
+      <!-- <div> -->
+      <!--   {{> test}} -->
+      <!-- </div> -->
+    </div>
+  </body>
+</template>
 
 <template name="devicesList">
-    <div id="devices-container">
-      <h2 class="subtitle">Devices:</h2>
-      <div class="devices">
-        {{#each devices}}
-        {{> deviceItem}}
-        {{/each}}
-      </div>
+  <div id="devices-container">
+    <h2 class="subtitle">Devices:</h2>
+    <div class="devices">
+      {{#each devices}}
+      {{> deviceItem}}
+      {{/each}}
     </div>
+  </div>
 </template>
 
 <template name="packageList">
-    <div id="packages-container">
-      <h2 class="subtitle">Packages:</h2>
-      <!-- {{> config}} -->
-      <div class="packageList">
-        {{#each packages}}
-        {{> package}}
-        {{/each}}
-      </div>
+  <div id="packages-container">
+    <h2 class="subtitle">Packages:</h2>
+    <!-- {{> config}} -->
+    <div class="packageList">
+      {{#each packages}}
+      {{> package}}
+      {{/each}}
     </div>
+  </div>
 </template>

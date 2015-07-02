@@ -13,3 +13,4 @@ less
 miro:json2html
 xcv58:collection-api
 simple:reactive-method
+iron:router

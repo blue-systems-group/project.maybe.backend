@@ -6,6 +6,9 @@ Meteor.startup(function() {
   // });
 
   setGlobalVariables();
+  Router.route('/', function () {
+    this.render('Home');
+  });
 
   hljs.initHighlightingOnLoad();
   Session.setDefault("selectPackage", "default");
@@ -31,6 +34,12 @@ function setGlobalVariables() {
   var duration = Meteor.settings && Meteor.settings.public && Meteor.settings.public.toggleDuration || 1024;
   Session.setDefault("toggleDuration", duration);
 }
+
+Template.api.events({
+  'click #api-title': function() {
+    Router.go('/README.html');
+  }
+});
 
 Template.devicesList.helpers({
   devices: function() {
