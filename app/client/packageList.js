@@ -11,14 +11,12 @@ Template.packageList.helpers({
       var name = ReactiveMethod.call('getPackage', onePackage._id);
       if (name !== undefined) {
         if (!PackageCollections.hasOwnProperty(name)) {
-          console.log('subscribe: ' + name);
-          // PackageCollections[name] = MetaData;
+          // console.log('subscribe: ' + name);
           Meteor.subscribe(name, function() {
-            console.log('content: ' + PackageCollections[name].find().fetch());
+            // console.log('content: ' + PackageCollections[name].find().fetch());
           });
           PackageCollections[name] = new Meteor.Collection(name);
         }
-        // console.log('content: ' + PackageCollections[name].find().fetch());
         packageArray.push(PackageCollections[name]);
       }
     });

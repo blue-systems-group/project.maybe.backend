@@ -1,8 +1,10 @@
 Meteor.startup(function() {
-  console.log("StartUp");
+  // console.log("StartUp");
+
   // hljs.configure({
   //     useBR: true,
   // });
+
   hljs.initHighlightingOnLoad();
   Session.setDefault("selectPackage", "default");
   Session.setDefault("selectHash", "default");
@@ -13,10 +15,10 @@ Meteor.startup(function() {
   //     });
   // });
   Meteor.subscribe('metadata', function() {
-    debug('metadata index subscribe complete');
+    // debug('metadata index subscribe complete');
   });
   Meteor.subscribe('devices', function() {
-    debug('device index subscribe complete');
+    // debug('device index subscribe complete');
   });
 });
 

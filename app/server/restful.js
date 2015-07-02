@@ -680,7 +680,7 @@ function addLogs() {
   });
 }
 
-// On the server
+// avoid duplicated publish
 var publishedCollection = {};
 
 Meteor.methods({
@@ -688,17 +688,12 @@ Meteor.methods({
     var packageCollection = initPackageCollection(packageName);
     if (!publishedCollection.hasOwnProperty(packageCollection._name)) {
       Meteor.publish(packageCollection._name, function() {
-        // packageCollection.find({_id: "0"});
+        // only return current ('0') record
         return packageCollection.find('0');
       });
       console.log('publish: ' + packageCollection._name + ', count: ' + packageCollection.find('0').count());
       publishedCollection[packageCollection._name] = packageCollection;
     }
     return packageCollection._name;
-    // console.log(packageCollection);
-    // console.log(packageCollection._prefix);
-    // var package = packageCollection.findOne('0');
-    // return package.package;
-    // return JSON.stringify(package.package);
   }
 });
