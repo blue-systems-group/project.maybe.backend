@@ -19,7 +19,7 @@ function shuffle(array) {
   }
 
   return array;
-};
+}
 
 function split(array, chunkSize) {
     return [].concat.apply([],
@@ -27,7 +27,7 @@ function split(array, chunkSize) {
             return i%chunkSize ? [] : [array.slice(i,i+chunkSize)];
         })
     );
-};
+}
 
 function updateOneDevice(deviceid, device, package, hash, label, value, choiceCount) {
   var oneDevice = device;
@@ -104,7 +104,7 @@ function assignValue(valueJSONObject, value) {
   }
   MetaData.update(packageDocument._id, packageDocument);
   return null;
-};
+}
 
 Template.config.helpers({
   select: function() {

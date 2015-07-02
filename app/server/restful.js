@@ -534,7 +534,7 @@ function addMetadata() {
         }
 
         var packageName = obj.package;
-        var hash = obj.sha224_hash;
+        // var hash = obj.sha224_hash;
 
         // handle this manually
 
