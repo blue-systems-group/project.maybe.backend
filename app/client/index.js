@@ -32,13 +32,6 @@ function setGlobalVariables() {
   Session.setDefault("toggleDuration", duration);
 }
 
-Template.api.events({
-  'click #api-title': function() {
-    var api = $('#api-content');
-    api.toggle(Session.get('toggleDuration'));
-  }
-});
-
 Template.devicesList.helpers({
   devices: function() {
     return Devices.find();
