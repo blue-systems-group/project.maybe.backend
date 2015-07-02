@@ -1,6 +1,7 @@
 // prepare collections
 var Devices = new Meteor.Collection('devices');
 var MetaData = new Meteor.Collection('metadata');
+var maybeAPIv1;
 
 // publish collections
 Meteor.publish('metadata', function() {
