@@ -1,3 +1,5 @@
+Session.setDefault('showHideToggle', false);
+
 var PackageCollections = {};
 
 Template.packageList.helpers({
@@ -26,6 +28,12 @@ Template.packageList.helpers({
 
 Template.packageList.events({
   'click .subtitle': function(event, template) {
-    template.$('.packageDetail').toggle(1000);
+    var isShow = Session.get('showHideToggle');
+    if (isShow) {
+      template.$('.packageDetail').show(1000);
+    } else {
+      template.$('.packageDetail').hide(1000);
+    }
+    Session.set('showHideToggle', !isShow);
   }
 });

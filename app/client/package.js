@@ -178,7 +178,6 @@ Template.package.events({
     // // console.log(event.toElement);
   },
   'click .packageName': function(event, template) {
-    console.log(event.target.innerHTML);
     template.$('.packageDetail').toggle(1000);
   }
 
