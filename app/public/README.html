@@ -227,37 +227,37 @@ You can use command:</p>
             "<span class="hljs-attribute">label</span>": <span class="hljs-value"><span class="hljs-string">"another block test"</span>
         </span>}
     ]
-</span>}</code></pre><h3 id="post"><a class="header-link" href="#post"></a>POST</h3>
+</span>}</code></pre><h3 id="post-1"><a class="header-link" href="#post-1"></a>POST</h3>
 <p>Create a new record for specific <code>metadata</code>.</p>
 <pre class="hljs"><code><span class="hljs-variable">$ </span>curl <span class="hljs-symbol">http:</span>/<span class="hljs-regexp">/localhost:3000/maybe</span>-api-v1/metadata -d <span class="hljs-string">'you json object'</span></code></pre><p>It will use <code>sha224_hash</code> as <code>_id</code> in MongoDB:
 If everything good, it will return a JSONObject with status code <code>201</code>.</p>
 <p>If the <code>sha224_hash</code> is duplicated, its status code <code>500</code>, content like this:</p>
 <pre class="hljs"><code>{<span class="hljs-string">"error"</span>:<span class="hljs-string">"MongoError: E11000 duplicate key error index: meteor.metadata.$_id_  dup key: { : \"1aab3f28f3d0ead580c3c22b10fee7e81c75e6d1e8f957611aedf51e\" }"</span>}%</code></pre><p>If something wrong, its status code <code>409</code>, content like this:</p>
-<pre class="hljs"><code>{ "<span class="hljs-attribute">message</span>": <span class="hljs-value"><span class="hljs-string">"Could not post that object."</span> </span>}</code></pre><h3 id="get"><a class="header-link" href="#get"></a>GET</h3>
+<pre class="hljs"><code>{ "<span class="hljs-attribute">message</span>": <span class="hljs-value"><span class="hljs-string">"Could not post that object."</span> </span>}</code></pre><h3 id="get-1"><a class="header-link" href="#get-1"></a>GET</h3>
 <p>Get all of the metadata records:</p>
 <pre class="hljs"><code><span class="hljs-variable">$ </span>curl <span class="hljs-symbol">http:</span>/<span class="hljs-regexp">/localhost:3000/maybe</span>-api-v1/metadata</code></pre><p>Get a device record:</p>
 <pre class="hljs"><code><span class="hljs-variable">$ </span>curl <span class="hljs-symbol">http:</span>/<span class="hljs-regexp">/localhost:3000/maybe</span>-api-v1/metadata/<span class="hljs-number">1</span>aab3f28f3d0ead580c3c22b10fee7e81c75e6d1e8f957611aedf51e</code></pre><p>If sucess, it will return an array of JSONObjects.</p>
-<h3 id="put"><a class="header-link" href="#put"></a>PUT</h3>
+<h3 id="put-1"><a class="header-link" href="#put-1"></a>PUT</h3>
 <p>TODO: example doesn&#39;t fit for metadata.</p>
 <p>Update a metadata:</p>
 <pre class="hljs"><code>$ curl http://localhost:<span class="hljs-number">3000</span>/maybe-api-v1/metadata/<span class="hljs-number">1</span>aab3f28f3d0ead580c3c22b10fee7e81c75e6d1e8f957611aedf51e -X PUT -d '{<span class="hljs-string">"<span class="hljs-variable">$set</span>"</span>: {<span class="hljs-string">"a"</span> : <span class="hljs-string">"c"</span>}}'</code></pre><p>If sucess, it will return a JSONObjects.</p>
 <pre class="hljs"><code>$ curl http://localhost:<span class="hljs-number">3000</span>/maybe-api-v1/metadata/<span class="hljs-number">1</span>aab3f28f3d0ead580c3c22b10fee7e81c75e6d1e8f957611aedf51e?<span class="hljs-variable">callback=</span><span class="hljs-number">0</span> -X PUT -d '{<span class="hljs-string">"$set"</span>: {<span class="hljs-string">"a"</span> : <span class="hljs-string">"c"</span>}}'</code></pre><p>With <code>?callback=0</code>, it will return a JSONObjects to indicate the PUT&#39;s status:</p>
-<pre class="hljs"><code>{"<span class="hljs-attribute">status</span>":<span class="hljs-value"><span class="hljs-string">"success"</span></span>}</code></pre><h3 id="delete"><a class="header-link" href="#delete"></a>DELETE</h3>
+<pre class="hljs"><code>{"<span class="hljs-attribute">status</span>":<span class="hljs-value"><span class="hljs-string">"success"</span></span>}</code></pre><h3 id="delete-1"><a class="header-link" href="#delete-1"></a>DELETE</h3>
 <p>Delete a record:</p>
 <pre class="hljs"><code><span class="hljs-variable">$ </span>curl <span class="hljs-symbol">http:</span>/<span class="hljs-regexp">/localhost:3000/maybe</span>-api-v1/metadata/<span class="hljs-number">1</span>aab3f28f3d0ead580c3c22b10fee7e81c75e6d1e8f957611aedf51e -<span class="hljs-constant">X DELETE</span></code></pre><p>If sucess, it will return empty content with  status code <code>200</code>. Otherwise, the output looks like:</p>
 <pre class="hljs"><code>{<span class="hljs-string">"message"</span>:<span class="hljs-string">"Could not delete that object."</span>}<span class="hljs-comment">%</span></code></pre><h2 id="logs"><a class="header-link" href="#logs"></a>logs</h2>
 <p>The logs api will let you store logs from devices. So each record represents a log entry. Currently, you are only allowed to use POST method.</p>
-<h3 id="post"><a class="header-link" href="#post"></a>POST</h3>
+<h3 id="post-2"><a class="header-link" href="#post-2"></a>POST</h3>
 <p>This is the only thing you can do with the <code>logs</code> api.</p>
 <pre class="hljs"><code>$ curl http://localhost:3000/maybe-api-v1/logs/deviceid -d '{<span class="hljs-string">"a"</span> : 1, <span class="hljs-string">"sha224_hash"</span> : <span class="hljs-string">"1aab3f28f3d0ead580c3c22b10fee7e81c75e6d1e8f957611aedf51e"</span>, <span class="hljs-string">"label"</span>: <span class="hljs-string">"simple test"</span>}'</code></pre><p>Note that, the JSONObject must have keys <code>sha224_hash</code> and <code>label</code> to represent its <code>package hash</code> and <code>label</code> respectively!
 Otherwise, the server will not allow the POST operation.</p>
 <p>If everything good (I hope that),  it will return a JSONObject with status code <code>201</code>:</p>
 <pre class="hljs"><code>[{"<span class="hljs-attribute">a</span>":<span class="hljs-value"><span class="hljs-number">1</span></span>,"<span class="hljs-attribute">_metadata</span>":<span class="hljs-value">{"<span class="hljs-attribute">deviceid</span>":<span class="hljs-value"><span class="hljs-string">"deviceid"</span></span>,"<span class="hljs-attribute">timestamp</span>":<span class="hljs-value"><span class="hljs-number">1425851460385</span></span>}</span>,"<span class="hljs-attribute">_id</span>":<span class="hljs-value"><span class="hljs-string">"CBZNtSBgHf3MBprnX"</span></span>}]</code></pre><p>You should pass your real <code>deviceid</code> instead of the <code>deviceid</code> in url above. The data content can be arbitrary JSONObject, but you can not use the key: <strong><code>_metadata</code></strong>, it&#39;s reversed for log analysis.</p>
-<h3 id="get"><a class="header-link" href="#get"></a>GET</h3>
+<h3 id="get-2"><a class="header-link" href="#get-2"></a>GET</h3>
 <p>You shouldn&#39;t GET log(s), because the log analysis is processing offline.</p>
-<h3 id="put"><a class="header-link" href="#put"></a>PUT</h3>
+<h3 id="put-2"><a class="header-link" href="#put-2"></a>PUT</h3>
 <p>You shouldn&#39;t PUT (change) log, because the log is unchangeable.</p>
-<h3 id="delete"><a class="header-link" href="#delete"></a>DELETE</h3>
+<h3 id="delete-2"><a class="header-link" href="#delete-2"></a>DELETE</h3>
 <p>You shouldn&#39;t DELETE log(s), we&#39;ll archive logs offline.</p>
     </article>
   </body>
