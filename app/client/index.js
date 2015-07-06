@@ -6,6 +6,11 @@ Meteor.startup(function() {
   // });
 
   setGlobalVariables();
+
+  Router.configure({
+    notFoundTemplate: "Home"
+  });
+
   Router.route('/', function () {
     this.render('Home');
   });
