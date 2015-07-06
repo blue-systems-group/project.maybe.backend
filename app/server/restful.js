@@ -618,60 +618,60 @@ function addLogs() {
         debug('POST log: ' + JSON.stringify(obj) + ' with: ' + JSON.stringify(requestMetadata));
         return true;
 
-        if (!requestMetadata.collectionId) {
-          return false;
-        }
+        // if (requestMetadata.collectionId === undefined) {
+        //   return false;
+        // }
 
-        if (!obj.hasOwnProperty("sha224_hash")) {
-          return false;
-        }
-        if (!obj.hasOwnProperty("label")) {
-          return false;
-        }
+        // if (!obj.hasOwnProperty("sha224_hash")) {
+        //   return false;
+        // }
+        // if (!obj.hasOwnProperty("label")) {
+        //   return false;
+        // }
 
-        var metaData = {
-          deviceid: requestMetadata.collectionId,
-          timestamp: new Date().valueOf()
-        };
+        // var metaData = {
+        //   deviceid: requestMetadata.collectionId,
+        //   timestamp: new Date().valueOf()
+        // };
 
-        var logEntry = {
-          _metadata: metaData,
-          value: obj
-        };
+        // var logEntry = {
+        //   _metadata: metaData,
+        //   value: obj
+        // };
 
-        var hash = obj.sha224_hash;
-        var label = obj.label;
-        var key = hash + "_" + label;
+        // var hash = obj.sha224_hash;
+        // var label = obj.label;
+        // var key = hash + "_" + label;
 
-        if (!Logs.hasOwnProperty(key) || !Logs[key].enable) {
-          returnObject.success = true;
-          returnObject.statusCode = 500;
-          var error = "";
-          if (MetaData.findOne(hash) === undefined) {
-            error = "No package for " + hash;
-          } else {
-            error = "Package " + hash  + " has no label " + label;
-          }
-          returnObject.body = {
-            error: error
-          };
-          return true;
-        }
+        // if (!Logs.hasOwnProperty(key) || !Logs[key].enable) {
+        //   returnObject.success = true;
+        //   returnObject.statusCode = 500;
+        //   var error = "";
+        //   if (MetaData.findOne(hash) === undefined) {
+        //     error = "No package for " + hash;
+        //   } else {
+        //     error = "Package " + hash  + " has no label " + label;
+        //   }
+        //   returnObject.body = {
+        //     error: error
+        //   };
+        //   return true;
+        // }
 
-        try {
-          Logs[key].collection.insert(logEntry);
-          returnObject.success = true;
-          returnObject.statusCode = 201;
-          returnObject.body = logEntry;
-        } catch (e) {
-          returnObject.success = true;
-          returnObject.statusCode = 500;
-          returnObject.body = {
-            error: e.toString()
-          };
-        }
+        // try {
+        //   Logs[key].collection.insert(logEntry);
+        //   returnObject.success = true;
+        //   returnObject.statusCode = 201;
+        //   returnObject.body = logEntry;
+        // } catch (e) {
+        //   returnObject.success = true;
+        //   returnObject.statusCode = 500;
+        //   returnObject.body = {
+        //     error: e.toString()
+        //   };
+        // }
 
-        return true;
+        // return true;
       },
       GET: function(objs, requestMetadata) {
         debug('GET');
