@@ -219,6 +219,15 @@ function delFromIndexCollection(obj, collection, returnObject) {
 //   }
 // }
 
+function initChoiceCount(alternatives, choiceCount) {
+  alternatives.forEach(function(oneAlternative) {
+    var value = oneAlternative.value;
+    if (!choiceCount.hasOwnProperty[value]) {
+      choiceCount[oneAlternative.value] = 0;
+    }
+  });
+}
+
 function updateOneDevice(deviceIndex, packageList) {
   debug('update choices for ' + deviceIndex._id);
   var collection = initDeviceCollection(deviceIndex._id);
@@ -269,13 +278,16 @@ function updateOneDevice(deviceIndex, packageList) {
           if (statement.choiceCount === undefined) {
             statement.choiceCount = {};
           }
+
           var choiceCount = statement.choiceCount;
-          statement.alternatives.forEach(function(oneAlternative) {
-            var value = oneAlternative.value;
-            if (!choiceCount.hasOwnProperty[value]) {
-              choiceCount[oneAlternative.value] = 0;
-            }
-          });
+
+          initChoiceCount(statement.alternatives, choiceCount);
+          // statement.alternatives.forEach(function(oneAlternative) {
+          //   var value = oneAlternative.value;
+          //   if (!choiceCount.hasOwnProperty[value]) {
+          //     choiceCount[oneAlternative.value] = 0;
+          //   }
+          // });
 
           // TODO assign random one and update statement.choiceCount
 
@@ -605,7 +617,8 @@ function addLogs() {
       POST: function(obj, requestMetadata, returnObject) {
         debug('POST log: ' + JSON.stringify(obj) + ' with: ' + JSON.stringify(requestMetadata));
         return true;
-        if (requestMetadata.collectionId === undefined) {
+
+        if (!requestMetadata.collectionId) {
           return false;
         }
 
