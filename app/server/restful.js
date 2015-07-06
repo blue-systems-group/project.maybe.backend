@@ -686,17 +686,25 @@ function addLogs() {
 // avoid duplicated publish
 var publishedCollection = {};
 
+function publishCollection(collection) {
+  if (!publishedCollection.hasOwnProperty(collection._name)) {
+    Meteor.publish(collection._name, function() {
+      // only return current ('0') record
+      return collection.find('0');
+    });
+    console.log('publish: ' + collection._name + ', count: ' + collection.find('0').count());
+    publishedCollection[collection._name] = collection;
+  }
+  return collection._name;
+}
+
 Meteor.methods({
   getPackage: function(packageName) {
     var packageCollection = initPackageCollection(packageName);
-    if (!publishedCollection.hasOwnProperty(packageCollection._name)) {
-      Meteor.publish(packageCollection._name, function() {
-        // only return current ('0') record
-        return packageCollection.find('0');
-      });
-      console.log('publish: ' + packageCollection._name + ', count: ' + packageCollection.find('0').count());
-      publishedCollection[packageCollection._name] = packageCollection;
-    }
-    return packageCollection._name;
+    return publishCollection(packageCollection);
+  },
+  getDevice: function(deviceid) {
+    var deviceCollection = initDeviceCollection(deviceid);
+    return publishCollection(deviceCollection);
   }
 });

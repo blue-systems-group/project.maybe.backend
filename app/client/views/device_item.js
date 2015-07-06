@@ -1,26 +1,35 @@
 Template.deviceItem.helpers({
   deviceid: function() {
-    return this.deviceid || this._id;
+    var self = this.findOne('0');
+    console.log(self);
+    return self && self.device && self.device.deviceid;
   },
   values: function() {
+    var self = this.findOne('0');
+    var choices = self && self.device && self.device.choices;
+
     var array = [];
-    for (var key in this) {
-      if (this.hasOwnProperty(key)) {
-        var value = this[key];
-        var object = {
-          "key" : key,
-          "value" : JSON.stringify(this[key]),
-          "choosed" : false
-        };
-        array.push(object);
-      }
-    }
-    return array;
+    // for (var key in this) {
+    //   if (this.hasOwnProperty(key)) {
+    //     var value = this[key];
+    //     var object = {
+    //       "key" : key,
+    //       "value" : JSON.stringify(this[key]),
+    //       "choosed" : false
+    //     };
+    //     array.push(object);
+    //   }
+    // }
+    // return array;
+    return 'values';
   },
   hasGCMid: function() {
-    return this.hasOwnProperty("gcmid");
+    var self = this.findOne('0');
+    return self && self.device && self.device.hasOwnProperty('gcmid');
   },
   deviceHtmlCode: function() {
+    var self = this.findOne('0');
+
     var root = document.createElement("div");
     var preNode = document.createElement("pre");
     preNode.className = "json";
@@ -37,12 +46,14 @@ Template.deviceItem.helpers({
     // delete this._id;
     // delete this.gcmid;
 
-    codeNode.innerHTML = json2html.transform(this);
+    var jsonObject = self && self.device;
+    codeNode.innerHTML = json2html.transform(jsonObject);
     hljs.highlightBlock(codeNode);
 
     // this._id = id;
     // this.gcmid = gcmid;
     return root.innerHTML;
+    // return 'deviceHtmlCode';
   }
 });
 
