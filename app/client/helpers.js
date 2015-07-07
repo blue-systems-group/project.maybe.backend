@@ -1,14 +1,12 @@
-function batchSubscribe(indexCollection, map, functionName) {
+CollectionMap = {};
+
+function batchSubscribe(indexCollection, functionName) {
   var index = indexCollection.find().fetch();
   var array = [];
   index.forEach(function(one) {
     var name = ReactiveMethod.call(functionName, one._id);
     if (name !== undefined) {
-      if (!map.hasOwnProperty(name)) {
-        Meteor.subscribe(name);
-      }
-      map[name] = new Meteor.Collection(name);
-      array.push(map[name]);
+      array.push(name);
     }
   });
   return array;
@@ -16,11 +14,9 @@ function batchSubscribe(indexCollection, map, functionName) {
 
 Session.setDefault('packageShowing', false);
 
-var PackageCollections = {};
-
 Template.packageList.helpers({
   packages: function() {
-    return batchSubscribe(MetaData, PackageCollections, 'getPackage');
+    return batchSubscribe(MetaData, 'getPackage');
   }
 });
 
@@ -36,11 +32,9 @@ Template.packageList.events({
   }
 });
 
-var DeviceCollections = {};
-
 Template.devicesList.helpers({
   devices: function() {
-    return batchSubscribe(Devices, DeviceCollections, 'getDevice');
+    return batchSubscribe(Devices, 'getDevice');
   }
 });
 

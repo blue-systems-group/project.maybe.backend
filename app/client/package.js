@@ -1,22 +1,37 @@
+Template.package.onCreated(function() {
+  var self = this;
+  var name = Template.currentData();
+  if(!CollectionMap.hasOwnProperty(name)) {
+    CollectionMap[name] = new Meteor.Collection(name);
+  }
+  self.collection = CollectionMap[name];
+  this.subscribe(name);
+});
+
 Template.package.helpers({
   dataReady: function() {
-    var self = this.findOne('0');
-    return self !== undefined;
+    var collection = Template.instance().collection;
+    return collection.findOne('0') !== undefined;
   },
   packageName: function() {
     // return this.package;
-    var self = this.findOne('0');
-    return self && self.package.package;
+    var collection = Template.instance().collection;
+    var record = collection.findOne('0');
+    return record && record.package.package;
   },
   hash: function() {
-    var self = this.findOne('0');
-    return self && self.package.sha224_hash;
+    var collection = Template.instance().collection;
+    var record = collection.findOne('0');
+    return record && record.package.sha224_hash;
   },
   statements: function() {
-    var self = this.findOne('0');
-    return self && mapToArray(self.package.statements);
+    var collection = Template.instance().collection;
+    var record = collection.findOne('0');
+    return record && mapToArray(record.package.statements);
   },
   packageHtmlCode: function() {
+    var collection = Template.instance().collection;
+    var record = collection.findOne('0');
     var root = document.createElement("div");
     var preNode = document.createElement("pre");
     preNode.className = "json";
@@ -28,13 +43,14 @@ Template.package.helpers({
 
     preNode.appendChild(codeNode);
 
-    var self = this.findOne('0');
-    codeNode.innerHTML = self && json2html.transform(self.package);
+    codeNode.innerHTML = record && json2html.transform(record.package);
     hljs.highlightBlock(codeNode);
 
     return root.innerHTML;
   },
   alternatives: function() {
+    var collection = Template.instance().collection;
+    var record = collection.findOne('0');
     var code = this.content;
     var label = this.label;
     var choice = 0;
@@ -122,8 +138,7 @@ Template.package.events({
     var label = this.label;
     var choice = this.value;
 
-    var collection = template.data;
-
+    var collection = Template.instance().collection;
 
     var document = collection.findOne('0');
 

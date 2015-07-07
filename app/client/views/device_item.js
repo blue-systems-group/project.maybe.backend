@@ -1,15 +1,28 @@
+Template.deviceItem.onCreated(function() {
+  var self = this;
+  var name = Template.currentData();
+  if(!CollectionMap.hasOwnProperty(name)) {
+    CollectionMap[name] = new Meteor.Collection(name);
+  }
+  self.collection = CollectionMap[name];
+  this.subscribe(name);
+});
+
 Template.deviceItem.helpers({
   dataReady: function() {
-    var self = this.findOne('0');
-    return self !== undefined;
+    // return Template.instance().dataReady;
+    var collection = Template.instance().collection;
+    return collection.findOne('0') !== undefined;
   },
   deviceid: function() {
-    var self = this.findOne('0');
-    return self && self.device && self.device.deviceid;
+    var collection = Template.instance().collection;
+    var record = collection.findOne('0');
+    return record && record.device && record.device.deviceid;
   },
   values: function() {
-    var self = this.findOne('0');
-    var choices = self && self.device && self.device.choices;
+    var collection = Template.instance().collection;
+    var record = collection.findOne('0');
+    var choices = record && record.device && record.device.choices;
 
     var array = [];
     // for (var key in this) {
@@ -27,11 +40,13 @@ Template.deviceItem.helpers({
     return 'values';
   },
   hasGCMid: function() {
-    var self = this.findOne('0');
-    return self && self.device && self.device.hasOwnProperty('gcmid');
+    var collection = Template.instance().collection;
+    var record = collection.findOne('0');
+    return record && record.device && record.device.hasOwnProperty('gcmid');
   },
   deviceHtmlCode: function() {
-    var self = this.findOne('0');
+    var collection = Template.instance().collection;
+    var record = collection.findOne('0');
 
     var root = document.createElement("div");
     var preNode = document.createElement("pre");
@@ -49,7 +64,7 @@ Template.deviceItem.helpers({
     // delete this._id;
     // delete this.gcmid;
 
-    var jsonObject = self && self.device;
+    var jsonObject = record && record.device;
     codeNode.innerHTML = json2html.transform(jsonObject);
     hljs.highlightBlock(codeNode);
 
@@ -97,12 +112,13 @@ Template.deviceItem.events({
       event.preventDefault();
       event.target.blur();
     }
-  },
+  }
+  // },
 
   // update the text of the item on keypress but throttle the event to ensure
   // we don't flood the server with updates (handles the event at most once
   // every 300ms)
-  'keyup input[type=text]': _.throttle(function(event) {
-    Devices.update(this._id, {$set: {'values.color': event.target.value}});
-  }, 300)
+  // 'keyup input[type=text]': _.throttle(function(event) {
+  //   Devices.update(this._id, {$set: {'values.color': event.target.value}});
+  // }, 300)
 });
