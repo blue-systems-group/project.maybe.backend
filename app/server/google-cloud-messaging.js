@@ -23,7 +23,7 @@ Meteor.methods({
         }
       },
       headers: {
-        Authorization: "key=AIzaSyC7tvl67Wlq7b0Exdf1vVE0496voBRJZnY",
+        Authorization: Meteor.settings.server.key,
         "Content-Type": "application/json"
       }
     };

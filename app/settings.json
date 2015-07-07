@@ -1,5 +1,8 @@
 {
   "public": {
     "toggleDuration": 1000
+  },
+  "server": {
+    "key": "key=AIzaSyC7tvl67Wlq7b0Exdf1vVE0496voBRJZnY"
   }
 }
