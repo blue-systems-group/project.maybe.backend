@@ -9,10 +9,6 @@ Template.package.onCreated(function() {
 });
 
 Template.package.helpers({
-  dataReady: function() {
-    var collection = Template.instance().collection;
-    return collection.findOne('0') !== undefined;
-  },
   packageName: function() {
     // return this.package;
     var collection = Template.instance().collection;

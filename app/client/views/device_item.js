@@ -9,11 +9,6 @@ Template.deviceItem.onCreated(function() {
 });
 
 Template.deviceItem.helpers({
-  dataReady: function() {
-    // return Template.instance().dataReady;
-    var collection = Template.instance().collection;
-    return collection.findOne('0') !== undefined;
-  },
   deviceid: function() {
     var collection = Template.instance().collection;
     var record = collection.findOne('0');
