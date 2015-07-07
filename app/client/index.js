@@ -61,7 +61,7 @@ Template.devicesList.helpers({
         if (!DeviceCollections.hasOwnProperty(name)) {
           // console.log('subscribe: ' + name);
           Meteor.subscribe(name, function() {
-            console.log('content: ' + DeviceCollections[name].find().fetch());
+            // console.log('content: ' + DeviceCollections[name].find().fetch());
           });
           DeviceCollections[name] = new Meteor.Collection(name);
         }

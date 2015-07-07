@@ -5,7 +5,6 @@ Template.deviceItem.helpers({
   },
   deviceid: function() {
     var self = this.findOne('0');
-    console.log(self);
     return self && self.device && self.device.deviceid;
   },
   values: function() {
