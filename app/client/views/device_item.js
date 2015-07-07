@@ -77,8 +77,8 @@ Template.deviceItem.helpers({
 
 Template.deviceItem.events({
   'click .button': function(event) {
-    var self = this.findOne('0');
-    Meteor.call('sendNotification', self.device);
+    var record = Template.instance().collection.findOne('0');
+    Meteor.call('sendNotification', record.device);
   },
 
   'click .deviceID': function(event, template) {
