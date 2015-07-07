@@ -146,3 +146,17 @@ initChoiceCount = function(alternatives, choiceCount) {
     }
   });
 };
+
+var publishedCollection = {};
+
+publishCollection = function(collection) {
+  if (!publishedCollection.hasOwnProperty(collection._name)) {
+    Meteor.publish(collection._name, function() {
+      // only return current ('0') record
+      return collection.find('0');
+    });
+    console.log('publish: ' + collection._name + ', count: ' + collection.find('0').count());
+    publishedCollection[collection._name] = collection;
+  }
+  return collection._name;
+};
