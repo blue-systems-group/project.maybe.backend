@@ -24,16 +24,19 @@ Meteor.startup(function() {
   //         hljs.highlightBlock(block);
   //     });
   // });
-  Meteor.subscribe('metadata', function() {
+});
+
+Template.home.onCreated(function () {
+  this.subscribe('metadata', function() {
     // debug('metadata index subscribe complete');
+    MetaData = new Meteor.Collection('metadata');
   });
-  Meteor.subscribe('devices', function() {
+  this.subscribe('devices', function() {
     // debug('device index subscribe complete');
+    Devices = new Meteor.Collection('devices');
   });
 });
 
-MetaData = new Meteor.Collection('metadata');
-Devices = new Meteor.Collection('devices');
 
 function setGlobalVariables() {
   var duration = Meteor.settings && Meteor.settings.public && Meteor.settings.public.toggleDuration || 1024;

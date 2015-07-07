@@ -4,8 +4,12 @@
       <h1 id="title">Maybe Backend!</h1>
 
       {{> api}}
-      {{> packageList}}
-      {{> devicesList}}
+      {{#if Template.subscriptionsReady}}
+        {{> packageList}}
+        {{> devicesList}}
+      {{else}}
+        Loading
+      {{/if}}
 
       <!-- <div> -->
       <!--   {{> test}} -->
