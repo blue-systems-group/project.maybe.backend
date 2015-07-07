@@ -1,4 +1,8 @@
 Template.package.helpers({
+  dataReady: function() {
+    var self = this.findOne('0');
+    return self !== undefined;
+  },
   packageName: function() {
     // return this.package;
     var self = this.findOne('0');

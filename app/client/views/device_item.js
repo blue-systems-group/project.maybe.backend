@@ -1,4 +1,8 @@
 Template.deviceItem.helpers({
+  dataReady: function() {
+    var self = this.findOne('0');
+    return self !== undefined;
+  },
   deviceid: function() {
     var self = this.findOne('0');
     console.log(self);

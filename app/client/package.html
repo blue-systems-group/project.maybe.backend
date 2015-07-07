@@ -1,42 +1,46 @@
 <template name="package">
   <div class="package">
-    <div class="packageName">
-      {{packageName}}
-    </div>
-    <div class="hash">
-      {{hash}}
-    </div>
-    <div class="packageDetail">
-      {{#each statements}}
-      <div class="statement">
-        <div class="label">
-          {{label}}
-          <button class="config">Config for each device</button>
-        </div>
-        <div class="alternatives">
+    {{#if dataReady}}
+      <div class="packageName">
+        {{packageName}}
+      </div>
+      <div class="hash">
+        {{hash}}
+      </div>
+      <div class="packageDetail">
+        {{#each statements}}
+        <div class="statement">
+          <div class="label">
+            {{label}}
+            <button class="config">Config for each device</button>
+          </div>
+          <div class="alternatives">
 
-          <div class="options">
-            {{#each alternatives}}
-            <div class="option-container">
-              {{#if isAlternative}}
-              {{#if isChoosed}}
-              <button class="option optionChoosed">{{value}}</button>
-              {{else}}
-              <button class="option">{{value}}</button>
-              {{/if}}
-              {{/if}}
+            <div class="options">
+              {{#each alternatives}}
+              <div class="option-container">
+                {{#if isAlternative}}
+                {{#if isChoosed}}
+                <button class="option optionChoosed">{{value}}</button>
+                {{else}}
+                <button class="option">{{value}}</button>
+                {{/if}}
+                {{/if}}
+              </div>
+              {{/each}}
             </div>
-            {{/each}}
-          </div>
-          <div class="code">
-            {{{highlightedHtmlCode}}}
+            <div class="code">
+              {{{highlightedHtmlCode}}}
+            </div>
           </div>
         </div>
+        {{/each}}
+        <div class="code">
+        {{{packageHtmlCode}}}
+        </div>
       </div>
-      {{/each}}
-      <div class="code">
-      {{{packageHtmlCode}}}
-      </div>
-    </div>
+    {{else}}
+      Loading
+    {{/if}}
   </div>
 </template>

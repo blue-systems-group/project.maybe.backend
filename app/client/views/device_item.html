@@ -1,15 +1,19 @@
 <template name="deviceItem">
   <div class="device">
-    <h3 class="deviceID">{{deviceid}}</h3>
-    {{#if hasGCMid}}
-    <div class="button">
-      <button>
-        Sent notification
-      </button>
-    </div>
+    {{#if dataReady}}
+      <h3 class="deviceID">{{deviceid}}</h3>
+      {{#if hasGCMid}}
+        <div class="button">
+          <button>
+            Sent notification
+          </button>
+        </div>
+      {{/if}}
+      <div class="deviceDetail">
+        {{{deviceHtmlCode}}}
+      </div>
+    {{else}}
+      Loading
     {{/if}}
-    <div class="deviceDetail">
-      {{{deviceHtmlCode}}}
-    </div>
   </div>
 </template>
