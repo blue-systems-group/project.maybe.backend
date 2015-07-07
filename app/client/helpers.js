@@ -1,4 +1,11 @@
-CollectionMap = {};
+var CollectionMap = {};
+
+getCollection = function(name) {
+  if(!CollectionMap.hasOwnProperty(name)) {
+    CollectionMap[name] = new Meteor.Collection(name);
+  }
+  return CollectionMap[name];
+};
 
 function batchSubscribe(indexCollection, functionName) {
   var index = indexCollection.find().fetch();

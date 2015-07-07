@@ -1,11 +1,7 @@
 Template.deviceItem.onCreated(function() {
-  var self = this;
   var name = Template.currentData();
-  if(!CollectionMap.hasOwnProperty(name)) {
-    CollectionMap[name] = new Meteor.Collection(name);
-  }
-  self.collection = CollectionMap[name];
   this.subscribe(name);
+  this.collection = getCollection(name);
 });
 
 Template.deviceItem.helpers({
