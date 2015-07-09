@@ -1,6 +1,7 @@
 // prepare collections
 Devices = new Meteor.Collection('devices');
 MetaData = new Meteor.Collection('metadata');
+Logs = new Meteor.Collection('logs');
 var maybeAPIv1;
 
 // publish collections
@@ -11,9 +12,6 @@ Meteor.publish('metadata', function() {
 Meteor.publish('devices', function() {
   return Devices.find({deleted: false}, {fields: {deleted: 0}});
 });
-
-var Logs = new Meteor.Collection('logs');
-// var Logs = {};
 
 function getMinChoice(statement, choiceCount) {
   var minChoice = statement.choice;
@@ -175,96 +173,9 @@ Meteor.startup(function() {
 
   addDevices(maybeAPIv1);
   addMetadata(maybeAPIv1);
-  addLogs();
+  addLogs(maybeAPIv1);
 
   maybeAPIv1.start();
 });
-
-function addLogs() {
-  maybeAPIv1.addCollection(Logs, 'logs', {
-    authToken: undefined,
-    methods: ['POST','GET','PUT','DELETE'],
-    before: {
-      POST: function(obj, requestMetadata, returnObject) {
-        debug('POST log: ' + JSON.stringify(obj) + ' with: ' + JSON.stringify(requestMetadata));
-        return true;
-
-        // if (requestMetadata.collectionId === undefined) {
-        //   return false;
-        // }
-
-        // if (!obj.hasOwnProperty("sha224_hash")) {
-        //   return false;
-        // }
-        // if (!obj.hasOwnProperty("label")) {
-        //   return false;
-        // }
-
-        // var metaData = {
-        //   deviceid: requestMetadata.collectionId,
-        //   timestamp: new Date().valueOf()
-        // };
-
-        // var logEntry = {
-        //   _metadata: metaData,
-        //   value: obj
-        // };
-
-        // var hash = obj.sha224_hash;
-        // var label = obj.label;
-        // var key = hash + "_" + label;
-
-        // if (!Logs.hasOwnProperty(key) || !Logs[key].enable) {
-        //   returnObject.success = true;
-        //   returnObject.statusCode = 500;
-        //   var error = "";
-        //   if (MetaData.findOne(hash) === undefined) {
-        //     error = "No package for " + hash;
-        //   } else {
-        //     error = "Package " + hash  + " has no label " + label;
-        //   }
-        //   returnObject.body = {
-        //     error: error
-        //   };
-        //   return true;
-        // }
-
-        // try {
-        //   Logs[key].collection.insert(logEntry);
-        //   returnObject.success = true;
-        //   returnObject.statusCode = 201;
-        //   returnObject.body = logEntry;
-        // } catch (e) {
-        //   returnObject.success = true;
-        //   returnObject.statusCode = 500;
-        //   returnObject.body = {
-        //     error: e.toString()
-        //   };
-        // }
-
-        // return true;
-      },
-      GET: function(objs, requestMetadata) {
-        debug('GET');
-        debug(objs);
-        return true;
-      },
-      PUT: function(obj, newValues, requestMetadata) {
-        debug('PUT');
-        debug(obj);
-        debug(newValues);
-        debug(requestMetadata);
-        return true;
-      },
-      DELETE: function(obj, requestMetadata) {
-        debug('DEL');
-        if (obj === undefined) {
-          return false;
-        }
-        return false;
-      }
-    }
-  });
-}
 
 // avoid duplicated publish
