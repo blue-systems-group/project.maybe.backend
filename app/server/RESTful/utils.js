@@ -26,6 +26,7 @@ initCollection = function(map, key, prefix) {
         enable: true,
         collection: new Meteor.Collection(key)
       };
+      map._length = map._length && map._length + 1 || 1;
     } else {
       if (map[key].enable === false) {
         debug('enable Collection: ' + key);
