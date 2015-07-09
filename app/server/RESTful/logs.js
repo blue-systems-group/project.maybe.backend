@@ -4,9 +4,20 @@ var getLogCollection = function(deviceid, packageName) {
   var length = LogCollections._length || 0;
   var collection = initCollection(LogCollections, deviceid + '_' + packageName, 'log');
   if (LogCollections._length > length) {
-    // TODO: inform package have such device
-    // TODO: inform device have such package
-    console.log('new', deviceid, packageName);
+    var packageIndexCollection = initCollection(LogCollections, packageName, 'log_package_index');
+    var deviceIndexCollection = initCollection(LogCollections, deviceid, 'log_device_index');
+    try {
+      // DONE: inform package have such device
+      if (!packageIndexCollection.findOne(deviceid)) {
+        packageIndexCollection.insert({_id: deviceid});
+      }
+      // DONE: inform device have such package
+      if (!deviceIndexCollection.findOne(packageName)) {
+        deviceIndexCollection.insert({_id: packageName});
+      }
+    } catch (e) {
+      console.log(e);
+    }
   }
   return collection;
 };
@@ -26,8 +37,8 @@ addLogs = function(maybeAPIv1) {
       POST: function(obj, requestMetadata, returnObject) {
         debug('POST log: ' + JSON.stringify(obj) + ' with: ' + JSON.stringify(requestMetadata));
         returnObject.success = true;
-        returnObject.statusCode = 400;
-        returnObject.body = {};
+        // returnObject.statusCode = 400;
+        // returnObject.body = {};
         var deviceid = requestMetadata.collectionId;
         if (deviceid === undefined) {
           // TODO: tell that we need device id
@@ -50,16 +61,30 @@ addLogs = function(maybeAPIv1) {
         // 2. label, label
         // 3. logObject, logObject
 
-        if (obj.constructor === Array) {
-          obj.forEach(function(entry) {
-            console.log(entry);
-          });
-        } else if (obj.constructor === Object) {
+        try {
+          if (obj.constructor === Array) {
+            // TODO: bunch insert
+            obj.forEach(function(entry) {
+              console.log(entry);
+              insertToLogCollection(entry, logCollection);
+            });
+          } else if (obj.constructor === Object) {
+            if (insertToLogCollection(obj, logCollection)) {
+              returnObject.statusCode = 201;
+              returnObject.body = {};
+            } else {
+              returnObject.statusCode = 403;
+              returnObject.body = {error: JSON.stringify(obj) + ' is not valid!'};
+            }
+          }
+        } catch (e) {
+          returnObject.statusCode = 500;
+          returnObject.body = {error: e.toString()};
         }
-
         // TODO: insert to collection, then return success code
 
-        // TODO: bunch insert
+        // return empty jsonObject indicate everything is good.
+        // return {error: 'something wrong!'} to indicate there're errors
         return true;
 
 
