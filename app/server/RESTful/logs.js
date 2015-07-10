@@ -23,10 +23,27 @@ var getLogCollection = function(deviceid, packageName) {
 };
 
 var insertToLogCollection = function(obj, logCollection) {
-  // TODO: insert obj to logCollection
-  // need validate obj
-  // need try catch and error handle.
-  return true;
+  // DONE: validation format
+  // the obj should have:
+  // 1. timestamp, timestamp
+  // 2. label, label
+  // 3. logObject, logObject
+
+  if (obj.timestamp === undefined) {
+    return false;
+  }
+  if (obj.label === undefined) {
+    return false;
+  }
+  if (obj.logObject === undefined) {
+    return false;
+  }
+
+  // DONE: insert obj to logCollection
+  // add _timestamp when insert to log
+  obj._timestamp = new Date().valueOf();
+  logCollection.insert(obj);
+  return false;
 };
 
 addLogs = function(maybeAPIv1) {
@@ -41,103 +58,46 @@ addLogs = function(maybeAPIv1) {
         // returnObject.body = {};
         var deviceid = requestMetadata.collectionId;
         if (deviceid === undefined) {
-          // TODO: tell that we need device id
+          // DONE: tell that we need device id
+          returnObject.statusCode = 403;
+          returnObject.body = {error: 'need deviceid in url!'};
           return true;
         }
         var fields = requestMetadata.fields;
         if (fields.length === 0) {
-          // TODO: tell that we need package name
+          // DONE: tell that we need package name
+          returnObject.statusCode = 403;
+          returnObject.body = {error: 'need package name in url!'};
           return true;
         }
         var packageName = fields[0];
 
-        // TODO: get log collection, per device per package should have a collection.
+        // DONE: get log collection, per device per package should have a collection.
         var logCollection = getLogCollection(deviceid, packageName);
 
+        var array = obj.constructor === Array && obj || [obj];
 
-        // TODO: validation format
-        // the obj should have:
-        // 1. timestamp, timestamp
-        // 2. label, label
-        // 3. logObject, logObject
-
+        // DONE: insert to collection, then return success code
         try {
-          if (obj.constructor === Array) {
-            // TODO: bunch insert
-            obj.forEach(function(entry) {
-              console.log(entry);
-              insertToLogCollection(entry, logCollection);
-            });
-          } else if (obj.constructor === Object) {
-            if (insertToLogCollection(obj, logCollection)) {
-              returnObject.statusCode = 201;
-              returnObject.body = {};
-            } else {
+          // DONE: bunch insert
+          for (var i in array) {
+            if (!insertToLogCollection(array[i], logCollection)) {
               returnObject.statusCode = 403;
-              returnObject.body = {error: JSON.stringify(obj) + ' is not valid!'};
+              returnObject.body = {error: JSON.stringify(array[i]) + ' is not valid!'};
+              return true;
             }
           }
         } catch (e) {
           returnObject.statusCode = 500;
           returnObject.body = {error: e.toString()};
+          return true;
         }
-        // TODO: insert to collection, then return success code
 
         // return empty jsonObject indicate everything is good.
         // return {error: 'something wrong!'} to indicate there're errors
+        returnObject.statusCode = 201;
+        returnObject.body = {};
         return true;
-
-
-        // if (!obj.hasOwnProperty("sha224_hash")) {
-        //   return false;
-        // }
-        // if (!obj.hasOwnProperty("label")) {
-        //   return false;
-        // }
-
-        // var metaData = {
-        //   deviceid: requestMetadata.collectionId,
-        //   timestamp: new Date().valueOf()
-        // };
-
-        // var logEntry = {
-        //   _metadata: metaData,
-        //   value: obj
-        // };
-
-        // var hash = obj.sha224_hash;
-        // var label = obj.label;
-        // var key = hash + "_" + label;
-
-        // if (!Logs.hasOwnProperty(key) || !Logs[key].enable) {
-        //   returnObject.success = true;
-        //   returnObject.statusCode = 500;
-        //   var error = "";
-        //   if (MetaData.findOne(hash) === undefined) {
-        //     error = "No package for " + hash;
-        //   } else {
-        //     error = "Package " + hash  + " has no label " + label;
-        //   }
-        //   returnObject.body = {
-        //     error: error
-        //   };
-        //   return true;
-        // }
-
-        // try {
-        //   Logs[key].collection.insert(logEntry);
-        //   returnObject.success = true;
-        //   returnObject.statusCode = 201;
-        //   returnObject.body = logEntry;
-        // } catch (e) {
-        //   returnObject.success = true;
-        //   returnObject.statusCode = 500;
-        //   returnObject.body = {
-        //     error: e.toString()
-        //   };
-        // }
-
-        // return true;
       },
       GET: function(objs, requestMetadata) {
         debug('GET');
