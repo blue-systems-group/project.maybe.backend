@@ -45,7 +45,7 @@ staleData = function(collection) {
     collection.remove(current);
 
     current._id = current._version.toString();
-    current._dumpAt = new Date();
+    current._dumpAt = new Date().valueOf();
 
     collection.insert(current);
   }
