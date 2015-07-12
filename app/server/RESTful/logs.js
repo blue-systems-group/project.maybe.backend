@@ -73,6 +73,7 @@ addLogs = function(maybeAPIv1) {
         var packageName = fields[0];
 
         // DONE: get log collection, per device per package should have a collection.
+        // TODO: check whether deviceid and package exist.
         var logCollection = getLogCollection(deviceid, packageName);
 
         var array = obj.constructor === Array && obj || [obj];
