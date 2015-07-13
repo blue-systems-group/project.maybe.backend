@@ -8,9 +8,9 @@ meteor-platform
 insecure
 http
 simple:highlight.js
-nemo64:bootstrap
 less
 miro:json2html
 xcv58:collection-api
 simple:reactive-method
 iron:router
+twbs:bootstrap
