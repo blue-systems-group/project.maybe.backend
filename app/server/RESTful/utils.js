@@ -142,7 +142,7 @@ delFromIndexCollection = function(obj, collection, returnObject) {
 initChoiceCount = function(alternatives, choiceCount) {
   alternatives.forEach(function(oneAlternative) {
     var value = oneAlternative.value;
-    if (!choiceCount.hasOwnProperty[value]) {
+    if (!choiceCount.hasOwnProperty(value)) {
       choiceCount[oneAlternative.value] = 0;
     }
   });
