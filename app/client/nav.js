@@ -38,3 +38,32 @@ Template.nav.helpers({
     return Session.get('activeNav') === this.href;
   }
 });
+
+// Hide Header on on scroll down
+// inspired by https://medium.com/@mariusc23/hide-header-on-scroll-down-show-on-scroll-up-67bbaae9a78c
+var lastScrollTop = 0;
+var delta = 32;
+
+setInterval(function() {
+  if (Session.get('didScroll')) {
+    hasScrolled();
+    Session.set('didScroll', false);
+  }
+}, 250);
+
+function hasScrolled() {
+  var st = $(this).scrollTop();
+
+  // Make sure they scroll more than delta
+  if(Math.abs(lastScrollTop - st) <= delta) {
+    return;
+  }
+
+  if (st > lastScrollTop){
+    $('.navbar').fadeOut(500);
+  } else {
+    $('.navbar').show();
+  }
+
+  lastScrollTop = st;
+}

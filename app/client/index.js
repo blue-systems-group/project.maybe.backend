@@ -34,6 +34,10 @@ Meteor.startup(function() {
   // });
   MetaData = new Meteor.Collection('metadata');
   Devices = new Meteor.Collection('devices');
+
+  $(window).scroll(function(event){
+    Session.set('didScroll', true);
+  });
 });
 
 Template.home.onCreated(function () {
@@ -49,4 +53,6 @@ Template.home.onCreated(function () {
 function setGlobalVariables() {
   var duration = Meteor.settings && Meteor.settings.public && Meteor.settings.public.toggleDuration || 1024;
   Session.setDefault("toggleDuration", duration);
+
+  Session.setDefault('didScroll', false);
 }
