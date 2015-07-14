@@ -52,7 +52,7 @@ var lastScrollTop = 0;
 var delta = 32;
 
 function hasScrolled() {
-  var st = $(this).scrollTop();
+  var st = Math.max($(this).scrollTop(), 0);
 
   if(Math.abs(lastScrollTop - st) <= delta) {
     return;
