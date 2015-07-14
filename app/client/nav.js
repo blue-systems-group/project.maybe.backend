@@ -23,10 +23,11 @@ Template.nav.helpers({
   links: function() {
     var links = [];
     links.push(getLink('Maybe Backend', '/'));
-    links.push(getLink('Packages', '#packages-container'));
-    links.push(getLink('Devices', '#devices-container'));
-    links.push(getLink('RESTful API', 'api'));
-    links.push(getLink('Contact', '#contact'));
+    links.push(getLink('Packages', '/#packages-container'));
+    links.push(getLink('Devices', '/#devices-container'));
+    links.push(getLink('Logs', '/logs'));
+    links.push(getLink('RESTful API', '/api'));
+    links.push(getLink('Contact', '/#contact'));
     return links;
   },
   active: function() {
