@@ -1,8 +1,6 @@
 Template.nav.onCreated(function() {
   if (location.hash !== '') {
     Session.setDefault('activeNav', location.hash);
-  } else if (location.pathname === '/') {
-    Session.setDefault('activeNav', '/');
   } else {
     var fields = location.pathname.split('/');
     Session.setDefault('activeNav', fields[1]);
@@ -12,6 +10,9 @@ Template.nav.onCreated(function() {
 Template.nav.events({
   'click .nav a': function(event, template) {
     Session.set('activeNav', this.href);
+  },
+  'click .navbar-brand': function(event, template) {
+    Session.set('activeNav', '');
   }
 });
 
@@ -22,7 +23,7 @@ function getLink(name, href) {
 Template.nav.helpers({
   links: function() {
     var links = [];
-    links.push(getLink('Maybe Backend', '/'));
+    links.push(getLink('Home', ''));
     links.push(getLink('Packages', '/#packages-container'));
     links.push(getLink('Devices', '/#devices-container'));
     links.push(getLink('Logs', '/logs'));
