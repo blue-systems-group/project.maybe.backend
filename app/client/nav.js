@@ -7,6 +7,13 @@ Template.nav.onCreated(function() {
     var fields = location.pathname.split('/');
     Session.setDefault('activeNav', fields[1]);
   }
+
+  Deps.autorun(function() {
+    if(Session.get('didScroll')) {
+      hasScrolled();
+      Session.set('didScroll', false);
+    }
+  });
 });
 
 Template.nav.events({
@@ -44,22 +51,14 @@ Template.nav.helpers({
 var lastScrollTop = 0;
 var delta = 32;
 
-setInterval(function() {
-  if (Session.get('didScroll')) {
-    hasScrolled();
-    Session.set('didScroll', false);
-  }
-}, 250);
-
 function hasScrolled() {
   var st = $(this).scrollTop();
 
-  // Make sure they scroll more than delta
   if(Math.abs(lastScrollTop - st) <= delta) {
     return;
   }
 
-  if (st > lastScrollTop){
+  if (st > lastScrollTop) {
     $('.navbar').fadeOut(500);
   } else {
     $('.navbar').show();
