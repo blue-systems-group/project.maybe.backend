@@ -10,7 +10,7 @@ Table of Contents
   * [Maybe backend](#maybe-backend)
   * [Table of Contents](#table-of-contents)
   * [Usage](#usage)
-    * [Convert README.md to Meteor template](#convert-readmemd-to-meteor-template)
+    * [Convert readme file to Meteor template](#convert-readme-file-to-meteor-template)
   * [RESTFul APIs](#restful-apis)
     * [devices](#devices)
       * [POST](#post)
