@@ -10,6 +10,7 @@ Table of Contents
   * [Maybe backend](#maybe-backend)
   * [Table of Contents](#table-of-contents)
   * [Usage](#usage)
+    * [Convert README.md to Meteor template](#convert-readmemd-to-meteor-template)
   * [RESTFul APIs](#restful-apis)
     * [devices](#devices)
       * [POST](#post)
@@ -47,7 +48,7 @@ You can use command:
    meteor
 ```
 
-## Convert README.md to Meteor template
+## Convert readme file to Meteor template
 ```bash
    generate-md --layout ./meteor-template-layout --input ./README.md --output ./app/client
 ```
