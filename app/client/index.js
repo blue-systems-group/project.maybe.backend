@@ -15,6 +15,10 @@ Meteor.startup(function() {
     this.render('Home');
   });
 
+  Router.route('/api', function () {
+    this.render('api');
+  });
+
   hljs.initHighlightingOnLoad();
   Session.setDefault("selectPackage", "default");
   Session.setDefault("selectHash", "default");
@@ -42,9 +46,3 @@ function setGlobalVariables() {
   var duration = Meteor.settings && Meteor.settings.public && Meteor.settings.public.toggleDuration || 1024;
   Session.setDefault("toggleDuration", duration);
 }
-
-Template.api.events({
-  'click #api-title': function() {
-    Router.go('/README.html');
-  }
-});

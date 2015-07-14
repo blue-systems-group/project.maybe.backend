@@ -22,7 +22,7 @@ Template.nav.helpers({
     var links = [];
     links.push(getLink('Packages', '#packages-container'));
     links.push(getLink('Devices', '#devices-container'));
-    links.push(getLink('RESTful API', '#api'));
+    links.push(getLink('RESTful API', 'api'));
     links.push(getLink('Contact', '#contact'));
     return links;
   },
