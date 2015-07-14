@@ -1,6 +1,10 @@
 /* CSS declarations go here */
 body, html {
     padding-top: 32px;
+    margin: auto;
+    max-width: 80em;
+    padding-left: 1em;
+    padding-right: 1em;
     /* height: 100%; */
    /*background-color: red;*/
 }

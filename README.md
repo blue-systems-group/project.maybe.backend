@@ -8,6 +8,7 @@ Table of Contents
 =================
 
   * [Maybe backend](#maybe-backend)
+  * [Table of Contents](#table-of-contents)
   * [Usage](#usage)
   * [RESTFul APIs](#restful-apis)
     * [devices](#devices)
@@ -26,6 +27,8 @@ Table of Contents
       * [PUT](#put-2)
       * [DELETE](#delete-2)
 
+Created by [gh-md-toc](https://github.com/ekalinin/github-markdown-toc)
+
 ---
 
 # Usage
@@ -42,6 +45,11 @@ You can use command:
 ```bash
    cd app
    meteor
+```
+
+## Convert README.md to Meteor template
+```bash
+   generate-md --layout ./meteor-template-layout --input ./README.md --output ./app/client
 ```
 
 ---
