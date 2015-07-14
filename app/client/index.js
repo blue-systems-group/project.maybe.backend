@@ -28,16 +28,16 @@ Meteor.startup(function() {
   //         hljs.highlightBlock(block);
   //     });
   // });
+  MetaData = new Meteor.Collection('metadata');
+  Devices = new Meteor.Collection('devices');
 });
 
 Template.home.onCreated(function () {
   this.subscribe('metadata', function() {
     // debug('metadata index subscribe complete');
-    MetaData = new Meteor.Collection('metadata');
   });
   this.subscribe('devices', function() {
     // debug('device index subscribe complete');
-    Devices = new Meteor.Collection('devices');
   });
 });
 
