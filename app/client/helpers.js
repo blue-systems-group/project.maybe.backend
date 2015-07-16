@@ -7,6 +7,8 @@ getCollection = function(name) {
   return CollectionMap[name];
 };
 
+// call server side method to publish collection
+// by deviceid/package name, and return array contains collection name
 function batchSubscribe(indexCollection, functionName) {
   var index = indexCollection.find().fetch();
   var array = [];
