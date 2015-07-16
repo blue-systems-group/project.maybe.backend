@@ -6,8 +6,8 @@
 
 <template name="home">
   {{> nav}}
-  <div class="flex-container">
-    <h1 id="title" class="flex-row">Maybe Backend!</h1>
+  <div class="flex-column">
+    <h1 id="title" class="flex-column">Maybe Backend!</h1>
 
     {{#if Template.subscriptionsReady}}
     {{> packageList}}
@@ -23,7 +23,7 @@
 </template>
 
 <template name="devicesList">
-  <div id="devices-container" class="flex-row">
+  <div id="devices-container" class="flex-column">
     <h2 class="subtitle">Devices:</h2>
     <div class="devices">
       {{#each devices}}
@@ -34,10 +34,10 @@
 </template>
 
 <template name="packageList">
-  <div id="packages-container" class="flex-row">
-    <h2 class="subtitle">Packages:</h2>
-    <!-- {{> config}} -->
-    <div class="packageList flex-row">
+  <div id="packages-container" class="flex-column">
+    <div class="packageList flex-column">
+      <h2 class="subtitle flex-column">Packages:</h2>
+      <!-- {{> config}} -->
       {{#each packages}}
       {{> package}}
       {{/each}}
