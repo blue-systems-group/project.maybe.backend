@@ -43,7 +43,7 @@ var insertToLogCollection = function(obj, logCollection) {
   // add _timestamp when insert to log
   obj._timestamp = new Date().valueOf();
   logCollection.insert(obj);
-  return false;
+  return true;
 };
 
 addLogs = function(maybeAPIv1) {
