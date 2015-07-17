@@ -7,22 +7,6 @@ Meteor.startup(function() {
 
   setGlobalVariables();
 
-  Router.configure({
-    notFoundTemplate: "Home"
-  });
-
-  Router.route('/', function () {
-    this.render('Home');
-  });
-
-  Router.route('/api', function () {
-    this.render('api');
-  });
-
-  Router.route('/logs', function () {
-    this.render('logs');
-  });
-
   hljs.initHighlightingOnLoad();
   Session.setDefault("selectPackage", "default");
   Session.setDefault("selectHash", "default");
