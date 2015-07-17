@@ -1,4 +1,34 @@
 <template name="logs">
   {{> nav}}
-  logs should be here!
+  <div class="flex-column">
+    {{#if Template.subscriptionsReady}}
+      {{#each packages}}
+        {{> log_package}}
+      {{/each}}
+    {{else}}
+      Loading...
+    {{/if}}
+  </div>
+</template>
+
+<template name="log_package">
+  {{#if alone}}
+  {{> nav}}
+  {{/if}}
+  <div class="flex-element">
+    {{#if Template.subscriptionsReady}}
+      {{packageName}}
+      {{#each devices}}
+        {{device}}
+      {{/each}}
+    {{else}}
+      Loading...
+    {{/if}}
+  </div>
+</template>
+
+<template name="showLog">
+  {{> nav}}
+  {{packageName}}
+  {{deviceid}}
 </template>
