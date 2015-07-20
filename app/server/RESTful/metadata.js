@@ -102,9 +102,9 @@ addMetadata = function(maybeAPIv1) {
   });
 };
 
-Meteor.methods({
-  getPackage: function(packageName) {
-    var packageCollection = initPackageCollection(packageName);
-    return publishCollection(packageCollection);
+Meteor.publish('getPackageCollection', function(collectionName) {
+  if (!PackageCollections.hasOwnProperty(collectionName)) {
+    PackageCollections[collectionName] = new Meteor.Collection(collectionName);
   }
+  return PackageCollections[collectionName].find();
 });

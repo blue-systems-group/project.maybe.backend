@@ -25,12 +25,8 @@ Meteor.startup(function() {
 });
 
 Template.home.onCreated(function () {
-  this.subscribe('metadata', function() {
-    // debug('metadata index subscribe complete');
-  });
-  this.subscribe('devices', function() {
-    // debug('device index subscribe complete');
-  });
+  this.subscribe('metadata');
+  this.subscribe('devices');
 });
 
 

@@ -38,9 +38,6 @@ Template.log_package.onCreated(function () {
 Template.log_package.helpers({
   packageName: function() {
     console.log(this);
-    var name = ReactiveMethod.call('getPackageLogIndexCollection', this._id);
-    console.log(name);
-    console.log(IndexCollection.find().fetch());
     return this._id;
   },
   devices: function() {

@@ -179,9 +179,9 @@ addDevices = function(maybeAPIv1) {
   });
 };
 
-Meteor.methods({
-  getDevice: function(deviceid) {
-    var deviceCollection = initDeviceCollection(deviceid);
-    return publishCollection(deviceCollection);
+Meteor.publish('getDeviceCollection', function(collectionName) {
+  if (!DeviceCollections.hasOwnProperty(collectionName)) {
+    DeviceCollections[collectionName] = new Meteor.Collection(collectionName);
   }
+  return DeviceCollections[collectionName].find();
 });

@@ -1,6 +1,6 @@
 Template.package.onCreated(function() {
   var name = Template.currentData();
-  this.subscribe(name);
+  this.subscribe('getPackageCollection', name);
   this.collection = getCollection(name);
 });
 

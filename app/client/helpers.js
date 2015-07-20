@@ -25,7 +25,12 @@ Session.setDefault('packageShowing', false);
 
 Template.packageList.helpers({
   packages: function() {
-    return batchSubscribe(MetaData, 'getPackage');
+    var documents = MetaData.find().fetch();
+    var packages = [];
+    documents.forEach(function(doc) {
+      packages.push(doc.actualCollection);
+    });
+    return packages;
   }
 });
 
@@ -43,7 +48,12 @@ Template.packageList.events({
 
 Template.devicesList.helpers({
   devices: function() {
-    return batchSubscribe(Devices, 'getDevice');
+    var documents = Devices.find().fetch();
+    var devices = [];
+    documents.forEach(function(doc) {
+      devices.push(doc.actualCollection);
+    });
+    return devices;
   }
 });
 
