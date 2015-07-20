@@ -180,8 +180,5 @@ addDevices = function(maybeAPIv1) {
 };
 
 Meteor.publish('getDeviceCollection', function(collectionName) {
-  if (!DeviceCollections.hasOwnProperty(collectionName)) {
-    DeviceCollections[collectionName] = new Meteor.Collection(collectionName);
-  }
-  return DeviceCollections[collectionName].find();
+  return getCollection(collectionName).find();
 });

@@ -16,6 +16,8 @@ filterDeleted = function(objs, returnObject) {
   return records;
 };
 
+var CollectionMap = {};
+
 initCollection = function(map, key, prefix) {
   prefix = prefix || 'noprefix';
   key = prefix + '_' + key;
@@ -24,7 +26,7 @@ initCollection = function(map, key, prefix) {
       debug('create Collection: ' + key);
       map[key] = {
         enable: true,
-        collection: new Meteor.Collection(key)
+        collection: getCollection(key)
       };
       map._length = map._length && map._length + 1 || 1;
     } else {
@@ -37,6 +39,13 @@ initCollection = function(map, key, prefix) {
     debug(e.toString());
   }
   return map[key].collection;
+};
+
+getCollection = function(key) {
+  if (!CollectionMap.hasOwnProperty(key)) {
+    CollectionMap[key] = new Meteor.Collection(key);
+  }
+  return CollectionMap[key];
 };
 
 staleData = function(collection) {

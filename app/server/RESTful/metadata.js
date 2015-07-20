@@ -103,8 +103,17 @@ addMetadata = function(maybeAPIv1) {
 };
 
 Meteor.publish('getPackageCollection', function(collectionName) {
-  if (!PackageCollections.hasOwnProperty(collectionName)) {
-    PackageCollections[collectionName] = new Meteor.Collection(collectionName);
+  return getCollection(collectionName).find();
+});
+
+Meteor.methods({
+  setFixedChoice: function(packageName, label, choice) {
+    // TODO: error handle
+    // TODO: record log for who changes what
+    var collection = initPackageCollection(packageName);
+    var document = collection.findOne('0');
+    document.package.statements[label].choice = choice;
+    collection.update('0', document);
+    return;
   }
-  return PackageCollections[collectionName].find();
 });

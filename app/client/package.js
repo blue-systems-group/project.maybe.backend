@@ -134,10 +134,8 @@ Template.package.events({
 
     var document = collection.findOne('0');
 
-    document.package.statements[label].choice = choice;
-    collection.update('0', document);
-
     console.log(document.package.package + '\n' + label + '\nchoice: ' + choice);
+    Meteor.call('setFixedChoice', document.package.package, label, choice);
   },
   'click .config': function(event, template) {
     var package = template.data;
