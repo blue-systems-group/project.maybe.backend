@@ -1,13 +1,21 @@
 var LogCollections = {};
 
-var getLogCollection = function(deviceid, packageName) {
+var getLogCollection = function(deviceid, packageName, returnObject) {
   var length = LogCollections._length || 0;
   var collection = initCollection(LogCollections, deviceid + '_' + packageName, 'log');
   if (LogCollections._length > length) {
     var packageIndexCollection = initCollection(LogCollections, packageName, 'log_package_index');
     var deviceIndexCollection = initCollection(LogCollections, deviceid, 'log_device_index');
-    updateToIndexCollection(deviceid, Devices, 'logIndexCollection', deviceIndexCollection._name);
-    updateToIndexCollection(packageName, MetaData, 'logIndexCollection', packageIndexCollection._name);
+    if (!updateToIndexCollection(deviceid, Devices, 'logIndexCollection', deviceIndexCollection._name)) {
+      returnObject.statusCode = 403;
+      returnObject.body = {error: 'deviceid: ' + deviceid + ' is not valid!'};
+      return undefined;
+    }
+    if (!updateToIndexCollection(packageName, MetaData, 'logIndexCollection', packageIndexCollection._name)) {
+      returnObject.statusCode = 403;
+      returnObject.body = {error: 'packageName: ' + packageName + ' is not valid!'};
+      return undefined;
+    }
     try {
       // DONE: inform package have such device
       if (!packageIndexCollection.findOne(deviceid)) {
@@ -75,8 +83,11 @@ addLogs = function(maybeAPIv1) {
         var packageName = fields[0];
 
         // DONE: get log collection, per device per package should have a collection.
-        // TODO: check whether deviceid and package exist.
-        var logCollection = getLogCollection(deviceid, packageName);
+        // DONE: check whether deviceid and package exist.
+        var logCollection = getLogCollection(deviceid, packageName, returnObject);
+        if (logCollection === undefined) {
+          return true;
+        }
 
         var array = obj.constructor === Array && obj || [obj];
 
