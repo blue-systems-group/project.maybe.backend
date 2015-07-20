@@ -1,9 +1,9 @@
-Template.deviceItem.onCreated(function() {
-  this.subscribe('getCollectionByName', Template.currentData().actualCollection);
+Template.device.onCreated(function() {
   this.collection = getCollection(Template.currentData().actualCollection);
+  this.subscribe('getCollectionByName', Template.currentData().actualCollection);
 });
 
-Template.deviceItem.helpers({
+Template.device.helpers({
   deviceid: function() {
     var collection = Template.instance().collection;
     var record = collection.findOne('0');
@@ -65,7 +65,7 @@ Template.deviceItem.helpers({
   }
 });
 
-Template.deviceItem.events({
+Template.device.events({
   'click .button': function(event) {
     var record = Template.instance().collection.findOne('0');
     Meteor.call('sendNotification', record.device);
