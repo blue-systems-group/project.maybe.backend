@@ -1,7 +1,7 @@
 Template.deviceItem.onCreated(function() {
-  var name = Template.currentData();
-  this.subscribe('getDeviceCollection', name);
-  this.collection = getCollection(name);
+  var self = Template.currentData();
+  this.subscribe('getDeviceCollection', self.actualCollection);
+  this.collection = getCollection(self.actualCollection);
 });
 
 Template.deviceItem.helpers({
