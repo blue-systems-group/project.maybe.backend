@@ -178,7 +178,3 @@ addDevices = function(maybeAPIv1) {
     }
   });
 };
-
-Meteor.publish('getDeviceCollection', function(collectionName) {
-  return getCollection(collectionName).find();
-});

@@ -102,10 +102,6 @@ addMetadata = function(maybeAPIv1) {
   });
 };
 
-Meteor.publish('getPackageCollection', function(collectionName) {
-  return getCollection(collectionName).find();
-});
-
 Meteor.methods({
   setFixedChoice: function(packageName, label, choice) {
     // TODO: error handle

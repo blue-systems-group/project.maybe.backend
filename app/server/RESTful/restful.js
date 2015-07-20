@@ -13,6 +13,10 @@ Meteor.publish('devices', function() {
   return Devices.find({deleted: false}, {fields: {deleted: 0}});
 });
 
+Meteor.publish('getCollectionByName', function(collectionName) {
+  return getCollection(collectionName).find();
+});
+
 function getMinChoice(statement, choiceCount) {
   var minChoice = statement.choice;
   var minCount = Number.MAX_VALUE;
