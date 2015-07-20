@@ -6,6 +6,8 @@ var getLogCollection = function(deviceid, packageName) {
   if (LogCollections._length > length) {
     var packageIndexCollection = initCollection(LogCollections, packageName, 'log_package_index');
     var deviceIndexCollection = initCollection(LogCollections, deviceid, 'log_device_index');
+    updateToIndexCollection(deviceid, Devices, 'logIndexCollection', deviceIndexCollection._name);
+    updateToIndexCollection(packageName, MetaData, 'logIndexCollection', packageIndexCollection._name);
     try {
       // DONE: inform package have such device
       if (!packageIndexCollection.findOne(deviceid)) {

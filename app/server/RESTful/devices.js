@@ -32,6 +32,8 @@ addDevices = function(maybeAPIv1) {
         try {
           var collection = initDeviceCollection(obj.deviceid);
 
+          updateToIndexCollection(obj.deviceid, Devices, 'actualCollection', collection._name);
+
           var newRecord = addDeviceToCollection(obj, collection);
 
           var packageList = getPackageList();

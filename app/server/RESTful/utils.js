@@ -161,3 +161,21 @@ publishCollection = function(collection) {
   }
   return collection._name;
 };
+
+updateToIndexCollection = function(id, collection, field, name) {
+  try {
+    var record = collection.findOne(id);
+    if (record === undefined) {
+      return false;
+    } else {
+      if (record[field] === undefined || record[field] !== name) {
+        record[field] = name;
+        collection.update(record._id, record);
+      }
+    }
+  } catch (e) {
+    debug(e.toString());
+    return false;
+  }
+  return true;
+};

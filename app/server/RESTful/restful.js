@@ -177,5 +177,3 @@ Meteor.startup(function() {
 
   maybeAPIv1.start();
 });
-
-// avoid duplicated publish

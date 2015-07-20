@@ -49,6 +49,7 @@ addMetadata = function(maybeAPIv1) {
 
         try {
           var collection = initPackageCollection(packageName);
+          updateToIndexCollection(packageName, MetaData, 'actualCollection', collection._name);
 
           var newRecord = addMetadataToCollection(obj, collection);
 
