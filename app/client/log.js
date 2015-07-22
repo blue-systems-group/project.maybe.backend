@@ -40,7 +40,6 @@ Template.log_package.onCreated(function () {
 
 Template.log_package.helpers({
   packageName: function() {
-    console.log('name', this);
     return this._id;
   },
   devices: function() {
@@ -52,7 +51,6 @@ Template.log_package.helpers({
     return indexCollection.find();
   },
   device: function() {
-    console.log('device', this);
     return this._id;
   }
 });
@@ -97,9 +95,5 @@ Template.log_device.helpers({
     hljs.highlightBlock(codeNode);
 
     return root.innerHTML;
-  },
-  test: function() {
-    console.log(this);
-    return "showLog";
   }
 });
