@@ -19,11 +19,11 @@ var getLogCollection = function(deviceid, packageName, returnObject) {
     try {
       // DONE: inform package have such device
       if (!packageIndexCollection.findOne(deviceid)) {
-        packageIndexCollection.insert({_id: deviceid});
+        packageIndexCollection.insert({_id: deviceid, actualCollection: collection._name});
       }
       // DONE: inform device have such package
       if (!deviceIndexCollection.findOne(packageName)) {
-        deviceIndexCollection.insert({_id: packageName});
+        deviceIndexCollection.insert({_id: packageName, actualCollection: collection._name});
       }
     } catch (e) {
       console.log(e);

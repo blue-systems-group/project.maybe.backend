@@ -3,7 +3,9 @@
   <div class="flex-column">
     {{#if Template.subscriptionsReady}}
       {{#each packages}}
-        {{> log_package}}
+        <div class="log-package">
+          {{> log_package}}
+        </div>
       {{/each}}
     {{else}}
       Loading...
@@ -17,9 +19,13 @@
   {{/if}}
   <div class="flex-element">
     {{#if Template.subscriptionsReady}}
-      {{packageName}}
+      <div class="packageName">
+        {{packageName}}
+      </div>
       {{#each devices}}
-        {{device}}
+        <div class="log-device">
+          {{> log_device}}
+        </div>
       {{/each}}
     {{else}}
       Loading...
@@ -27,8 +33,13 @@
   </div>
 </template>
 
-<template name="showLog">
-  {{> nav}}
-  {{packageName}}
-  {{deviceid}}
+<template name="log_device">
+    {{#if Template.subscriptionsReady}}
+      {{deviceid}}
+      {{#each logs}}
+        {{{logHtmlCode}}}
+      {{/each}}
+    {{else}}
+      Loading...
+    {{/if}}
 </template>

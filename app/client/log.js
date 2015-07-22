@@ -19,15 +19,18 @@ Template.logs.helpers({
     // TODO: /logs/:packageName/:deviceid  get log_package_deviceid collection
     // template logPackageDevice
 
-    var packages = MetaData.find().fetch();
-    return packages;
+    // var packages = MetaData.find().fetch();
+    // return packages;
+    return MetaData.find();
   }
 });
 
-IndexCollection = new Meteor.Collection('log_package_index_testing_inputs.maybe');
 Template.log_package.onCreated(function () {
   // var name = ReactiveMethod.call('getPackageLogIndexCollection', this._id);
   var self = Template.currentData();
+  if (self.logIndexCollection !== undefined) {
+    this.subscribe('getCollectionByName', self.logIndexCollection);
+  }
   // Meteor.call('getPackageLogIndexCollection', self._id, function(err, response) {
   //   console.log('err', err);
   //   console.log('res', response);
@@ -37,24 +40,59 @@ Template.log_package.onCreated(function () {
 
 Template.log_package.helpers({
   packageName: function() {
-    console.log(this);
+    console.log('name', this);
     return this._id;
   },
   devices: function() {
-    return [];
+    var self = this;
+    if (self.logIndexCollection === undefined) {
+      return [];
+    }
+    var indexCollection = getCollection(self.logIndexCollection);
+    return indexCollection.find();
   },
   device: function() {
-    console.log(this);
+    console.log('device', this);
     return this._id;
   }
 });
 
-Template.showLog.helpers({
+Template.log_device.onCreated(function() {
+  this.collection = getCollection(Template.currentData().actualCollection);
+  this.subscribe('getCollectionByName', Template.currentData().actualCollection);
+});
+
+Template.log_device.helpers({
+  temp: function() {
+    return 'temp';
+  },
   packageName: function() {
     return this.packageName;
   },
   deviceid: function() {
-    return this.deviceid;
+    return this._id;
+  },
+  logs: function() {
+    var collection = Template.instance().collection;
+    return collection.find();
+  },
+  logHtmlCode: function() {
+    var root = document.createElement("div");
+    var preNode = document.createElement("pre");
+    preNode.className = "json";
+
+    root.appendChild(preNode);
+
+    var codeNode = document.createElement("code");
+    codeNode.className = "json";
+
+    preNode.appendChild(codeNode);
+
+    var jsonObject = this;
+    codeNode.innerHTML = json2html.transform(jsonObject);
+    hljs.highlightBlock(codeNode);
+
+    return root.innerHTML;
   },
   test: function() {
     console.log(this);
