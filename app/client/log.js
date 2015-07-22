@@ -76,6 +76,10 @@ Template.log_device.helpers({
     var collection = Template.instance().collection;
     return collection.find();
   },
+  count: function() {
+    var collection = Template.instance().collection;
+    return collection.find().count();
+  },
   logHtmlCode: function() {
     var root = document.createElement("div");
     var preNode = document.createElement("pre");

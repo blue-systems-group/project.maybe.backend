@@ -36,6 +36,7 @@
 <template name="log_device">
     {{#if Template.subscriptionsReady}}
       {{deviceid}}
+      Total log: {{count}}
       {{#each logs}}
         {{{logHtmlCode}}}
       {{/each}}
