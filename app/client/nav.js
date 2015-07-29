@@ -5,7 +5,7 @@ Template.nav.onCreated(function() {
     Session.setDefault('activeNav', '/');
   } else {
     var fields = location.pathname.split('/');
-    Session.setDefault('activeNav', fields[1]);
+    Session.setDefault('activeNav', '/' + fields[1]);
   }
 
   Deps.autorun(function() {
