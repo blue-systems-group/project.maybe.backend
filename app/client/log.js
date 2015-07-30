@@ -56,8 +56,7 @@ Template.log_package.helpers({
 });
 
 Template.log_device.onCreated(function() {
-  this.collection = getCollection(Template.currentData().actualCollection);
-  this.subscribe('getCollectionByName', Template.currentData().actualCollection);
+  subscribeActualCollection(this);
 });
 
 Template.log_device.helpers({

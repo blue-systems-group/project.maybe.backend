@@ -7,6 +7,11 @@ getCollection = function(name) {
   return CollectionMap[name];
 };
 
+subscribeActualCollection = function(self) {
+  self.collection = getCollection(Template.currentData().actualCollection);
+  self.subscribe('getCollectionByName', Template.currentData().actualCollection);
+}
+
 // call server side method to publish collection
 // by deviceid/package name, and return array contains collection name
 function batchSubscribe(indexCollection, functionName) {
