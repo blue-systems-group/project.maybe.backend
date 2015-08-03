@@ -2,7 +2,6 @@
 import sys, os, subprocess
 
 url = 'https://maybe.xcv58.me'
-file = 'doc/maybe_meta.json'
 files = []
 
 for i in sys.argv[1:]:
@@ -12,12 +11,6 @@ for i in sys.argv[1:]:
         files += [i]
     pass
 
-if not os.path.isfile(file):
-    print file, 'is not a file!'
-    quit()
-
-if len(files) == 0:
-    files += file
 for i in files:
     with open(i, 'r') as content_file:
         content = content_file.read()
