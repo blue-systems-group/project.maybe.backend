@@ -18,7 +18,7 @@ getPackageList = function() {
 addMetadata = function(maybeAPIv1) {
   maybeAPIv1.addCollection(MetaData, 'metadata', {
     authToken: undefined,
-    methods: ['POST','GET','PUT','DELETE'],
+    methods: ['POST', 'GET', 'DELETE'],
     before: {
       POST: function(obj, requestMetadata, returnObject) {
         returnObject.success = true;
@@ -86,10 +86,6 @@ addMetadata = function(maybeAPIv1) {
           returnObject.body = {error: e.toString()};
         }
         return true;
-      },
-      PUT: function(obj, newValues, requestMetadata) {
-        debug('PUT to metadata is forbidden!');
-        return false;
       },
       DELETE: function(obj, requestMetadata, returnObject) {
         debug('DEL metadata: ' + obj._id);
