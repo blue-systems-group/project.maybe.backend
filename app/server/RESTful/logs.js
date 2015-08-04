@@ -59,7 +59,7 @@ var insertToLogCollection = function(obj, logCollection) {
 addLogs = function(maybeAPIv1) {
   maybeAPIv1.addCollection(Logs, 'logs', {
     authToken: undefined,
-    methods: ['POST','GET','PUT','DELETE'],
+    methods: ['POST'],
     before: {
       POST: function(obj, requestMetadata, returnObject) {
         debug('POST log: ' + JSON.stringify(obj) + ' with: ' + JSON.stringify(requestMetadata));
@@ -112,25 +112,6 @@ addLogs = function(maybeAPIv1) {
         returnObject.statusCode = 201;
         returnObject.body = {};
         return true;
-      },
-      GET: function(objs, requestMetadata) {
-        debug('GET');
-        debug(objs);
-        return true;
-      },
-      PUT: function(obj, newValues, requestMetadata) {
-        debug('PUT');
-        debug(obj);
-        debug(newValues);
-        debug(requestMetadata);
-        return true;
-      },
-      DELETE: function(obj, requestMetadata) {
-        debug('DEL');
-        if (obj === undefined) {
-          return false;
-        }
-        return false;
       }
     }
   });
