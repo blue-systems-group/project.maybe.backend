@@ -12,5 +12,4 @@ miro:json2html
 xcv58:collection-api
 iron:router
 twbs:bootstrap
-xolvio:cucumber
 velocity:html-reporter
