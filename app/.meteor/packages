@@ -13,5 +13,4 @@ xcv58:collection-api
 iron:router
 twbs:bootstrap
 xolvio:cucumber
-sanjo:jasmine
 velocity:html-reporter
