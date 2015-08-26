@@ -90,7 +90,8 @@ Template.log_device.helpers({
     preNode.appendChild(codeNode);
 
     var jsonObject = this;
-    codeNode.innerHTML = json2html.transform(jsonObject);
+    // codeNode.innerHTML = json2html.transform(jsonObject);
+    codeNode.innerHTML = JSON.stringify(jsonObject);
     hljs.highlightBlock(codeNode);
 
     return root.innerHTML;
