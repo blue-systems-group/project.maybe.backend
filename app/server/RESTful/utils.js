@@ -174,3 +174,20 @@ updateToIndexCollection = function(id, collection, field, name) {
   }
   return true;
 };
+
+existInIndexCollection = function(id, collection, returnObject) {
+  try {
+    var record = collection.findOne(id);
+    if (record === undefined || record.deleted) {
+      returnObject.statusCode = 404;
+      returnObject.body = {error: id + " not found!"};
+      return false;
+    }
+  } catch (e) {
+    debug(e.toString());
+    returnObject.statusCode = 500;
+    returnObject.body = {error: e.toString()};
+    return false;
+  }
+  return true;
+}

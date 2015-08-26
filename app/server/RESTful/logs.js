@@ -84,6 +84,14 @@ addLogs = function(maybeAPIv1) {
 
         // DONE: get log collection, per device per package should have a collection.
         // DONE: check whether deviceid and package exist.
+        // TODO: check deviceid and packageName is valid
+        if (!existInIndexCollection(deviceid, Devices, returnObject)) {
+          return true;
+        }
+        if (!existInIndexCollection(packageName, MetaData, returnObject)) {
+          return true;
+        }
+
         var logCollection = getLogCollection(deviceid, packageName, returnObject);
         if (logCollection === undefined) {
           return true;
