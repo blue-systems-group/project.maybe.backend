@@ -13,3 +13,4 @@ xcv58:collection-api
 iron:router
 twbs:bootstrap
 velocity:html-reporter
+meteorhacks:kadira
