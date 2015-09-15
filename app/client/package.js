@@ -88,12 +88,20 @@ Template.package.helpers({
       // junction = junction.replace(/(?:\r\n|\r|\n)/g, "</br>");
       start = alternative.start;
       var end = alternative.end;
+      // trim for {}, we need treat start end in different way.
       if (trim) {
         end -= 1;
         while (code.charAt(end - 1) === ' ' || code.charAt(end - 1) === '\t') {
           end -= 1;
         }
+        if (code.charAt(start) === '{') {
+          start += 1;
+          while (code.charAt(start) === ' ' || code.charAt(start) === '\t') {
+            start += 1;
+          }
+        }
       }
+      junction += code.substring(alternative.start, start);
       var block = code.substring(start, end);
       // var block = code.substring(alternative.start, alternative.end).replace(/(?:\r\n|\r|\n)/g, "</br>");
       start = end;
