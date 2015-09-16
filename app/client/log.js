@@ -21,7 +21,7 @@ Template.logs.helpers({
 
     // var packages = MetaData.find().fetch();
     // return packages;
-    return MetaData.find();
+    return MetaData.find({actualCollection: {$exists: true}});
   }
 });
 

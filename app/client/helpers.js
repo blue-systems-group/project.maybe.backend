@@ -30,7 +30,7 @@ Session.setDefault('packageShowing', false);
 
 Template.packageList.helpers({
   packages: function() {
-    return MetaData.find();
+    return MetaData.find({actualCollection: {$exists: true}});
   }
 });
 
@@ -48,7 +48,7 @@ Template.packageList.events({
 
 Template.devicesList.helpers({
   devices: function() {
-    return Devices.find();
+    return Devices.find({actualCollection: {$exists: true}});
   }
 });
 
