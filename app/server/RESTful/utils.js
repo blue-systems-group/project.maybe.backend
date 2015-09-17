@@ -77,11 +77,13 @@ addDeviceToCollection = function(obj, collection) {
 };
 
 addMetadataToCollection = function(obj, collection) {
-  var statements = {};
-  obj.statements.forEach(function(oneStatement) {
-    statements[oneStatement.label] = oneStatement;
-  });
-  obj.statements = statements;
+  if (Array.isArray(obj.statements)) {
+    var statements = {};
+    obj.statements.forEach(function(oneStatement) {
+      statements[oneStatement.label] = oneStatement;
+    });
+    obj.statements = statements;
+  }
   var newPackage = {
     package: obj
   };
