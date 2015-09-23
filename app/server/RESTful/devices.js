@@ -161,6 +161,8 @@ addDevices = function(maybeAPIv1) {
           device.gcmid = newValues.gcmid;
           collection.update(current._id, current);
 
+          device.choices = arrayToMap(device.choices, 'packageName');
+
           returnObject.statusCode = 202;
           returnObject.body = requestMetadata.query && requestMetadata.query.callback === "0" && {} || device;
         } catch (e) {
