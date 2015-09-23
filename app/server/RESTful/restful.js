@@ -67,10 +67,10 @@ updateOneDevice = function(deviceIndex, packageList) {
   var current = collection.findOne('0');
   var device = current.device;
 
-  if (device.choices === undefined) {
-    device.choices = {};
-  } else {
+  if (device.choices) {
     device.choices = arrayToMap(device.choices, 'packageName');
+  } else {
+    device.choices = {};
   }
 
   current.queryCount = current.queryCount + 1 || 1;
