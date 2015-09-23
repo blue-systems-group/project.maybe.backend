@@ -82,8 +82,11 @@ body {
     background-color: #9fffff;
 }
 
-.label {
+.maybe-label {
     padding: 12px 0 12px 0;
+    color: black;
+    font-size: large;
+    display: inline-flex;
 }
 
 .alternatives {
@@ -133,7 +136,11 @@ body {
 
 #config-container {
     /* display: none; */
-    Background: white;
+    background: white;
+}
+
+.config {
+    margin-left: 16px;
 }
 
 .oneOption {
