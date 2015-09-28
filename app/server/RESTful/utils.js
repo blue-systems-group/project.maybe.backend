@@ -88,6 +88,12 @@ addMetadataToCollection = function(obj, collection) {
     package: obj
   };
 
+  var record = collection.findOne('0');
+  if (record && isSameStatments(obj.statements, record.package.statements)) {
+    console.log('new metadata is same with previous one, skip update.');
+    return obj;
+  }
+
   var current = staleData(collection);
   var version = 1;
   if (current !== undefined) {
@@ -190,6 +196,25 @@ existInIndexCollection = function(id, collection, returnObject) {
     returnObject.statusCode = 500;
     returnObject.body = {error: e.toString()};
     return false;
+  }
+  return true;
+}
+
+function isSameStatments(newStatements, oldStatements) {
+  if (Object.keys(newStatements).length != Object.keys(oldStatements).length) {
+    return false;
+  }
+  for (var label in newStatements) {
+    if (!oldStatements[label]) {
+      return false;
+    }
+    var newStat = newStatements[label];
+    var oldStat = oldStatements[label];
+    for (var key in newStat) {
+      if (!_.isEqual(newStat[key], oldStat[key])) {
+        return false;
+      }
+    }
   }
   return true;
 }
