@@ -4,6 +4,9 @@ getCollection = function(name) {
   if(!CollectionMap.hasOwnProperty(name)) {
     CollectionMap[name] = new Meteor.Collection(name);
   }
+  Package['meteortoys:toykit'].MeteorToysDict.set('Mongol', {
+    collections: Object.keys(CollectionMap)
+  });
   return CollectionMap[name];
 };
 
