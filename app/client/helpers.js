@@ -4,15 +4,21 @@ getCollection = function(name) {
   if(!CollectionMap.hasOwnProperty(name)) {
     CollectionMap[name] = new Meteor.Collection(name);
   }
-  Package['meteortoys:toykit'].MeteorToysDict.set('Mongol', {
-    collections: Object.keys(CollectionMap)
-  });
+  updateMonogl(Object.keys(CollectionMap))
   return CollectionMap[name];
 };
 
 subscribeActualCollection = function(self) {
   self.collection = getCollection(Template.currentData().actualCollection);
   self.subscribe('getCollectionByName', Template.currentData().actualCollection);
+}
+
+function updateMonogl(collections) {
+  if (Package['meteortoys:toykit']) {
+    Package['meteortoys:toykit'].MeteorToysDict.set('Mongol', {
+      collections: collections
+    });
+  }
 }
 
 // call server side method to publish collection
