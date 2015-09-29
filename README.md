@@ -55,7 +55,9 @@ You can use command:
 
 ---
 
-# RESTFul APIs
+# RESTFul APIs 
+***Deprecated!*** please use [Maybe Developer Documentation](https://blue-systems-research-group.gitbooks.io/maybe/content/)
+
 This backend server provides three categories of APIs.
 
 ## devices
