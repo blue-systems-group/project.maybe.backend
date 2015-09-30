@@ -133,7 +133,7 @@ Template.device.events({
     var deviceID = target.data._id;
     var packageName = this.package;
     var label = this.label;
-    var choice = $(event.target).val();
+    var choice = parseInt($(event.target).val());
     $(event.target).prop('disabled', true).addClass('disabled');
     Meteor.call('updateChoice', deviceID, packageName, label, choice, (error, result) => {
       //function to update UI
@@ -141,7 +141,7 @@ Template.device.events({
         console.log('change choice get error:', error);
         return;
       }
-      // $(event.target).prop('disabled', false).removeClass('disabled');
+      $(event.target).prop('disabled', false).removeClass('disabled');
     });
   },
 });
