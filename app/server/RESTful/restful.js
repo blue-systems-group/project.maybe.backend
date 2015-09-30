@@ -128,8 +128,9 @@ updateOneDevice = function(deviceIndex, packageList) {
           var choice = statement.alternatives[random].value;
           choiceCount[choice]++;
           labelJSON[statement.label] = {
-            "label": statement.label,
-            "choice": choice
+            'label': statement.label,
+            'choice': choice,
+            'range': statement.alternatives.length
           };
           // }
         } else {
