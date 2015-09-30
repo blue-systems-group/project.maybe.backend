@@ -24,22 +24,21 @@
 </template>
 
 <template name="devicePackage">
-    <div class="flex-column">
+    <div class="flex-column package-choices">
         <div class="maybe-label">
             {{packageName}}
         </div>
     {{#each choices}}
     <div class="flex-row">
-        <div class="flex-element">
-          {{label}},
+        <div class="flex-label">
+          {{label}}
         </div>
-        <div class="flex-element">
-          {{choice}},
+        <div class="flex-choice">
+          {{choice}}
         </div>
-        <div class="flex-element">
-          {{range}}
+        <div class="choice-range">
+            <input type="range" min="0" max="{{range}}" value="{{choice}}">
         </div>
-        <input class="choice-range" type="range" min="0" max="{{range}}" value="{{choice}}">
     </div>
     {{/each}}
     </div>

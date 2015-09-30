@@ -29,6 +29,7 @@ body {
     flex-wrap: wrap;
     /*justify-content: space-between;*/
     justify-content: flex-start;
+    align-items: center;
 }
 
 .flex-element {
@@ -90,7 +91,7 @@ body {
 .maybe-label {
     padding: 12px 0 12px 0;
     color: black;
-    font-size: large;
+    font-size: x-large;
     display: inline-flex;
 }
 
@@ -160,10 +161,37 @@ body {
     clear: both;
 }
 
+.flex-label {
+    font-size: large;
+    margin-top: 16px;
+    margin-bottom: 16px;
+    flex-basis: auto;
+    flex-grow: 1;
+    min-width: 256px;
+    max-width: 500px;
+}
+
+.flex-choice {
+    font-size: x-large;
+    font-weight: bold;
+    margin-top: 16px;
+    margin-bottom: 16px;
+    flex-basis: auto;
+    flex-grow: 1;
+}
+
 .choice-range {
     display: inline-flex;
+    max-width: 960px;
+    flex-grow: 3;
+    flex-basis: auto;
+    margin: 0px 16px 16px 16px;
 }
 
 .disabled {
     color: red;
+}
+
+.package-choices {
+    border-bottom: dotted 1px;
 }
