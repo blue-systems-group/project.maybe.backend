@@ -8,25 +8,12 @@ Template.device.helpers({
     var record = collection.findOne('0');
     return record && record.device && record.device.deviceid;
   },
-  values: function() {
+  packages: function() {
     var collection = Template.instance().collection;
     var record = collection.findOne('0');
     var choices = record && record.device && record.device.choices;
 
-    var array = [];
-    // for (var key in this) {
-    //   if (this.hasOwnProperty(key)) {
-    //     var value = this[key];
-    //     var object = {
-    //       "key" : key,
-    //       "value" : JSON.stringify(this[key]),
-    //       "choosed" : false
-    //     };
-    //     array.push(object);
-    //   }
-    // }
-    // return array;
-    return 'values';
+    return choices;
   },
   hasGCMid: function() {
     var collection = Template.instance().collection;
@@ -110,4 +97,51 @@ Template.device.events({
   // 'keyup input[type=text]': _.throttle(function(event) {
   //   Devices.update(this._id, {$set: {'values.color': event.target.value}});
   // }, 300)
+});
+
+
+Template.devicePackage.helpers({
+  packageName: function () {
+    var name = this.packageName || 'unknow package name';
+    return name;
+  },
+  choices: function() {
+    var self = this;
+    var metadata = {'package': this.packageName};
+    var array = _.values(this.labelJSON);
+    _.each(array,
+      function(obj) {
+        return _.extend(obj, this);
+      },
+      metadata)
+    return array;
+    // return _.values(this.labelJSON);
+  },
+  choice: function() {
+    return this.choice;
+  },
+  label: function() {
+    return this.label;
+  },
+  range: function() {
+    return this.range - 1;
+  }
+});
+
+Template.device.events({
+  'change input[type="range"]': function(event, target) {
+    var deviceID = target.data._id;
+    var packageName = this.package;
+    var label = this.label;
+    var choice = $(event.target).val();
+    $(event.target).prop('disabled', true).addClass('disabled');
+    Meteor.call('updateChoice', deviceID, packageName, label, choice, (error, result) => {
+      //function to update UI
+      if (error) {
+        console.log('change choice get error:', error);
+        return;
+      }
+      // $(event.target).prop('disabled', false).removeClass('disabled');
+    });
+  },
 });

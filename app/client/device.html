@@ -10,10 +10,37 @@
         </div>
       {{/if}}
       <div class="deviceDetail">
-        {{{deviceHtmlCode}}}
+          <div>
+              {{#each packages}}
+              {{> devicePackage}}
+              {{/each}}
+          </div>
+          {{{deviceHtmlCode}}}
       </div>
     {{else}}
       Loading
     {{/if}}
   </div>
+</template>
+
+<template name="devicePackage">
+    <div class="flex-column">
+        <div class="maybe-label">
+            {{packageName}}
+        </div>
+    {{#each choices}}
+    <div class="flex-row">
+        <div class="flex-element">
+          {{label}},
+        </div>
+        <div class="flex-element">
+          {{choice}},
+        </div>
+        <div class="flex-element">
+          {{range}}
+        </div>
+        <input class="choice-range" type="range" min="0" max="{{range}}" value="{{choice}}">
+    </div>
+    {{/each}}
+    </div>
 </template>

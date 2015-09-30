@@ -27,7 +27,12 @@ body {
     flex: 1;
     flex-direction: row;
     flex-wrap: wrap;
-    justify-content: space-between;
+    /*justify-content: space-between;*/
+    justify-content: flex-start;
+}
+
+.flex-element {
+    display: inline-flex;
 }
 
 #title {
@@ -153,4 +158,12 @@ body {
 
 .optionList {
     clear: both;
+}
+
+.choice-range {
+    display: inline-flex;
+}
+
+.disabled {
+    color: red;
 }

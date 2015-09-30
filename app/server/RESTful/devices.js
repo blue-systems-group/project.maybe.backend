@@ -180,3 +180,21 @@ addDevices = function(maybeAPIv1) {
     }
   });
 };
+
+Meteor.methods({
+  updateChoice: function(deviceID, packageName, label, choice) {
+    // TODO: error handle
+    // TODO: record log for who changes what
+    console.log(deviceID);
+    var collection = initDeviceCollection(deviceID);
+    var document = collection.findOne('0');
+    var choices = document && document.device && document.device.choices;
+    var package = _.filter(choices, function(obj) { return obj.packageName === packageName; })
+    if (package.length === 0) {
+      throw new Meteor.Error(404, `the package ${packageName} for ${deviceID} is not found!`);
+    }
+    package[0].labelJSON[label].choice = choice;
+    // console.log(choices);
+    return collection.update('0', document);
+  }
+});
