@@ -93,6 +93,7 @@ body {
     padding: 12px 0 12px 0;
     color: black;
     font-size: x-large;
+    word-wrap: break-word;
     display: inline-flex;
 }
 
