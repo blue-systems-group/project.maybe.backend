@@ -69,6 +69,7 @@ body {
     font-weight: bold;
     font-size: x-large;
     padding: 8px 0 8px 0;
+    word-wrap: break-word;
 }
 
 .package {
