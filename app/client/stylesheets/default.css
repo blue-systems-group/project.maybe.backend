@@ -163,6 +163,11 @@ body {
     clear: both;
 }
 
+.log-device {
+    display: flex;
+    flex-direction: column;
+}
+
 .flex-label {
     font-size: large;
     margin-top: 16px;
