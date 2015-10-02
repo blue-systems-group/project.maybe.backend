@@ -30,6 +30,7 @@ Template.log_package.onCreated(function () {
   var self = Template.currentData();
   if (self.logIndexCollection !== undefined) {
     this.subscribe('getCollectionByName', self.logIndexCollection);
+    this.subscribe('getCollectionByName', self.actualCollection);
   }
   // Meteor.call('getPackageLogIndexCollection', self._id, function(err, response) {
   //   console.log('err', err);
@@ -38,9 +39,64 @@ Template.log_package.onCreated(function () {
   // });
 });
 
+Template.log_package.rendered = function () {
+  var template = this;
+  // console.log(template.$('.packageName'));
+  // console.log(template.$('.ct-chart'));
+  var data = Template.currentData();
+  this.autorun(function () {
+    if (data.logIndexCollection) {
+      // console.log('got');
+      logIndexCollection = getCollection(data.logIndexCollection);
+      var deviceArray = logIndexCollection.find().fetch();
+      deviceArray = _.map(deviceArray, function (d) {
+        return {
+          deviceid: d._id,
+          collection: getCollection(d.actualCollection)
+        };
+      }, data);
+      var label = [];
+      var num = [];
+      _.each(deviceArray, function(d) {
+        // console.log(d.deviceid, d.collection.find().count());
+        label.push(d.deviceid);
+        num.push(d.collection.find().count());
+      });
+      // console.log(deviceArray);
+      // var chart = new Chartist.Line(event.target, {
+      // console.log(template.find('.ct-chart'));
+      var chart = new Chartist.Line(template.find('.ct-chart'), {
+      // var chart = new Chartist.Line(this.find('.ct-chart'), {
+        labels: label,
+        series: [
+          num
+        ]
+      }, {
+        fullWidth: true,
+      });
+      // console.log('chart', chart);
+    }
+  });
+};
+
 Template.log_package.helpers({
   packageName: function() {
     return this._id;
+  },
+  labels: function() {
+    var self = this;
+    packageCollection = getCollection(self.actualCollection)
+    var record = packageCollection.findOne('0');
+    var statements = record && record.package && record.package.statements;
+    if (statements) {
+      var labels = Object.keys(statements);
+      console.log(labels);
+      return labels;
+    }
+    return [];
+  },
+  label: function() {
+    return this;
   },
   devices: function() {
     var self = this;
@@ -52,6 +108,46 @@ Template.log_package.helpers({
   },
   device: function() {
     return this._id;
+  }
+});
+
+Template.log_package.events({
+  'click .packageName': function(event, target) {
+    var self = this;
+    console.log(this);
+    if (self.logIndexCollection) {
+      logIndexCollection = getCollection(self.logIndexCollection);
+      var deviceArray = logIndexCollection.find().fetch();
+      deviceArray = _.map(deviceArray, function (d) {
+        return {
+          deviceid: d._id,
+          collection: getCollection(d.actualCollection)
+        };
+      }, self);
+      var label = [];
+      var num = [];
+      _.each(deviceArray, function(d) {
+        console.log(d.deviceid, d.collection.find().count());
+        label.push(d.deviceid);
+        num.push(d.collection.find().count());
+      });
+      console.log(deviceArray);
+      // var chart = new Chartist.Line(event.target, {
+      var chart = new Chartist.Line(Template.instance().$('.ct-chart')[0], {
+        labels: label,
+        series: [
+          num
+        ]
+      }, {
+        fullWidth: true,
+        chartPadding: {
+          right: 40
+        }
+      });
+      console.log('chart', chart);
+    }
+    console.log($(event.target));
+    console.log(target);
   }
 });
 

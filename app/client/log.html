@@ -22,6 +22,10 @@
       <div class="packageName">
         {{packageName}}
       </div>
+      {{#each labels}}
+      {{label}}
+      {{/each}}
+      <div class="ct-chart"></div>
       {{#each devices}}
         <div class="log-device">
           {{> log_device}}
