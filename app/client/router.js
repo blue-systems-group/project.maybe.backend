@@ -1,4 +1,12 @@
 Meteor.startup(function() {
+  Router.onBeforeAction(function() {
+    if (!Meteor.userId()) {
+      this.render('login');
+    } else {
+      this.next();
+    }
+  });
+
   Router.configure({
     notFoundTemplate: "Home"
   });
