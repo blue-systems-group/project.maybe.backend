@@ -18,6 +18,16 @@ getPackageList = function() {
 addMetadata = function(maybeAPIv1) {
   maybeAPIv1.addCollection(MetaData, 'metadata', {
     authToken: undefined,
+    authenticate: function(token, method, requestMetadata) {
+      console.log("authen");
+      console.log("token: " + token);
+      console.log("method: " + method);
+      console.log("requestMetadata: " + JSON.stringify(requestMetadata));
+      // if (!token) {
+      //   return false;
+      // }
+      return true;
+    },
     methods: ['POST', 'GET', 'DELETE'],
     before: {
       POST: function(obj, requestMetadata, returnObject) {
