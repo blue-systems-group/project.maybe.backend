@@ -34,8 +34,8 @@ Template.nav.helpers({
   links: function() {
     var links = [];
     links.push(getLink('Home', '/'));
-    links.push(getLink('Packages', '/#packages-container'));
-    links.push(getLink('Devices', '/#devices-container'));
+    links.push(getLink('Packages', '/packages'));
+    links.push(getLink('Devices', '/devices'));
     links.push(getLink('Logs', '/logs'));
     links.push(getLink('RESTful API', 'https://blue-systems-research-group.gitbooks.io/maybe/content/backend-server/index.html'));
     links.push(getLink('Contact', 'http://blue.cse.buffalo.edu/people/ychen78/'));

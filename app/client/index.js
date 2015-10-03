@@ -29,6 +29,14 @@ Template.home.onCreated(function () {
   this.subscribe('devices');
 });
 
+Template.packages.onCreated(function () {
+  this.subscribe('metadata');
+});
+
+Template.devices.onCreated(function () {
+  this.subscribe('devices');
+});
+
 
 function setGlobalVariables() {
   var duration = Meteor.settings && Meteor.settings.public && Meteor.settings.public.toggleDuration || 1024;

@@ -22,6 +22,30 @@
   </div>
 </template>
 
+<template name="packages">
+  {{> nav}}
+  <div class="flex-column">
+    <h1 id="title" class="flex-column">Maybe Backend!</h1>
+    {{#if Template.subscriptionsReady}}
+    {{> packageList}}
+    {{else}}
+    Loading
+    {{/if}}
+  </div>
+</template>
+
+<template name="devices">
+  {{> nav}}
+  <div class="flex-column">
+    <h1 id="title" class="flex-column">Maybe Backend!</h1>
+    {{#if Template.subscriptionsReady}}
+    {{> devicesList}}
+    {{else}}
+    Loading
+    {{/if}}
+  </div>
+</template>
+
 <template name="devicesList">
   <div id="devices-container" class="flex-column">
     <h2 class="subtitle">Devices:</h2>

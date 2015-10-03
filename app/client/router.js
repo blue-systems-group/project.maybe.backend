@@ -15,6 +15,14 @@ Meteor.startup(function() {
     this.render('Home');
   });
 
+  Router.route('/devices', function () {
+    this.render('devices');
+  });
+
+  Router.route('/packages', function () {
+    this.render('packages');
+  });
+
   Router.route('/api', function () {
     this.render('api');
   });
