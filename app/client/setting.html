@@ -1,9 +1,9 @@
 <template name="settings">
   {{> nav}}
   {{#if currentUser}}
-  <!-- TODO: change password -->
-  <!-- TODO: get token -->
+  <!-- TODO: change password and other standard features -->
   {{> apiKey}}
+  {{> bertAlert}}
   {{else}}
   {{> atForm}}
   {{/if}}
