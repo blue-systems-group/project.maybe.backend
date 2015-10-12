@@ -30,5 +30,5 @@ ecmascript
 underscore
 mfpierre:chartist-js
 accounts-password
-ian:accounts-ui-bootstrap-3
-meteortoys:allthings
+useraccounts:bootstrap
+fortawesome:fontawesome

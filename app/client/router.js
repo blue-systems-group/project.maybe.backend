@@ -1,14 +1,15 @@
 Meteor.startup(function() {
   Router.onBeforeAction(function() {
     if (!Meteor.userId()) {
-      this.render('login');
+      this.render('settings');
+      // this.render('fullPageAtForm');
     } else {
       this.next();
     }
   });
 
   Router.configure({
-    notFoundTemplate: "Home"
+    notFoundTemplate: 'settings'
   });
 
   Router.route('/', function () {
@@ -29,6 +30,10 @@ Meteor.startup(function() {
 
   Router.route('/logs', function () {
     this.render('logs');
+  });
+
+  Router.route('/settings', function () {
+    this.render('settings');
   });
 
   Router.route('/logs/:packageName', {

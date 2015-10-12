@@ -202,8 +202,3 @@ body {
 .package-choices {
     border-bottom: dotted 1px;
 }
-
-.login-text {
-    font-size: 26px;
-    word-break: break-all;
-}

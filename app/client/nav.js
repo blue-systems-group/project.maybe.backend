@@ -39,6 +39,20 @@ Template.nav.helpers({
     links.push(getLink('Logs', '/logs'));
     links.push(getLink('RESTful API', 'https://blue-systems-research-group.gitbooks.io/maybe/content/backend-server/index.html'));
     links.push(getLink('Contact', 'http://blue.cse.buffalo.edu/people/ychen78/'));
+    var user = Meteor.user();
+    if (user !== null && user !== undefined) {
+      var username = ' ';
+      if (user.profile && user.profile.name){
+        username = user.profile.name;
+      }
+      if (user.username){
+        username = user.username;
+      }
+      if (user.emails && user.emails[0] && user.emails[0].address){
+        username = user.emails[0].address;
+      }
+      links.push(getLink('Settings', '/settings'));
+    }
     return links;
   },
   active: function() {

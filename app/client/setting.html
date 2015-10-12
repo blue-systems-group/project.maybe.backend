@@ -1,0 +1,36 @@
+<template name="settings">
+  {{> nav}}
+  {{#if currentUser}}
+  <!-- TODO: change password -->
+  <!-- TODO: get token -->
+  {{> apiKey}}
+  {{else}}
+  {{> atForm}}
+  {{/if}}
+  <!-- {{> atForm state='signUp'}} -->
+  <!-- <div class="flex-column">
+    {{#if Template.subscriptionsReady}}
+      {{#each packages}}
+        <div class="log-package">
+          {{> log_package}}
+        </div>
+      {{/each}}
+    {{else}}
+      Loading...
+    {{/if}}
+  </div> -->
+</template>
+
+<template name="apiKey">
+  <div class="row">
+    <div class="col-xs-12 col-sm-12">
+      <h4 class="page-header">API Key</h4>
+      <p>To gain access to the backend API, use the following API Key. Make sure to keep it super safe! <strong>If you'd like to generate a new key, click the "refresh" icon on the field below</strong>.</p>
+      <label class="sr-only" for="apiKey">Your API Key</label>
+      <div class="input-group">
+        <input type="text" readonly class="form-control" id="apiKey" placeholder="API Key" value="{{apiKey}}">
+        <div class="input-group-addon regenerate-api-key"><i class="fa fa-refresh"></i></div>
+      </div>
+    </div>
+  </div> <!-- end .row -->
+</template>
