@@ -51,7 +51,7 @@ Template.nav.helpers({
       if (user.emails && user.emails[0] && user.emails[0].address){
         username = user.emails[0].address;
       }
-      links.push(getLink('Settings', '/settings'));
+      links.push(getLink(username, '/settings'));
     }
     return links;
   },

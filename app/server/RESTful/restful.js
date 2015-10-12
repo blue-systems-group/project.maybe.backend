@@ -6,6 +6,8 @@ var maybeAPIv1;
 
 // publish collections
 Meteor.publish('metadata', function() {
+  var user = this.userId;
+  console.log('user', user);
   return MetaData.find({deleted: false}, {fields: {deleted: 0}});
 });
 

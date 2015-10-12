@@ -23,10 +23,15 @@ addMetadata = function(maybeAPIv1) {
       console.log("token: " + token);
       console.log("method: " + method);
       console.log("requestMetadata: " + JSON.stringify(requestMetadata));
+      var apiKey = APIKeys.findOne({"key": token});
+      if (apiKey) {
+        console.log(apiKey.owner);
+        return true;
+      }
       // if (!token) {
       //   return false;
       // }
-      return true;
+      return false;
     },
     methods: ['POST', 'GET', 'DELETE'],
     before: {

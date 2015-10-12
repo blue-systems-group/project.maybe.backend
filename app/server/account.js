@@ -1,4 +1,4 @@
-var APIKeys = new Meteor.Collection('APIKeys');
+APIKeys = new Meteor.Collection('APIKeys');
 
 Accounts.onCreateUser(function(options, user) {
   Meteor.call('initApiKey', user._id );
