@@ -1,4 +1,5 @@
 <template name="package">
+  {{> bertAlert}}
   <div class="package">
     {{#if Template.subscriptionsReady}}
       <div class="packageName">
@@ -28,7 +29,11 @@
                 {{/if}}
               </div>
               {{/each}}
+              {{#if isRandom}}
+              <button class="random optionChoosed">random</button>
+              {{else}}
               <button class="random">random</button>
+              {{/if}}
             </div>
             <div class="code">
               {{{highlightedHtmlCode}}}

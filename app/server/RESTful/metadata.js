@@ -115,12 +115,69 @@ addMetadata = function(maybeAPIv1) {
 
 Meteor.methods({
   setFixedChoice: function(packageName, label, choice) {
-    // TODO: error handle
-    // TODO: record log for who changes what
+    return updateMetadata(packageName, label, choice, 'fixed')
+  },
+  setRandomChoice: function(packageName, label) {
+    return updateMetadata(packageName, label, -1, 'random')
+  }
+});
+
+function updateMetadata(packageName, label, choice, policy) {
     var collection = initPackageCollection(packageName);
     var document = collection.findOne('0');
     document.package.statements[label].choice = choice;
-    collection.update('0', document);
+    document.package.statements[label].assignPolicy = policy;
+    try {
+      collection.update('0', document);
+    } catch(exception) {
+      return exception;
+    }
+    return updateAllDevice(packageName, label);
+}
+
+function updateAllDevice(packageName, label) {
+  var index = MetaData.findOne({'_id': packageName, "deleted": false});
+  if (index === undefined || index === null) {
+    console.log(packageName, 'not found!');
     return;
   }
-});
+  var collection = initPackageCollection(index._id);
+  var record = collection.findOne('0');
+
+  var statement = record.package.statements[label];
+  if (statement.assignPolicy === 'fixed') {
+    var fixedChoice = statement.choice;
+  } else {
+    var range = statement.alternatives.length;
+  }
+
+  var deviceList = [];
+  var deviceIndexList = Devices.find({deleted: false}).fetch();
+  deviceIndexList.forEach(function(deviceIndex) {
+    var collection = initDeviceCollection(deviceIndex._id);
+    var record = collection.findOne('0');
+    choices = record.device.choices;
+    for (var i in choices) {
+      var choice = choices[i];
+      if (choice.packageName === packageName) {
+        if (fixedChoice !== undefined) {
+          choice.labelJSON[label].choice = fixedChoice;
+        } else {
+          choice.labelJSON[label].choice = Math.floor(Math.random() * range);
+        }
+        try {
+          collection.update('0', record);
+        } catch(exception) {
+          return exception;
+        }
+      }
+    }
+  });
+
+  if (fixedChoice !== undefined) {
+    console.log('set all choice of package: ' + packageName + ' label: ' + label + ' to: ' + fixedChoice);
+    return fixedChoice;
+  }
+  console.log('set all choice of package: ' + packageName + ' label: ' + label + ' to random value less than: ' + range);
+  return range;
+}

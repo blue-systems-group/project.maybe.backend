@@ -61,6 +61,9 @@ Template.package.helpers({
     }
     return alternatives;
   },
+  isRandom: function() {
+    return this.assignPolicy === 'random';
+  },
   highlightedHtmlCode: function() {
     var code = this.content;
     var label = this.label;
@@ -140,20 +143,39 @@ Template.package.events({
 
     var document = collection.findOne('0');
 
-    console.log(document.package.package + '\n' + label + '\nchoice: ' + choice);
-    Meteor.call('setFixedChoice', document.package.package, label, choice);
+    var confirmReset = confirm('Are you sure? This will reset all devices choices of the package: ' + document.package.package + ' label: ' + label + ' to ' + choice);
+
+    if (confirmReset) {
+      Meteor.call('setFixedChoice', document.package.package, label, choice, function(error, response) {
+        if (error) {
+          Bert.alert(error.reason, "danger");
+        } else {
+          console.log(document.package.package + '\n' + label + '\nchoice: ' + choice);
+          // Bert.alert("set all choice of ", "success", 'growl-top-right');
+          Bert.alert('set all choices of \npackage: ' + document.package.package + '\nlabel: ' + label + '\nto ' + choice, "success", 'growl-top');
+        }
+      });
+    }
   },
   'click .random': function(event, template) {
-    console.log(this);
     var label = this.label;
 
     var collection = Template.instance().collection;
 
     var document = collection.findOne('0');
 
-    // TODO: use random for all devices
-    console.log(document.package.package + '\n' + label + '\nset to random');
-    // Meteor.call('setFixedChoice', document.package.package, label, choice);
+    var confirmReset = confirm('Are you sure? This will reset all devices choices of the package: ' + document.package.package + ' label: ' + label + ' to random!');
+
+    if (confirmReset) {
+      Meteor.call('setRandomChoice', document.package.package, label, function(error, response) {
+        if (error) {
+          Bert.alert(error.reason, "danger");
+        } else {
+          console.log(document.package.package + '\n' + label + '\nset to random');
+          Bert.alert('set all choices of \npackage: ' + document.package.package + '\nlabel: ' + label + '\nto random', "success", 'growl-top');
+        }
+      });
+    }
   },
   'click .config': function(event, template) {
     var package = template.data;

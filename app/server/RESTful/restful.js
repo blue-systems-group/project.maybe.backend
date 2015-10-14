@@ -123,11 +123,16 @@ updateOneDevice = function(deviceIndex, packageList) {
           //   }
           // });
 
-          // TODO assign random one and update statement.choiceCount
 
-          var random = Math.floor(Math.random() * (statement.alternatives.length));
-
-          var choice = statement.alternatives[random].value;
+          // DONE: handle fixed and random
+          // DONE: assign random one and update statement.choiceCount
+          // if (fixed) { assign fixed } else { assign random value }
+          if (statement.assignPolicy === 'fixed') {
+            var choice = statement.choice || 0;
+          } else {
+            var random = Math.floor(Math.random() * (statement.alternatives.length));
+            var choice = statement.alternatives[random].value;
+          }
           choiceCount[choice]++;
           labelJSON[statement.label] = {
             'label': statement.label,
