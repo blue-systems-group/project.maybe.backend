@@ -143,6 +143,18 @@ Template.package.events({
     console.log(document.package.package + '\n' + label + '\nchoice: ' + choice);
     Meteor.call('setFixedChoice', document.package.package, label, choice);
   },
+  'click .random': function(event, template) {
+    console.log(this);
+    var label = this.label;
+
+    var collection = Template.instance().collection;
+
+    var document = collection.findOne('0');
+
+    // TODO: use random for all devices
+    console.log(document.package.package + '\n' + label + '\nset to random');
+    // Meteor.call('setFixedChoice', document.package.package, label, choice);
+  },
   'click .config': function(event, template) {
     var package = template.data;
     var packageName = package.package;

@@ -109,6 +109,7 @@ body {
     float: left;
 }
 
+.random,
 .option {
     width: 128px;
     margin: 4px;
