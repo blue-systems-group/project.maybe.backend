@@ -21,7 +21,7 @@ for i in sys.argv[1:]:
         delete = True
     pass
 
-for i in range(1, n):
+for i in range(1, n + 1):
     if delete:
         subprocess.check_call("""curl -X DELETE %s/maybe-api-v1/devices/%03d""" % (url, i), shell=True)
     else:
