@@ -31,7 +31,7 @@ addMetadata = function(maybeAPIv1) {
       // if (!token) {
       //   return false;
       // }
-      return false;
+      return true;
     },
     methods: ['POST', 'GET', 'DELETE'],
     before: {
