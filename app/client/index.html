@@ -58,8 +58,9 @@
 </template>
 
 <template name="packageList">
+  {{> bertAlert}}
   <div id="packages-container" class="flex-column">
-    <div class="packageList flex-column">
+    <div class="packageList">
       <h2 class="subtitle">Packages:</h2>
       <!-- {{> config}} -->
       {{#each packages}}
