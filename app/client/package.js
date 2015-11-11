@@ -146,9 +146,13 @@ Template.package.events({
     var confirmReset = confirm('Are you sure? This will reset all devices choices of the package: ' + document.package.package + ' label: ' + label + ' to ' + choice);
 
     if (confirmReset) {
+      if (!tmpAllow(getUserName())) {
+        Bert.alert('Sorry you are not allowed to do this. Please contact Yihong', 'danger');
+        return;
+      }
       Meteor.call('setFixedChoice', document.package.package, label, choice, function(error, response) {
         if (error) {
-          Bert.alert(error.reason, "danger");
+          Bert.alert(error.reason, 'danger');
         } else {
           console.log(document.package.package + '\n' + label + '\nchoice: ' + choice);
           // Bert.alert("set all choice of ", "success", 'growl-top-right');
@@ -167,6 +171,10 @@ Template.package.events({
     var confirmReset = confirm('Are you sure? This will reset all devices choices of the package: ' + document.package.package + ' label: ' + label + ' to random!');
 
     if (confirmReset) {
+      if (!tmpAllow(getUserName())) {
+        Bert.alert('Sorry you are not allowed to do this. Please contact Yihong', 'danger');
+        return;
+      }
       Meteor.call('setRandomChoice', document.package.package, label, function(error, response) {
         if (error) {
           Bert.alert(error.reason, "danger");
@@ -249,3 +257,24 @@ Template.package.events({
   //     // MetaData.update(onePackage._id, onePackage);
   // },
 });
+
+function getUserName() {
+  var user = Meteor.user();
+  var username = ' ';
+  if (user !== null && user !== undefined) {
+    if (user.profile && user.profile.name){
+      username = user.profile.name;
+    }
+    if (user.username){
+      username = user.username;
+    }
+    if (user.emails && user.emails[0] && user.emails[0].address){
+      username = user.emails[0].address;
+    }
+  }
+  return username;
+}
+
+function tmpAllow(username) {
+  return username === 'i@xcv58.com';
+}
