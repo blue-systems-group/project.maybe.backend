@@ -1,2 +1,2 @@
-FROM meteorhacks/meteord:onbuild
+FROM meteorhacks/meteord:devbuild
 MAINTAINER Yihong <ychen78@buffalo.edu>
