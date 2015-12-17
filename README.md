@@ -1,5 +1,5 @@
 # Maybe backend
-[![Build Status](https://travis-ci.org/xcv58/backend.svg?branch=meteor)](https://travis-ci.org/xcv58/backend)
+[![Build Status](https://travis-ci.org/blue-systems-group/project.maybe.backend.svg?branch=master)](https://travis-ci.org/blue-systems-group/project.maybe.backend)
 [![Code Climate](https://codeclimate.com/github/xcv58/backend/badges/gpa.svg)](https://codeclimate.com/github/xcv58/backend)
 
 This project is backend for [maybe](http://blue.cse.buffalo.edu/projects/maybe/) project of [blue](http://blue.cse.buffalo.edu) in [University at Buffalo](http://www.cse.buffalo.edu).
